@@ -1,0 +1,13 @@
+/node_modules/
+/coverage/
+/dist/
+/test/
+/.git/
+/.github/
+/.vscode/
+/.idea/
+*.iml
+
+Dockerfile
+.dockerignore
+README.md
