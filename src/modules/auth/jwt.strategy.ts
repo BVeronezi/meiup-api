@@ -5,10 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UsuarioRepository } from '../usuario/usuario.repository';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(
-  Strategy,
-  'jwt-refresh-strategy',
-) {
+export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(UsuarioRepository)
     private userRepository: UsuarioRepository,

@@ -6,8 +6,8 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Endereco } from '../endereco/endereco.entity';
 
@@ -35,17 +35,12 @@ export class Empresa extends BaseEntity {
   @Column({ nullable: true, type: 'integer' })
   telefone: number;
 
-  // @OneToOne(() => Endereco, {
-  //   eager: true,
-  //   cascade: true,
-  //   persistence: true,
-  // })
-  // @JoinColumn()
-  // endereco: Endereco;
-
-  @OneToOne(() => Endereco, (endereco) => endereco.empresa)
+  @ManyToOne(() => Endereco, {
+    eager: true,
+    cascade: true,
+  })
   @JoinColumn()
-  endereco!: Endereco;
+  endereco: Endereco;
 
   @CreateDateColumn()
   dataCriacao: Date;

@@ -1,5 +1,4 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Empresa } from 'src/modules/empresa/empresa.entity';
 
 export class CreateEnderecoDto {
   @ApiPropertyOptional()
@@ -24,5 +23,5 @@ export class CreateEnderecoDto {
   complemento: string;
 
   @ApiPropertyOptional()
-  empresa: Empresa;
+  usuarioId: string;
 }

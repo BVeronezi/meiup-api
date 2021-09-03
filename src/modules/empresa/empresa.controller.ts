@@ -27,7 +27,7 @@ export class EmpresaController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Busca empresa por id' })
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.MEI)
   async findCompanyById(@Param('id') id): Promise<ReturnEmpresaDto> {
     const empresa = await this.empresaService.findEmpresaById(id);
     return {
@@ -43,7 +43,7 @@ export class EmpresaController {
     @GetUser() user: Usuario,
     @Param('id') id: string,
   ) {
-    if (user.role != UserRole.ADMIN && user.id.toString() != id) {
+    if (user.role != UserRole.MEI && user.id.toString() != id) {
       throw new ForbiddenException(
         'Você não tem autorização para acessar esse recurso',
       );

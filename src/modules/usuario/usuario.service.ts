@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EnderecoService } from '../endereco/endereco.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { FindUsuariosQueryDto } from './dto/find-usuarios-query.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { UserRole } from './enum/user-roles.enum';
 import { Usuario } from './usuario.entity';
 import { UsuarioRepository } from './usuario.repository';
 
@@ -12,10 +12,14 @@ export class UsuarioService {
   constructor(
     @InjectRepository(UsuarioRepository)
     private userRepository: UsuarioRepository,
+    private enderecoService: EnderecoService,
   ) {}
 
-  async createAdminUser(createUserDto: CreateUsuarioDto): Promise<Usuario> {
-    return this.userRepository.createUser(createUserDto, UserRole.ADMIN);
+  async createUser(createUserDto: CreateUsuarioDto): Promise<Usuario> {
+    return await this.userRepository.createUser(
+      createUserDto,
+      createUserDto.role,
+    );
   }
 
   async findUserById(userId: string): Promise<Usuario> {
@@ -29,9 +33,24 @@ export class UsuarioService {
   }
 
   async updateUser(updateUserDto: UpdateUsuarioDto, id: string) {
-    const result = await this.userRepository.update({ id }, updateUserDto);
+    const result = await this.userRepository.update(
+      { id },
+      {
+        nome: updateUserDto.nome,
+        email: updateUserDto.email,
+        celular: updateUserDto.celular ? Number(updateUserDto.celular) : 0,
+        telefone: updateUserDto.telefone ? Number(updateUserDto.telefone) : 0,
+        role: updateUserDto.role,
+      },
+    );
+
     if (result.affected > 0) {
       const user = await this.findUserById(id);
+
+      if (updateUserDto.endereco) {
+        this.endereco(updateUserDto, user);
+      }
+
       return user;
     } else {
       throw new NotFoundException('Usuário não encontrado');
@@ -52,5 +71,17 @@ export class UsuarioService {
   ): Promise<{ users: Usuario[]; total: number }> {
     const users = await this.userRepository.findUsers(queryDto);
     return users;
+  }
+
+  async endereco(createUserDto, user) {
+    const enderecoId = user.endereco ? user.endereco.id : null;
+
+    const endereco = await this.enderecoService.updateOrCreateEndereco(
+      createUserDto.endereco,
+      enderecoId,
+      user.id,
+    );
+
+    return endereco;
   }
 }

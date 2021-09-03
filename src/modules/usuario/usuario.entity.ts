@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
+  ManyToOne,
   OneToOne,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -46,11 +47,16 @@ export class Usuario extends BaseEntity {
   @Column({ nullable: true, type: 'varchar', length: 64 })
   confirmationToken: string;
 
-  @OneToOne(() => Empresa, { eager: true })
+  @ManyToOne(() => Empresa, { eager: true })
   @JoinColumn()
   empresa: Empresa;
 
-  @OneToOne(() => Endereco, { eager: true })
+  @OneToOne(() => Endereco, (endereco) => endereco.usuario, {
+    eager: true,
+    cascade: true,
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
   @JoinColumn()
   endereco: Endereco;
 

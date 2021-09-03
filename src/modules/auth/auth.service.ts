@@ -26,7 +26,7 @@ export class AuthService {
   async signUp(createUserDto: CreateUsuarioDto): Promise<Usuario> {
     const user = await this.userRepository.createUser(
       createUserDto,
-      UserRole.ADMIN,
+      UserRole.MEI,
     );
 
     const empresa = await this.empresaService.createCompany(createUserDto);

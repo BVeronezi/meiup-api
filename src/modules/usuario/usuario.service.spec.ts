@@ -1,10 +1,10 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateUserDto } from './dto/create-user.dto';
-import { FindUsersQueryDto } from './dto/find-users-query.dto';
+import { CreateUsuarioDto } from './dto/create-usuario.dto';
+import { FindUsuariosQueryDto } from './dto/find-usuarios-query.dto';
 import { UserRole } from './enum/user-roles.enum';
-import { UserRepository } from './user.repository';
-import { UserService } from './user.service';
+import { UsuarioRepository } from './usuario.repository';
+import { UsuarioService } from './usuario.service';
 
 const mockUserRepository = () => ({
   createUser: jest.fn(),
@@ -21,16 +21,16 @@ describe('UserService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        UserService,
+        UsuarioService,
         {
-          provide: UserRepository,
+          provide: UsuarioRepository,
           useFactory: mockUserRepository,
         },
       ],
     }).compile();
 
-    userRepository = await module.get<UserRepository>(UserRepository);
-    service = await module.get<UserService>(UserService);
+    userRepository = await module.get<UsuarioRepository>(UsuarioRepository);
+    service = await module.get<UsuarioService>(UsuarioService);
   });
 
   it('should be defined', () => {
@@ -39,11 +39,12 @@ describe('UserService', () => {
   });
 
   describe('createUser', () => {
-    let mockCreateUserDto: CreateUserDto;
+    let mockCreateUserDto: CreateUsuarioDto;
 
     beforeEach(() => {
       mockCreateUserDto = {
         email: 'mock@email.com',
+        cnpj: '123123123123',
         nome: 'Mock User',
         senha: 'mockPassword',
         celular: 1233123123,
@@ -98,7 +99,7 @@ describe('UserService', () => {
   describe('findUsers', () => {
     it('should call the findUsers method of the userRepository', async () => {
       userRepository.findUsers.mockResolvedValue('resultOfsearch');
-      const mockFindUsersQueryDto: FindUsersQueryDto = {
+      const mockFindUsersQueryDto: FindUsuariosQueryDto = {
         nome: '',
         email: '',
         limit: 1,

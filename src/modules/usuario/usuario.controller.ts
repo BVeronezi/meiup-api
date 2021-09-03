@@ -31,21 +31,28 @@ export class UsuariosController {
   constructor(private usuarioService: UsuarioService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Cria usuário administrador' })
-  @Role(UserRole.ADMIN)
-  async createAdminUser(
+  @ApiOperation({ summary: 'Cria usuário' })
+  async createUser(
     @Body() createUserDto: CreateUsuarioDto,
   ): Promise<ReturnUsuarioDto> {
-    const user = await this.usuarioService.createAdminUser(createUserDto);
+    const user = await this.usuarioService.createUser(createUserDto);
+
+    if (createUserDto.endereco) {
+      const endereco = await this.usuarioService.endereco(createUserDto, user);
+
+      user.endereco = endereco;
+
+      user.save();
+    }
+
     return {
       user,
-      message: 'Administrador cadastrado com sucesso',
+      message: 'Usuário cadastrado com sucesso',
     };
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Busca usuário por id' })
-  @Role(UserRole.ADMIN)
   async findUserById(@Param('id') id): Promise<ReturnUsuarioDto> {
     const user = await this.usuarioService.findUserById(id);
     return {
@@ -61,7 +68,7 @@ export class UsuariosController {
     @GetUser() user: Usuario,
     @Param('id') id: string,
   ) {
-    if (user.role != UserRole.ADMIN && user.id.toString() != id) {
+    if (user.role == UserRole.USER && user.id.toString() != id) {
       throw new ForbiddenException(
         'Você não tem autorização para acessar esse recurso',
       );
@@ -72,7 +79,7 @@ export class UsuariosController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove o usuário por id' })
-  @Role(UserRole.ADMIN)
+  @Role(UserRole.MEI)
   async deleteUser(@Param('id') id: string) {
     await this.usuarioService.deleteUser(id);
     return {
@@ -81,8 +88,7 @@ export class UsuariosController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Busca usuário pelos filtros de nome ou  e-mail' })
-  @Role(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Busca usuário pelos filtros de nome, e-mail' })
   async findUsers(@Query() query: FindUsuariosQueryDto) {
     const found = await this.usuarioService.findUsers(query);
     return {

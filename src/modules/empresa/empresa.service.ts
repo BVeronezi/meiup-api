@@ -34,7 +34,7 @@ export class EmpresaService {
     if (result.affected > 0) {
       const empresa = await this.findEmpresaById(id);
 
-      const enderecoId = empresa.endereco.id;
+      const enderecoId = empresa.endereco ? empresa.endereco.id : null;
 
       const endereco = await this.enderecoService.updateOrCreateEndereco(
         updateCompanyDto.endereco,

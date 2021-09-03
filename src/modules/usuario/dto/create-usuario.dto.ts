@@ -1,5 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { Empresa } from 'src/modules/empresa/empresa.entity';
+import { Endereco } from 'src/modules/endereco/endereco.entity';
+import { UserRole } from '../enum/user-roles.enum';
 
 export class CreateUsuarioDto {
   @IsNotEmpty({
@@ -43,6 +46,22 @@ export class CreateUsuarioDto {
     description: 'CNPJ para cadastro no sistema',
   })
   cnpj: string;
+
+  @ApiProperty({
+    type: 'string',
+    description: 'Perfil para acesso ao sistema',
+  })
+  role: UserRole;
+
+  @ApiPropertyOptional({
+    description: 'Empresa vinculada ao usuário',
+  })
+  empresa: Empresa;
+
+  @ApiPropertyOptional({
+    description: 'Endereco vinculado ao usuário',
+  })
+  endereco: Endereco;
 
   @IsNotEmpty({
     message: 'Informe uma senha',

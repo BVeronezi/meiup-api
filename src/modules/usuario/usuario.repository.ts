@@ -19,8 +19,12 @@ export class UsuarioRepository extends Repository<Usuario> {
     queryDto.page = queryDto.page < 1 ? 1 : queryDto.page;
     queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit;
 
-    const { email, nome, role } = queryDto;
+    const { empresa, email, nome } = queryDto;
     const query = this.createQueryBuilder('user');
+
+    query.andWhere('user.empresaId = :empresaId', {
+      empresaId: Number(empresa),
+    });
 
     if (email) {
       query.andWhere('user.email ILIKE :email', { email: `%${email}%` });
@@ -29,15 +33,18 @@ export class UsuarioRepository extends Repository<Usuario> {
     if (nome) {
       query.andWhere('user.nome ILIKE :nome', { nome: `%${nome}%` });
     }
-
-    if (role) {
-      query.andWhere('user.role = :role', { role });
-    }
+    query.andWhere('user.role NOT ILIKE :role', { role: 'MEI' });
 
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
-    query.select(['user.nome', 'user.email', 'user.role']);
+    query.select([
+      'user.id',
+      'user.nome',
+      'user.email',
+      'user.dataCriacao',
+      'user.role',
+    ]);
 
     const [users, total] = await query.getManyAndCount();
 
@@ -48,17 +55,19 @@ export class UsuarioRepository extends Repository<Usuario> {
     createUserDto: CreateUsuarioDto,
     role: UserRole,
   ): Promise<Usuario> {
-    const { email, nome, senha, celular, telefone } = createUserDto;
+    const { email, nome, senha, celular, telefone, empresa } = createUserDto;
 
     const user = this.create();
     user.email = email;
     user.nome = nome ? nome : email;
-    user.celular = celular;
-    user.telefone = telefone;
+    user.celular = celular ? Number(celular) : 0;
+    user.telefone = telefone ? Number(telefone) : 0;
+    user.empresa = empresa;
     user.role = role;
     user.confirmationToken = crypto.randomBytes(32).toString('hex');
     user.salt = await bcrypt.genSalt();
     user.senha = await this.hashPassword(senha, user.salt);
+
     try {
       await user.save();
       delete user.senha;

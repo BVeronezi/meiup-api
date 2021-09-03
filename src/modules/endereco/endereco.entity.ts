@@ -8,7 +8,7 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { Empresa } from '../empresa/empresa.entity';
+import { Usuario } from '../usuario/usuario.entity';
 
 @Entity()
 export class Endereco extends BaseEntity {
@@ -36,9 +36,12 @@ export class Endereco extends BaseEntity {
   @Column({ nullable: true, type: 'varchar' })
   complemento: string;
 
-  @OneToOne(() => Empresa, (empresa) => empresa.endereco)
+  @OneToOne(() => Usuario, (usuario) => usuario.endereco, {
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
   @JoinColumn()
-  empresa!: Empresa;
+  usuario: Usuario;
 
   @CreateDateColumn()
   dataCriacao: Date;
