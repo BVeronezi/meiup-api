@@ -44,8 +44,8 @@ export class AuthController {
       response.setHeader('Authorization', 'Bearer ' + jwt);
 
       response.cookie('meiup.token', jwt);
-      response.redirect(`${process.env.URL_FRONT}dashboard`);
-    } else response.redirect(`${process.env.URL_FRONT}login`);
+      response.redirect(`${process.env.URL_FRONT}/dashboard`);
+    } else response.redirect(`${process.env.URL_FRONT}/login`);
   }
 
   @Get('protected')
