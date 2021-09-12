@@ -22,6 +22,10 @@ export class UsuarioService {
     );
   }
 
+  async registerOAuthUser(profile, token) {
+    return await this.userRepository.creteUserSocial(profile, token);
+  }
+
   async findUserById(userId: string): Promise<Usuario> {
     const user = await this.userRepository.findOne(userId, {
       select: ['email', 'nome', 'role', 'id'],
@@ -30,6 +34,15 @@ export class UsuarioService {
     if (!user) throw new NotFoundException('Usuário não encontrado');
 
     return user;
+  }
+
+  async findUserByGoogleId(googleId: string): Promise<Usuario> {
+    return await this.userRepository.findOne({
+      select: ['email', 'nome', 'role', 'id'],
+      where: {
+        googleId: googleId,
+      },
+    });
   }
 
   async updateUser(updateUserDto: UpdateUsuarioDto, id: string) {

@@ -33,19 +33,19 @@ export class CreateUsuarioDto {
     type: 'number',
     description: 'Celular para cadastro no sistema',
   })
-  celular: number;
+  celular?: number;
 
   @ApiPropertyOptional({
     type: 'number',
     description: 'Telefone para cadastro no sistema',
   })
-  telefone: number;
+  telefone?: number;
 
   @ApiPropertyOptional({
     type: 'number',
     description: 'CNPJ para cadastro no sistema',
   })
-  cnpj: string;
+  cnpj?: string;
 
   @ApiProperty({
     type: 'string',
@@ -61,7 +61,7 @@ export class CreateUsuarioDto {
   @ApiPropertyOptional({
     description: 'Endereco vinculado ao usuário',
   })
-  endereco: Endereco;
+  endereco?: Endereco;
 
   @IsNotEmpty({
     message: 'Informe uma senha',

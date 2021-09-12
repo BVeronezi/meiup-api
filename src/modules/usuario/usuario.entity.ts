@@ -41,6 +41,9 @@ export class Usuario extends BaseEntity {
   @Column({ nullable: false })
   salt: string;
 
+  @Column({ nullable: true })
+  googleId: string;
+
   @Column({ nullable: true, type: 'varchar', length: 64 })
   recuperarToken: string;
 

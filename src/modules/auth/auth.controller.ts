@@ -5,12 +5,15 @@ import {
   Param,
   Patch,
   Post,
+  Req,
+  Res,
   UnauthorizedException,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
 import { UserRole } from '../usuario/enum/user-roles.enum';
 import { Usuario } from '../usuario/usuario.entity';
@@ -23,6 +26,33 @@ import { GetUser } from './get-user.decorator';
 @ApiTags('Authentication')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Get('/google')
+  @UseGuards(AuthGuard('google'))
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  googleAuth() {}
+
+  @Get('/google/callback')
+  @UseGuards(AuthGuard('google'))
+  googleAuthRedirect(
+    @Req() req,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const jwt: string = req.user.jwt;
+
+    if (jwt) {
+      response.setHeader('Authorization', 'Bearer ' + jwt);
+
+      response.cookie('meiup.token', jwt);
+      response.redirect(`${process.env.URL_FRONT}dashboard`);
+    } else response.redirect(`${process.env.URL_FRONT}login`);
+  }
+
+  @Get('protected')
+  @UseGuards(AuthGuard('jwt'))
+  protectedResource() {
+    return 'JWT is working!';
+  }
 
   @Post('/signup')
   @ApiOperation({ summary: 'Realiza o cadastro do usuário no sistema' })

@@ -84,6 +84,34 @@ export class UsuarioRepository extends Repository<Usuario> {
     }
   }
 
+  async creteUserSocial(profile, token): Promise<Usuario> {
+    const { email, name } = profile._json;
+
+    const user = this.create();
+    user.email = email;
+    user.nome = name ? name : email;
+    user.role = UserRole.MEI;
+    user.confirmationToken = crypto.randomBytes(32).toString('hex');
+    user.salt = await bcrypt.genSalt();
+    user.senha = token;
+    user.googleId = profile.id;
+
+    try {
+      await user.save();
+      delete user.senha;
+      delete user.salt;
+      return user;
+    } catch (error) {
+      if (error.code.toString() === '23505') {
+        throw new ConflictException('Endereço de email já está em uso');
+      } else {
+        throw new InternalServerErrorException(
+          'Erro ao salvar o usuário no banco de dados',
+        );
+      }
+    }
+  }
+
   async changePassword(id: string, senha: string) {
     const user = await this.findOne(id);
     user.salt = await bcrypt.genSalt();
