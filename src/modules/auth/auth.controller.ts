@@ -43,7 +43,9 @@ export class AuthController {
     if (jwt) {
       response.setHeader('Authorization', 'Bearer ' + jwt);
 
-      response.cookie('meiup.token', jwt);
+      response.cookie('meiup.token', jwt, {
+        domain: 'https://meiup-frontend.herokuapp.com/',
+      });
 
       response.redirect(`https://meiup-frontend.herokuapp.com/dashboard`);
     } else response.redirect(`https://meiup-frontend.herokuapp.com/login`);
