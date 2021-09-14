@@ -41,9 +41,13 @@ export class AuthController {
     const jwt: string = req.user.jwt;
 
     if (jwt) {
+      console.log(`${jwt} jwt recebido`);
       response.setHeader('Authorization', 'Bearer ' + jwt);
 
       response.cookie('meiup.token', jwt);
+
+      console.log(`${jwt} jwt recebido`);
+
       response.redirect(`https://meiup-frontend.herokuapp.com/dashboard`);
     } else response.redirect(`https://meiup-frontend.herokuapp.com/login`);
   }
