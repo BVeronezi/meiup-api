@@ -45,6 +45,8 @@ export class AuthController {
 
       response.cookie('meiup.token', jwt, {
         domain: 'https://meiup-frontend.herokuapp.com/',
+        sameSite: 'none',
+        secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
       });
 
       response.redirect(`https://meiup-frontend.herokuapp.com/dashboard`);
