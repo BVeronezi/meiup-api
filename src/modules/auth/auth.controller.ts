@@ -45,10 +45,7 @@ export class AuthController {
 
       response.cookie('meiup.token', jwt);
 
-      console.log(`cookie: ${response.cookie}`);
-      console.log(`header: ${response.header}`);
-
-      response.redirect('https://www.google.com/');
+      response.redirect(`https://meiup-frontend.herokuapp.com/dashboard`);
     } else response.redirect(`https://meiup-frontend.herokuapp.com/login`);
   }
 
