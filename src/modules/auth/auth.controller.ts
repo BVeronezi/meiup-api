@@ -40,17 +40,7 @@ export class AuthController {
   ) {
     const jwt: string = req.user.jwt;
 
-    if (jwt) {
-      response.setHeader('Authorization', 'Bearer ' + jwt);
-
-      response.cookie('meiup.token', jwt, {
-        domain: 'https://meiup-frontend.herokuapp.com/',
-        sameSite: 'none',
-        secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
-      });
-
-      response.redirect(`https://meiup-frontend.herokuapp.com/dashboard`);
-    } else response.redirect(`https://meiup-frontend.herokuapp.com/login`);
+    response.redirect(`http://localhost:3001/login?jwt=${jwt}`);
   }
 
   @Get('protected')
