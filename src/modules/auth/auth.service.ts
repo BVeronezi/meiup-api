@@ -30,7 +30,7 @@ export class AuthService {
     private usuarioService: UsuarioService,
   ) {}
 
-  async validateOAuthLogin(profile: any, token: string): Promise<string> {
+  async validateOAuthLogin(profile: any, token: string) {
     try {
       let user = await this.usuarioService.findUserByGoogleId(profile.id);
 
@@ -62,7 +62,7 @@ export class AuthService {
         expiresIn: 18000,
       });
 
-      return jwt;
+      return { jwt, user };
     } catch (err) {
       throw new InternalServerErrorException('validateOAuthLogin', err.message);
     }

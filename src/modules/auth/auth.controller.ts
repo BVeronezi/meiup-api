@@ -38,9 +38,13 @@ export class AuthController {
     @Req() req,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const jwt: string = req.user.jwt;
+    const jwt = req.user.jwt;
 
-    response.redirect(`http://localhost:3001/login?jwt=${jwt}`);
+    const user = JSON.stringify(req.user.user);
+
+    response.redirect(
+      `https://meiup-frontend.herokuapp.com/loading?jwt=${jwt}&user=${user}`,
+    );
   }
 
   @Get('protected')
