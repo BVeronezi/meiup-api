@@ -1,7 +1,9 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 
 export class UpdateCategoriaDto {
-  @ApiPropertyOptional({
+  @IsOptional()
+  @ApiProperty({
     description: 'Nome da categoria para cadastro no sistema',
     type: 'string',
   })

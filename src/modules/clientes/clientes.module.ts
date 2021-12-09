@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EnderecoModule } from '../endereco/endereco.module';
 import { ClientesController } from './clientes.controller';
 import { ClientesRepository } from './clientes.repository';
 import { ClientesService } from './clientes.service';
@@ -9,6 +10,7 @@ import { ClientesService } from './clientes.service';
   imports: [
     TypeOrmModule.forFeature([ClientesRepository]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
+    EnderecoModule,
   ],
   controllers: [ClientesController],
   providers: [ClientesService],
