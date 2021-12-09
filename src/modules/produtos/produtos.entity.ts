@@ -14,7 +14,6 @@ import {
 import { Categorias } from '../categorias/categorias.entity';
 import { Empresa } from '../empresa/empresa.entity';
 import { Precos } from '../precos/precos.entity';
-
 @Entity()
 export class Produtos extends BaseEntity {
   @PrimaryGeneratedColumn()

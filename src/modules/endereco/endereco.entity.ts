@@ -8,6 +8,7 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
+import { Clientes } from '../clientes/clientes.entity';
 import { Usuario } from '../usuario/usuario.entity';
 
 @Entity()
@@ -42,6 +43,13 @@ export class Endereco extends BaseEntity {
   })
   @JoinColumn()
   usuario: Usuario;
+
+  @OneToOne(() => Clientes, (cliente) => cliente.endereco, {
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
+  @JoinColumn()
+  cliente: Clientes;
 
   @CreateDateColumn()
   dataCriacao: Date;

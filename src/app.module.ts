@@ -13,6 +13,7 @@ import { ProdutosModule } from './modules/produtos/produtos.module';
 import { CategoriasModule } from './modules/categorias/categorias.module';
 import { PrecosModule } from './modules/precos/precos.module';
 import { EnderecoModule } from './modules/endereco/endereco.module';
+import { ClientesModule } from './modules/clientes/clientes.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { EnderecoModule } from './modules/endereco/endereco.module';
     ProdutosModule,
     CategoriasModule,
     PrecosModule,
+    ClientesModule,
   ],
   controllers: [],
   providers: [],

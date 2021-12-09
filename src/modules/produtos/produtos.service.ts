@@ -23,8 +23,10 @@ export class ProdutosService {
     return produto;
   }
 
-  async deleteProduto(produtoId: string) {
-    const result = await this.produtosRepository.delete({ id: produtoId });
+  async deleteProduto(produtoId: number) {
+    const result = await this.produtosRepository.delete({
+      id: String(produtoId),
+    });
     if (result.affected === 0) {
       throw new NotFoundException(
         'Não foi encontrado produto com o ID informado',

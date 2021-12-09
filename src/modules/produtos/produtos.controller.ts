@@ -76,7 +76,7 @@ export class ProdutosController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove produto por id' })
-  async deleteProduto(@Param('id') id: string) {
+  async deleteProduto(@Param('id') id: number) {
     await this.produtosService.deleteProduto(id);
     return {
       message: 'Produto removido com sucesso',
