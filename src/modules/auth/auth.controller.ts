@@ -23,7 +23,7 @@ import { CredentialsDto } from './dto/credentials.dto';
 import { GetUser } from './get-user.decorator';
 
 @Controller('api/v1/auth')
-@ApiTags('Authentication')
+@ApiTags('Autenticação')
 export class AuthController {
   constructor(private authService: AuthService) {}
 

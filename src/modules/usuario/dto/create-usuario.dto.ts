@@ -53,7 +53,7 @@ export class CreateUsuarioDto {
   })
   role: UserRole;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Empresa vinculada ao usuário',
   })
   empresa: Empresa;

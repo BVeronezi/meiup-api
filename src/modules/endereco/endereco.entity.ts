@@ -15,7 +15,7 @@ export class Endereco extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ nullable: true, type: 'integer' })
+  @Column({ nullable: true, type: 'varchar' })
   cep: string;
 
   @Column({ nullable: true, type: 'varchar' })

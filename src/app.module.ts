@@ -7,9 +7,12 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { AuthModule } from './modules/auth/auth.module';
 import { EmpresaModule } from './modules/empresa/empresa.module';
 import { UsuarioModule } from './modules/usuario/usuario.module';
-import { EnderecoModule } from './modules/endereco/endereco.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import database from './config/database.config';
+import { ProdutosModule } from './modules/produtos/produtos.module';
+import { CategoriasModule } from './modules/categorias/categorias.module';
+import { PrecosModule } from './modules/precos/precos.module';
+import { EnderecoModule } from './modules/endereco/endereco.module';
 
 @Module({
   imports: [
@@ -31,6 +34,9 @@ import database from './config/database.config';
     AuthModule,
     EmpresaModule,
     EnderecoModule,
+    ProdutosModule,
+    CategoriasModule,
+    PrecosModule,
   ],
   controllers: [],
   providers: [],
