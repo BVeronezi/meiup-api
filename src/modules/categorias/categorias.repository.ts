@@ -7,10 +7,11 @@ export class CategoriasRepository extends Repository<Categorias> {
   async createCategoria(
     createCategoriaDto: CreateCategoriaDto,
   ): Promise<Categorias> {
-    const { nome } = createCategoriaDto;
+    const { nome, empresa } = createCategoriaDto;
 
     const categoria = this.create();
     categoria.nome = nome;
+    categoria.empresa = empresa;
 
     try {
       return await categoria.save();

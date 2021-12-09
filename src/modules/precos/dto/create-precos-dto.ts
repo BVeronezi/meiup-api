@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
+import { Produtos } from 'src/modules/produtos/produtos.entity';
 
 export class CreatePrecosDto {
   @IsNotEmpty({
@@ -28,4 +29,10 @@ export class CreatePrecosDto {
     type: 'number',
   })
   margemLucro: number;
+
+  @ApiPropertyOptional({
+    description: 'Produto vinculado ao preco',
+    type: 'number',
+  })
+  produto: Produtos;
 }

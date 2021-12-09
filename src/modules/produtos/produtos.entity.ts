@@ -9,6 +9,7 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  OneToOne,
 } from 'typeorm';
 import { Categorias } from '../categorias/categorias.entity';
 import { Empresa } from '../empresa/empresa.entity';
@@ -44,8 +45,11 @@ export class Produtos extends BaseEntity {
   @Column({ nullable: true, type: 'decimal' })
   estoqueMinimo: number;
 
-  @ManyToOne(() => Precos, {
+  @OneToOne(() => Precos, (precos) => precos.produto, {
     eager: true,
+    cascade: true,
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
   })
   @JoinColumn()
   precos: Precos;

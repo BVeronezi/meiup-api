@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
@@ -49,9 +57,11 @@ export class ProdutosController {
     const produto = await this.produtosService.createProduto(createProdutoDto);
 
     if (Object.keys(createProdutoDto.precos).length !== 0) {
-      const precos = await this.precosService.createPrecos(
-        createProdutoDto.precos,
-      );
+      const params = Object.assign(createProdutoDto.precos, {
+        produto: produto.id,
+      });
+
+      const precos = await this.precosService.createPrecos(params);
 
       produto.precos = precos;
 
@@ -61,6 +71,15 @@ export class ProdutosController {
     return {
       produto,
       message: 'Produto cadastrado com sucesso',
+    };
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Remove produto por id' })
+  async deleteProduto(@Param('id') id: string) {
+    await this.produtosService.deleteProduto(id);
+    return {
+      message: 'Produto removido com sucesso',
     };
   }
 }

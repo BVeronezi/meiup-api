@@ -5,7 +5,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Produtos } from '../produtos/produtos.entity';
 
 @Entity()
 export class Precos extends BaseEntity {
@@ -23,6 +26,13 @@ export class Precos extends BaseEntity {
 
   @Column({ nullable: true, type: 'decimal' })
   margemLucro: number;
+
+  @OneToOne(() => Produtos, (produto) => produto.precos, {
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
+  @JoinColumn()
+  produto: Produtos;
 
   @CreateDateColumn()
   dataCriacao: Date;
