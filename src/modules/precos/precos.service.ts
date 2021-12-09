@@ -19,8 +19,22 @@ export class PrecosService {
     return preco;
   }
 
-  async createPrecos(createPrecosDto: CreatePrecosDto): Promise<Precos> {
-    return await this.precosRepository.createPrecos(createPrecosDto);
+  async updateOrCreatePrecos(
+    createPrecosDto: CreatePrecosDto,
+    id: string,
+  ): Promise<Precos> {
+    if (id) {
+      const result = await this.precosRepository.update(
+        { id },
+        createPrecosDto,
+      );
+
+      if (result.affected > 0) {
+        return await this.findPrecoById(id);
+      }
+    } else {
+      return await this.precosRepository.createPrecos(createPrecosDto);
+    }
   }
 
   async deletePreco(precosId: string) {

@@ -4,8 +4,10 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -15,6 +17,7 @@ import { Empresa } from '../empresa/empresa.entity';
 import { PrecosService } from '../precos/precos.service';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { ReturnProdutoDto } from './dto/return-produto.dto';
+import { UpdateProdutoDto } from './dto/update-produto-dto';
 import { ProdutosService } from './produtos.service';
 
 @Controller('api/v1/produtos')
@@ -61,7 +64,10 @@ export class ProdutosController {
         produto: produto.id,
       });
 
-      const precos = await this.precosService.createPrecos(params);
+      const precos = await this.precosService.updateOrCreatePrecos(
+        params,
+        produto.precos?.id,
+      );
 
       produto.precos = precos;
 
@@ -72,6 +78,25 @@ export class ProdutosController {
       produto,
       message: 'Produto cadastrado com sucesso',
     };
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Atualiza produto por id' })
+  async updateProduto(
+    @Body(ValidationPipe) updateProdutoDto: UpdateProdutoDto,
+    @Param('id') id: string,
+  ) {
+    const idCategoria = Number(updateProdutoDto.categoria);
+
+    const categoria = await this.categoriasService.findCategoriaById(
+      idCategoria,
+    );
+
+    if (!categoria) {
+      throw new Error('Categoria não cadastrada');
+    }
+
+    return this.produtosService.updateProduto(updateProdutoDto, id);
   }
 
   @Delete(':id')
