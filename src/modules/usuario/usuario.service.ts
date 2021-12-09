@@ -81,8 +81,9 @@ export class UsuarioService {
 
   async findUsers(
     queryDto: FindUsuariosQueryDto,
+    empresaId: string,
   ): Promise<{ users: Usuario[]; total: number }> {
-    const users = await this.userRepository.findUsers(queryDto);
+    const users = await this.userRepository.findUsers(queryDto, empresaId);
     return users;
   }
 

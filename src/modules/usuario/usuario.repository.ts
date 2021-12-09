@@ -15,35 +15,36 @@ import { FindUsuariosQueryDto } from './dto/find-usuarios-query.dto';
 export class UsuarioRepository extends Repository<Usuario> {
   async findUsers(
     queryDto: FindUsuariosQueryDto,
+    empresaId: string,
   ): Promise<{ users: Usuario[]; total: number }> {
-    queryDto.page = queryDto.page < 1 ? 1 : queryDto.page;
-    queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit;
+    queryDto.page = queryDto.page < 1 ? 1 : queryDto.page ?? 1;
+    queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit ?? 100;
 
-    const { empresa, email, nome } = queryDto;
-    const query = this.createQueryBuilder('user');
+    const { email, nome } = queryDto;
+    const query = this.createQueryBuilder('usuario');
 
-    query.andWhere('user.empresaId = :empresaId', {
-      empresaId: Number(empresa),
+    query.andWhere('usuario.empresaId = :empresaId', {
+      empresaId: Number(empresaId),
     });
 
     if (email) {
-      query.andWhere('user.email ILIKE :email', { email: `%${email}%` });
+      query.andWhere('usuario.email ILIKE :email', { email: `%${email}%` });
     }
 
     if (nome) {
-      query.andWhere('user.nome ILIKE :nome', { nome: `%${nome}%` });
+      query.andWhere('usuario.nome ILIKE :nome', { nome: `%${nome}%` });
     }
-    query.andWhere('user.role NOT ILIKE :role', { role: 'MEI' });
+    query.andWhere('usuario.role NOT ILIKE :role', { role: 'MEI' });
 
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
     query.select([
-      'user.id',
-      'user.nome',
-      'user.email',
-      'user.dataCriacao',
-      'user.role',
+      'usuario.id',
+      'usuario.nome',
+      'usuario.email',
+      'usuario.dataCriacao',
+      'usuario.role',
     ]);
 
     const [users, total] = await query.getManyAndCount();

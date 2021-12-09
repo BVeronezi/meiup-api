@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PrecosService } from '../precos/precos.service';
 import { CreateProdutoDto } from './dto/create-produto-dto';
+import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
 import { UpdateProdutoDto } from './dto/update-produto-dto';
 import { Produtos } from './produtos.entity';
 import { ProdutosRepository } from './produtos.repository';
@@ -24,6 +25,17 @@ export class ProdutosService {
     if (!produto) throw new NotFoundException('Produto não encontrado');
 
     return produto;
+  }
+
+  async findProdutos(
+    queryDto: FindProdutosQueryDto,
+    empresaId: string,
+  ): Promise<{ produtos: Produtos[]; total: number }> {
+    const produtos = await this.produtosRepository.findProdutos(
+      queryDto,
+      empresaId,
+    );
+    return produtos;
   }
 
   async updateProduto(updateProdutoDto: UpdateProdutoDto, id: string) {

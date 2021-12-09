@@ -13,9 +13,11 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from 'src/decorators/user.decorator';
 import { GetUser } from '../auth/get-user.decorator';
 import { Role } from '../auth/role.decorator';
 import { RolesGuard } from '../auth/roles.guard';
+import { Empresa } from '../empresa/empresa.entity';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { FindUsuariosQueryDto } from './dto/find-usuarios-query.dto';
 import { ReturnUsuarioDto } from './dto/return-usuario.dto';
@@ -88,9 +90,15 @@ export class UsuariosController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Busca usuário pelos filtros de nome, e-mail' })
-  async findUsers(@Query() query: FindUsuariosQueryDto) {
-    const found = await this.usuarioService.findUsers(query);
+  @ApiOperation({
+    summary:
+      'Busca usuário pelos filtros de nome, e-mail ou retorna todos caso não informe os filtros',
+  })
+  async findUsers(
+    @Query() query: FindUsuariosQueryDto,
+    @User('empresa') empresa: Empresa,
+  ) {
+    const found = await this.usuarioService.findUsers(query, empresa.id);
     return {
       found,
       message: 'Usuários encontrados',

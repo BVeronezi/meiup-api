@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import { CategoriasService } from '../categorias/categorias.service';
 import { Empresa } from '../empresa/empresa.entity';
 import { PrecosService } from '../precos/precos.service';
 import { CreateProdutoDto } from './dto/create-produto-dto';
+import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
 import { ReturnProdutoDto } from './dto/return-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto-dto';
 import { ProdutosService } from './produtos.service';
@@ -37,6 +39,22 @@ export class ProdutosController {
     return {
       produto,
       message: 'Produto encontrado',
+    };
+  }
+
+  @Get()
+  @ApiOperation({
+    summary:
+      'Busca produtos pelos filtro de descricação ou retorna todos caso não informe a descricação',
+  })
+  async findProdutos(
+    @Query() query: FindProdutosQueryDto,
+    @User('empresa') empresa: Empresa,
+  ) {
+    const found = await this.produtosService.findProdutos(query, empresa.id);
+    return {
+      found,
+      message: 'Produtos encontrados',
     };
   }
 

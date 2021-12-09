@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -15,6 +16,7 @@ import { User } from 'src/decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriaDto } from './dto/create-categoria-dto';
+import { FindCategoriasQueryDto } from './dto/find-categorias-query-dto';
 import { ReturnCategoriaDto } from './dto/return-categoria-dto';
 import { UpdateCategoriaDto } from './dto/update-categoria-dto';
 
@@ -31,6 +33,25 @@ export class CategoriasController {
     return {
       categoria,
       message: 'Categoria encontrada',
+    };
+  }
+
+  @Get()
+  @ApiOperation({
+    summary:
+      'Busca categorias pelos filtro de nome ou retorna todass caso não informe o filtro',
+  })
+  async findCategorias(
+    @Query() query: FindCategoriasQueryDto,
+    @User('empresa') empresa: Empresa,
+  ) {
+    const found = await this.categoriasService.findCategorias(
+      query,
+      empresa.id,
+    );
+    return {
+      found,
+      message: 'Categorias encontradas',
     };
   }
 
