@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Categorias } from './categorias.entity';
 import { CategoriasRepository } from './categorias.repository';
 import { CreateCategoriaDto } from './dto/create-categoria-dto';
+import { UpdateCategoriaDto } from './dto/update-categoria-dto';
 
 @Injectable()
 export class CategoriasService {
@@ -25,12 +30,43 @@ export class CategoriasService {
     return await this.categoriasRepository.createCategoria(createCategoriaDto);
   }
 
+  async updateCategoria(updateCategoriaDto: UpdateCategoriaDto, id: number) {
+    const result = await this.categoriasRepository.update(
+      { id },
+      {
+        nome: updateCategoriaDto.nome,
+      },
+    );
+
+    if (result.affected > 0) {
+      const categoria = await this.findCategoriaById(Number(id));
+
+      return {
+        categoria,
+        message: 'Categoria atualizada com sucesso',
+      };
+    } else {
+      throw new NotFoundException('Categoria não encontrada');
+    }
+  }
+
   async deleteCategoria(categoriaId: number) {
-    const result = await this.categoriasRepository.delete({ id: categoriaId });
-    if (result.affected === 0) {
-      throw new NotFoundException(
-        'Não foi encontrada categoria com o ID informado',
-      );
+    try {
+      const result = await this.categoriasRepository.delete({
+        id: categoriaId,
+      });
+
+      if (result.affected === 0) {
+        throw new NotFoundException(
+          'Não foi encontrada categoria com o ID informado',
+        );
+      }
+    } catch (error) {
+      if (error.code === '23503') {
+        throw new ConflictException('Há produtos vinculados a categoria');
+      } else {
+        throw new Error(error.message);
+      }
     }
   }
 }

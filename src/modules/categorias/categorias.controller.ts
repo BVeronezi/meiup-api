@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
@@ -6,6 +16,7 @@ import { Empresa } from '../empresa/empresa.entity';
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriaDto } from './dto/create-categoria-dto';
 import { ReturnCategoriaDto } from './dto/return-categoria-dto';
+import { UpdateCategoriaDto } from './dto/update-categoria-dto';
 
 @Controller('api/v1/categorias')
 @ApiTags('Categorias')
@@ -36,6 +47,24 @@ export class CategoriasController {
     return {
       categoria,
       message: 'Categoria cadastrada com sucesso',
+    };
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Atualiza categoria por id' })
+  async updateCategoria(
+    @Body(ValidationPipe) updateCategoriaDto: UpdateCategoriaDto,
+    @Param('id') id: number,
+  ) {
+    return this.categoriasService.updateCategoria(updateCategoriaDto, id);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Remove categoria por id' })
+  async deleteCategoria(@Param('id') id: number) {
+    await this.categoriasService.deleteCategoria(id);
+    return {
+      message: 'Categoria removida com sucesso',
     };
   }
 }
