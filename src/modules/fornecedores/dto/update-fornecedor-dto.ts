@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsOptional } from 'class-validator';
 import { Endereco } from 'src/modules/endereco/endereco.entity';
 
-export class UpdateClienteDto {
+export class UpdateFornecedorDto {
   @IsOptional()
   @ApiProperty()
   nome: string;
@@ -18,16 +18,20 @@ export class UpdateClienteDto {
   email: string;
 
   @IsOptional()
+  @ApiProperty()
+  cpfCnpj: number;
+
+  @IsOptional()
+  @ApiProperty()
+  situacaoCadastral: string;
+
+  @IsOptional()
   @ApiPropertyOptional()
   celular: number;
 
   @IsOptional()
   @ApiPropertyOptional()
   telefone: number;
-
-  @IsOptional()
-  @ApiPropertyOptional()
-  dataNascimento: Date;
 
   @ApiPropertyOptional({
     description: 'Endereco vinculado ao usuário',

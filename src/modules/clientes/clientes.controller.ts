@@ -28,7 +28,7 @@ export class ClientesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Busca cliente por id' })
-  async findProdutoById(@Param('id') id): Promise<ReturnClienteDto> {
+  async findClienteById(@Param('id') id): Promise<ReturnClienteDto> {
     const cliente = await this.clientesService.findClienteById(id);
     return {
       cliente,
@@ -41,7 +41,7 @@ export class ClientesController {
     summary:
       'Busca cliente pelos filtros de nome, e-mail ou retorna todos caso não informe os filtros',
   })
-  async findUsers(
+  async findClientes(
     @Query() query: FindClientesQueryDto,
     @User('empresa') empresa: Empresa,
   ) {
@@ -54,7 +54,7 @@ export class ClientesController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza cliente por id' })
-  async updateUser(
+  async updateCliente(
     @Body(ValidationPipe) updateClienteDto: UpdateClienteDto,
     @Param('id') id: string,
   ) {
@@ -63,7 +63,7 @@ export class ClientesController {
 
   @Post()
   @ApiOperation({ summary: 'Cria cliente' })
-  async createProduto(
+  async createCliente(
     @Body() createClienteDto: CreateClienteDto,
     @User('empresa') empresa: Empresa,
   ): Promise<ReturnClienteDto> {

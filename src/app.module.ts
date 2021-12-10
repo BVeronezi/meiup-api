@@ -14,6 +14,7 @@ import { CategoriasModule } from './modules/categorias/categorias.module';
 import { PrecosModule } from './modules/precos/precos.module';
 import { EnderecoModule } from './modules/endereco/endereco.module';
 import { ClientesModule } from './modules/clientes/clientes.module';
+import { FornecedoresModule } from './modules/fornecedores/fornecedores.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ClientesModule } from './modules/clientes/clientes.module';
     CategoriasModule,
     PrecosModule,
     ClientesModule,
+    FornecedoresModule,
   ],
   controllers: [],
   providers: [],
