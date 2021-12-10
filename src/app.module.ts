@@ -17,6 +17,7 @@ import { ClientesModule } from './modules/clientes/clientes.module';
 import { FornecedoresModule } from './modules/fornecedores/fornecedores.module';
 import { ServicosModule } from './modules/servicos/servicos.module';
 import { VendasModule } from './modules/vendas/vendas.module';
+import { PromocoesModule } from './modules/promocoes/promocoes.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { VendasModule } from './modules/vendas/vendas.module';
     FornecedoresModule,
     ServicosModule,
     VendasModule,
+    PromocoesModule,
   ],
   controllers: [],
   providers: [],

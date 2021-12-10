@@ -10,40 +10,38 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { Clientes } from '../clientes/clientes.entity';
 import { Empresa } from '../empresa/empresa.entity';
 import { Produtos } from '../produtos/produtos.entity';
 import { Servicos } from '../servicos/servicos.entity';
-import { Usuario } from '../usuario/usuario.entity';
 
 @Entity()
-export class Vendas extends BaseEntity {
+export class Promocoes extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ nullable: false, type: 'decimal' })
-  pagamento: number;
-
-  @ManyToOne(() => Clientes, {
-    eager: true,
-  })
-  @JoinColumn()
-  cliente: Clientes;
+  @Column({ nullable: false, type: 'varchar' })
+  descricao: string;
 
   @ManyToMany(() => Produtos)
   @JoinTable({
-    name: 'produtos_venda',
+    name: 'produtos_promocao',
   })
   produtos: Produtos;
 
   @ManyToMany(() => Servicos)
   @JoinTable({
-    name: 'servicos_venda',
+    name: 'servicos_promocao',
   })
   servicos: Servicos;
 
+  @Column({ nullable: false, type: 'decimal' })
+  valorPromocional: number;
+
   @Column({ nullable: false, type: 'date' })
-  dataVenda: Date;
+  dataInicio: Date;
+
+  @Column({ nullable: false, type: 'date' })
+  dataFim: Date;
 
   @ManyToOne(() => Empresa, {
     eager: true,

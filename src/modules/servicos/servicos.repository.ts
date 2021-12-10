@@ -35,9 +35,7 @@ export class ServicosRepository extends Repository<Servicos> {
     return { servicos, total };
   }
 
-  async createServicos(
-    createServicosDto: CreateServicosDto,
-  ): Promise<Servicos> {
+  async createServico(createServicosDto: CreateServicosDto): Promise<Servicos> {
     const { nome, custo, valor, margemLucro, produtos } = createServicosDto;
 
     const servico = this.create();

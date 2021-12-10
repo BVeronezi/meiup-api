@@ -14,7 +14,7 @@ export class ServicosService {
   ) {}
 
   async createServico(createServicosDto: CreateServicosDto): Promise<Servicos> {
-    return await this.servicosRepository.createServicos(createServicosDto);
+    return await this.servicosRepository.createServico(createServicosDto);
   }
 
   async findServicoById(servicoId: number): Promise<Servicos> {
