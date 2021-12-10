@@ -15,9 +15,11 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { CategoriasService } from '../categorias/categorias.service';
 import { Empresa } from '../empresa/empresa.entity';
+import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { PrecosService } from '../precos/precos.service';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
+import { FornecedorProdutoDto } from './dto/fornecedor-produto-dto';
 import { ReturnProdutoDto } from './dto/return-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto-dto';
 import { ProdutosService } from './produtos.service';
@@ -30,6 +32,7 @@ export class ProdutosController {
     private produtosService: ProdutosService,
     private categoriasService: CategoriasService,
     private precosService: PrecosService,
+    private fornecedoresService: FornecedoresService,
   ) {}
 
   @Get(':id')
@@ -75,8 +78,21 @@ export class ProdutosController {
     }
 
     createProdutoDto.empresa = empresa;
-    const produto = await this.produtosService.createProduto(createProdutoDto);
+    if (createProdutoDto.fornecedoresProduto.length > 0) {
+      const fornecedoresProduto = [];
 
+      for (const idFornecedor of createProdutoDto.fornecedoresProduto) {
+        const fornecedor = await this.fornecedoresService.findFornecedorById(
+          Number(idFornecedor),
+        );
+
+        fornecedoresProduto.push(fornecedor);
+      }
+
+      createProdutoDto.fornecedoresProduto = fornecedoresProduto;
+    }
+
+    const produto = await this.produtosService.createProduto(createProdutoDto);
     if (Object.keys(createProdutoDto.precos).length !== 0) {
       const params = Object.assign(createProdutoDto.precos, {
         produto: produto.id,
@@ -123,6 +139,21 @@ export class ProdutosController {
     await this.produtosService.deleteProduto(id);
     return {
       message: 'Produto removido com sucesso',
+    };
+  }
+
+  @Delete('/fornecedor/:id')
+  @ApiOperation({ summary: 'Remove fornecedor do produto por id' })
+  async deleteFornecedorProduto(
+    @Param('id') id: number,
+    @Body(ValidationPipe) fornecedorProdutoDto: FornecedorProdutoDto,
+  ) {
+    await this.produtosService.deleteFornecedorProduto(
+      fornecedorProdutoDto,
+      id,
+    );
+    return {
+      message: 'Fornecedor removido com sucesso',
     };
   }
 }

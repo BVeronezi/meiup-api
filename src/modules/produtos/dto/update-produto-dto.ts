@@ -66,5 +66,5 @@ export class UpdateProdutoDto {
     description: 'Fornecedores do produto',
     type: 'number',
   })
-  fornecedoresProduto: Fornecedores;
+  fornecedoresProduto: Fornecedores[];
 }

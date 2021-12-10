@@ -73,7 +73,7 @@ export class CreateProdutoDto {
     description: 'Fornecedores do produto',
     type: 'number',
   })
-  fornecedoresProduto: Fornecedores;
+  fornecedoresProduto: Fornecedores[];
 
   @ApiProperty({
     description: 'Empresa vinculada ao item',

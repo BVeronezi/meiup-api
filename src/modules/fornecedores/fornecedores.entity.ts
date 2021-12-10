@@ -32,7 +32,7 @@ export class Fornecedores extends BaseEntity {
   @Column({ nullable: true, type: 'integer' })
   telefone: number;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: true, type: 'varchar' })
   situacaoCadastral: string;
 
   @OneToOne(() => Endereco, (endereco) => endereco.fornecedor, {

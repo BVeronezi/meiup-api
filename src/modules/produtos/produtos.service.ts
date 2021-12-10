@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { PrecosService } from '../precos/precos.service';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
+import { FornecedorProdutoDto } from './dto/fornecedor-produto-dto';
 import { UpdateProdutoDto } from './dto/update-produto-dto';
 import { Produtos } from './produtos.entity';
 import { ProdutosRepository } from './produtos.repository';
@@ -13,6 +15,7 @@ export class ProdutosService {
     @InjectRepository(ProdutosRepository)
     private produtosRepository: ProdutosRepository,
     private precosService: PrecosService,
+    private fornecedoresService: FornecedoresService,
   ) {}
 
   async createProduto(createProdutoDto: CreateProdutoDto): Promise<Produtos> {
@@ -39,23 +42,11 @@ export class ProdutosService {
   }
 
   async updateProduto(updateProdutoDto: UpdateProdutoDto, id: string) {
-    const result = await this.produtosRepository.update(
-      { id },
-      {
-        descricao: updateProdutoDto.descricao,
-        tipoItem: updateProdutoDto.tipoItem,
-        unidade: updateProdutoDto.unidade,
-        categoria: updateProdutoDto.categoria,
-        estoque: updateProdutoDto.estoque,
-        estoqueMinimo: updateProdutoDto.estoqueMinimo,
-        estoqueMaximo: updateProdutoDto.estoqueMaximo,
-        fornecedoresProduto: updateProdutoDto.fornecedoresProduto,
-      },
-    );
+    const produto = await this.findProdutoById(Number(id));
 
-    if (result.affected > 0) {
-      const produto = await this.findProdutoById(Number(id));
-
+    if (produto) {
+      const fornecedoresProduto = produto.fornecedoresProduto;
+      const fornecedoresCadastrados = [];
       const precoId = produto.precos ? produto.precos.id : null;
 
       const precos = await this.precosService.updateOrCreatePrecos(
@@ -63,7 +54,49 @@ export class ProdutosService {
         precoId,
       );
 
-      produto.precos = precos;
+      for (const fornecedorCadastrado of produto.fornecedoresProduto) {
+        fornecedoresCadastrados.push(fornecedorCadastrado.id);
+      }
+
+      if (updateProdutoDto.fornecedoresProduto.length > 0) {
+        for (const idFornecedor of updateProdutoDto.fornecedoresProduto) {
+          const fornecedorJaCadastrado = fornecedoresCadastrados.filter(
+            (f) => f !== idFornecedor,
+          );
+
+          if (fornecedorJaCadastrado.length > 0) {
+            const fornecedor =
+              await this.fornecedoresService.findFornecedorById(
+                Number(idFornecedor),
+              );
+
+            fornecedoresProduto.push(fornecedor);
+          }
+        }
+
+        produto.fornecedoresProduto = fornecedoresProduto;
+
+        await produto.save();
+      }
+
+      try {
+        await this.produtosRepository.update(
+          { id },
+          {
+            descricao: updateProdutoDto.descricao,
+            tipoItem: updateProdutoDto.tipoItem,
+            unidade: updateProdutoDto.unidade,
+            categoria: updateProdutoDto.categoria,
+            estoque: updateProdutoDto.estoque ?? 0,
+            estoqueMinimo: updateProdutoDto.estoqueMinimo ?? 0,
+            estoqueMaximo: updateProdutoDto.estoqueMaximo ?? 0,
+          },
+        );
+
+        produto.precos = precos;
+      } catch (error) {
+        throw new Error(error.message);
+      }
 
       return {
         produto,
@@ -71,6 +104,38 @@ export class ProdutosService {
       };
     } else {
       throw new NotFoundException('Produto não encontrado');
+    }
+  }
+
+  async deleteFornecedorProduto(
+    fornecedorProdutoDto: FornecedorProdutoDto,
+    produtoId: number,
+  ) {
+    try {
+      const produto = await this.findProdutoById(Number(produtoId));
+      const fornecedoresCadastrados = [];
+      const newFornecedoresProdutos = [];
+
+      for (const fornecedorCadastrado of produto.fornecedoresProduto) {
+        fornecedoresCadastrados.push(fornecedorCadastrado.id);
+      }
+
+      produto.fornecedoresProduto = fornecedoresCadastrados.filter(
+        (fornecedor) => !fornecedorProdutoDto.fornecedores.includes(fornecedor),
+      );
+
+      for (const idFornecedor of produto.fornecedoresProduto) {
+        const fornecedor = await this.fornecedoresService.findFornecedorById(
+          Number(idFornecedor),
+        );
+
+        newFornecedoresProdutos.push(fornecedor);
+      }
+
+      produto.fornecedoresProduto = newFornecedoresProdutos;
+      return await produto.save();
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 
