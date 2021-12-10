@@ -13,10 +13,12 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
+import { Role } from '../auth/role.decorator';
 import { CategoriasService } from '../categorias/categorias.service';
 import { Empresa } from '../empresa/empresa.entity';
 import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { PrecosService } from '../precos/precos.service';
+import { UserRole } from '../usuario/enum/user-roles.enum';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
 import { FornecedorProdutoDto } from './dto/fornecedor-produto-dto';
@@ -64,6 +66,8 @@ export class ProdutosController {
 
   @Post()
   @ApiOperation({ summary: 'Cria produto' })
+  @Role(UserRole.MEI)
+  @Role(UserRole.ADMIN)
   async createProduto(
     @Body() createProdutoDto: CreateProdutoDto,
     @User('empresa') empresa: Empresa,
@@ -117,6 +121,8 @@ export class ProdutosController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza produto por id' })
+  @Role(UserRole.MEI)
+  @Role(UserRole.ADMIN)
   async updateProduto(
     @Body(ValidationPipe) updateProdutoDto: UpdateProdutoDto,
     @Param('id') id: string,
@@ -136,6 +142,8 @@ export class ProdutosController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove produto por id' })
+  @Role(UserRole.MEI)
+  @Role(UserRole.ADMIN)
   async deleteProduto(@Param('id') id: number) {
     await this.produtosService.deleteProduto(id);
     return {
@@ -145,6 +153,8 @@ export class ProdutosController {
 
   @Delete('/fornecedor/:id')
   @ApiOperation({ summary: 'Remove fornecedor do produto por id' })
+  @Role(UserRole.MEI)
+  @Role(UserRole.ADMIN)
   async deleteFornecedorProduto(
     @Param('id') id: number,
     @Body(ValidationPipe) fornecedorProdutoDto: FornecedorProdutoDto,

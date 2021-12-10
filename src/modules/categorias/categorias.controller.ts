@@ -13,7 +13,9 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
+import { Role } from '../auth/role.decorator';
 import { Empresa } from '../empresa/empresa.entity';
+import { UserRole } from '../usuario/enum/user-roles.enum';
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriaDto } from './dto/create-categoria-dto';
 import { FindCategoriasQueryDto } from './dto/find-categorias-query-dto';
@@ -40,7 +42,7 @@ export class CategoriasController {
   @Get()
   @ApiOperation({
     summary:
-      'Busca categorias pelos filtro de nome ou retorna todass caso não informe o filtro',
+      'Busca categorias pelos filtro de nome ou retorna todas caso não informe o filtro',
   })
   async findCategorias(
     @Query() query: FindCategoriasQueryDto,
@@ -58,6 +60,8 @@ export class CategoriasController {
 
   @Post()
   @ApiOperation({ summary: 'Cria categoria' })
+  @Role(UserRole.MEI)
+  @Role(UserRole.ADMIN)
   async createCategoria(
     @Body() createCategoriaDto: CreateCategoriaDto,
     @User('empresa') empresa: Empresa,
@@ -74,6 +78,8 @@ export class CategoriasController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza categoria por id' })
+  @Role(UserRole.MEI)
+  @Role(UserRole.ADMIN)
   async updateCategoria(
     @Body(ValidationPipe) updateCategoriaDto: UpdateCategoriaDto,
     @Param('id') id: number,
@@ -83,6 +89,8 @@ export class CategoriasController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove categoria por id' })
+  @Role(UserRole.MEI)
+  @Role(UserRole.ADMIN)
   async deleteCategoria(@Param('id') id: number) {
     await this.categoriasService.deleteCategoria(id);
     return {

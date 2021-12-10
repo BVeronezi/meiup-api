@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   Post,
   Query,
@@ -48,11 +49,16 @@ export class VendasController {
     @Query() query: FindVendasQueryDto,
     @User('empresa') empresa: Empresa,
   ) {
-    const found = await this.vendasService.findVendas(query, empresa.id);
-    return {
-      found,
-      message: 'Vendas encontradas',
-    };
+    try {
+      const found = await this.vendasService.findVendas(query, empresa.id);
+
+      return {
+        found,
+        message: 'Vendas encontradas',
+      };
+    } catch (error) {
+      throw new NotFoundException('Venda não encontrada');
+    }
   }
 
   @Post()

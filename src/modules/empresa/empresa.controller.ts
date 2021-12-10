@@ -39,6 +39,8 @@ export class EmpresaController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza empresa por id' })
+  @Role(UserRole.MEI)
+  @Role(UserRole.ADMIN)
   async updateCompany(
     @Body(ValidationPipe) updateCompanyDto: UpdateEmpresaDto,
     @GetUser() user: Usuario,

@@ -13,7 +13,9 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
+import { Role } from '../auth/role.decorator';
 import { Empresa } from '../empresa/empresa.entity';
+import { UserRole } from '../usuario/enum/user-roles.enum';
 import { CreateServicosDto } from './dto/create-servicos-dto';
 import { FindServicosQueryDto } from './dto/find-servicos-query-dto';
 import { ReturnServicosDto } from './dto/return-servicos-dto';
@@ -79,6 +81,8 @@ export class ServicosController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove serviço por id' })
+  @Role(UserRole.MEI)
+  @Role(UserRole.ADMIN)
   async deleteServico(@Param('id') id: number) {
     await this.servicosService.deleteServico(id);
     return {
