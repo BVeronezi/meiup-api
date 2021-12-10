@@ -71,7 +71,7 @@ export class CreateProdutoDto {
 
   @ApiPropertyOptional({
     description: 'Fornecedores do produto',
-    type: 'number',
+    type: [Number],
   })
   fornecedoresProduto: Fornecedores[];
 

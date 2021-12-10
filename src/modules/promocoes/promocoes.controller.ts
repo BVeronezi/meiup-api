@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
 import { CreatePromocaoDto } from './dto/create-promocoes-dto';
@@ -23,6 +23,7 @@ import { PromocoesService } from './promocoes.service';
 @Controller('api/v1/promocoes')
 @ApiTags('Promoções')
 @UseGuards(AuthGuard())
+@ApiBearerAuth('access-token')
 export class PromocoesController {
   constructor(private promocoesService: PromocoesService) {}
 

@@ -6,6 +6,8 @@ export class FornecedorProdutoDto {
   @IsNotEmpty({
     message: 'Informe os fornecedores',
   })
-  @ApiProperty()
+  @ApiProperty({
+    type: [Number],
+  })
   fornecedores: Fornecedores[];
 }

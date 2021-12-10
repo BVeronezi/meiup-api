@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
 import { CreateVendaDto } from './dto/create-venda-dto';
@@ -19,6 +19,7 @@ import { VendasService } from './vendas.service';
 @Controller('api/v1/vendas')
 @ApiTags('Vendas')
 @UseGuards(AuthGuard())
+@ApiBearerAuth('access-token')
 export class VendasController {
   constructor(private vendasService: VendasService) {}
 

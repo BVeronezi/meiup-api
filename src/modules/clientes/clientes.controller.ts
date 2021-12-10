@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
 import { ClientesService } from './clientes.service';
@@ -23,6 +23,7 @@ import { UpdateClienteDto } from './dto/update-cliente-dto';
 @Controller('api/v1/clientes')
 @ApiTags('Clientes')
 @UseGuards(AuthGuard())
+@ApiBearerAuth('access-token')
 export class ClientesController {
   constructor(private clientesService: ClientesService) {}
 

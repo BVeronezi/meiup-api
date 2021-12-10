@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
 import { CategoriasService } from './categorias.service';
@@ -23,6 +23,7 @@ import { UpdateCategoriaDto } from './dto/update-categoria-dto';
 @Controller('api/v1/categorias')
 @ApiTags('Categorias')
 @UseGuards(AuthGuard())
+@ApiBearerAuth('access-token')
 export class CategoriasController {
   constructor(private categoriasService: CategoriasService) {}
 

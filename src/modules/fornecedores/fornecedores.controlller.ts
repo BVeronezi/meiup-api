@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
 import { CreateFornecedorDto } from './dto/create-fornecedor-dto';
@@ -23,6 +23,7 @@ import { FornecedoresService } from './fornecedores.service';
 @Controller('api/v1/fornecedores')
 @ApiTags('Fornecedores')
 @UseGuards(AuthGuard())
+@ApiBearerAuth('access-token')
 export class FornecedoresController {
   constructor(private fornecedoresService: FornecedoresService) {}
 

@@ -58,13 +58,14 @@ export class UpdateProdutoDto {
   @IsOptional()
   @ApiProperty({
     description: 'Precos do item',
+    type: {},
   })
   precos: Precos;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Fornecedores do produto',
-    type: 'number',
+    type: [Number],
   })
   fornecedoresProduto: Fornecedores[];
 }

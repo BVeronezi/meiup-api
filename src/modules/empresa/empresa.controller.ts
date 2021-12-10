@@ -9,7 +9,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from '../auth/get-user.decorator';
 import { Role } from '../auth/role.decorator';
 import { RolesGuard } from '../auth/roles.guard';
@@ -22,6 +22,7 @@ import { UpdateEmpresaDto } from './dto/update-empresa.dto';
 @Controller('api/v1/empresa')
 @ApiTags('Empresa')
 @UseGuards(AuthGuard(), RolesGuard)
+@ApiBearerAuth('access-token')
 export class EmpresaController {
   constructor(private empresaService: EmpresaService) {}
 

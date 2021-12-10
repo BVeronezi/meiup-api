@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { CategoriasService } from '../categorias/categorias.service';
 import { Empresa } from '../empresa/empresa.entity';
@@ -27,6 +27,7 @@ import { ProdutosService } from './produtos.service';
 @Controller('api/v1/produtos')
 @ApiTags('Produtos')
 @UseGuards(AuthGuard())
+@ApiBearerAuth('access-token')
 export class ProdutosController {
   constructor(
     private produtosService: ProdutosService,

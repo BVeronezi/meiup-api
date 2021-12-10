@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Usuario } from '../usuario/usuario.entity';
 import { AgendaService } from './agenda.service';
@@ -23,6 +23,7 @@ import { UpdateAgendaDto } from './dto/update-agenda-dto';
 @Controller('api/v1/agenda')
 @ApiTags('Agenda')
 @UseGuards(AuthGuard())
+@ApiBearerAuth('access-token')
 export class AgendaController {
   constructor(private agendaService: AgendaService) {}
 
