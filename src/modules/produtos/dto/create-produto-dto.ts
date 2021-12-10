@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { Categorias } from 'src/modules/categorias/categorias.entity';
 import { Empresa } from 'src/modules/empresa/empresa.entity';
+import { Fornecedores } from 'src/modules/fornecedores/fornecedores.entity';
 import { Precos } from 'src/modules/precos/precos.entity';
 
 export class CreateProdutoDto {
@@ -67,6 +68,12 @@ export class CreateProdutoDto {
     description: 'Precos do item',
   })
   precos: Precos;
+
+  @ApiPropertyOptional({
+    description: 'Fornecedores do produto',
+    type: 'number',
+  })
+  fornecedoresProduto: Fornecedores;
 
   @ApiProperty({
     description: 'Empresa vinculada ao item',

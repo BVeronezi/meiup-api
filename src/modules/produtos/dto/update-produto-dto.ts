@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
 import { Categorias } from 'src/modules/categorias/categorias.entity';
+import { Fornecedores } from 'src/modules/fornecedores/fornecedores.entity';
 import { Precos } from 'src/modules/precos/precos.entity';
 
 export class UpdateProdutoDto {
@@ -59,4 +60,11 @@ export class UpdateProdutoDto {
     description: 'Precos do item',
   })
   precos: Precos;
+
+  @IsOptional()
+  @ApiPropertyOptional({
+    description: 'Fornecedores do produto',
+    type: 'number',
+  })
+  fornecedoresProduto: Fornecedores;
 }

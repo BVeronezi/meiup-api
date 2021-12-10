@@ -49,6 +49,7 @@ export class ProdutosService {
         estoque: updateProdutoDto.estoque,
         estoqueMinimo: updateProdutoDto.estoqueMinimo,
         estoqueMaximo: updateProdutoDto.estoqueMaximo,
+        fornecedoresProduto: updateProdutoDto.fornecedoresProduto,
       },
     );
 

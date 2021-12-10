@@ -45,6 +45,7 @@ export class ProdutosRepository extends Repository<Produtos> {
       estoqueMinimo,
       estoqueMaximo,
       empresa,
+      fornecedoresProduto,
     } = createProdutoDto;
 
     const produto = this.create();
@@ -53,6 +54,7 @@ export class ProdutosRepository extends Repository<Produtos> {
     produto.unidade = unidade;
     produto.categoria = categoria;
     produto.empresa = empresa;
+    produto.fornecedoresProduto = fornecedoresProduto;
     produto.estoque = estoque ?? 0;
     produto.estoqueMinimo = estoqueMinimo ?? 0;
     produto.estoqueMaximo = estoqueMaximo ?? 0;

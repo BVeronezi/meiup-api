@@ -54,9 +54,11 @@ export class Produtos extends BaseEntity {
   @JoinColumn()
   precos: Precos;
 
-  // @ManyToMany(() => Fornecedores)
-  // @JoinTable()
-  // fornecedores: Fornecedores;
+  @ManyToMany(() => Fornecedores)
+  @JoinTable({
+    name: 'produtos_fornecedores',
+  })
+  fornecedoresProduto: Fornecedores;
 
   @ManyToOne(() => Empresa, {
     eager: true,

@@ -45,7 +45,7 @@ export class ServicosRepository extends Repository<Servicos> {
     servico.custo = custo;
     servico.valor = valor;
     servico.margemLucro = margemLucro;
-    servico.produtos = produtos;
+    servico.produtosUtilizados = produtos;
 
     try {
       return await servico.save();

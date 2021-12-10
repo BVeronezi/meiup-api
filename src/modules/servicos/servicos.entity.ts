@@ -37,8 +37,10 @@ export class Servicos extends BaseEntity {
   empresa: Empresa;
 
   @ManyToMany(() => Produtos)
-  @JoinTable()
-  produtos: Produtos;
+  @JoinTable({
+    name: 'produtos_servicos',
+  })
+  produtosUtilizados: Produtos;
 
   @CreateDateColumn()
   dataCriacao: Date;
