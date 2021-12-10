@@ -11,6 +11,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
+import { ProdutosService } from '../produtos/produtos.service';
+import { ServicosService } from '../servicos/servicos.service';
 import { CreateVendaDto } from './dto/create-venda-dto';
 import { FindVendasQueryDto } from './dto/find-vendas-query-dto';
 import { ReturnVendasDto } from './dto/return-venda-dto';
@@ -21,7 +23,11 @@ import { VendasService } from './vendas.service';
 @UseGuards(AuthGuard())
 @ApiBearerAuth('access-token')
 export class VendasController {
-  constructor(private vendasService: VendasService) {}
+  constructor(
+    private vendasService: VendasService,
+    private servicoService: ServicosService,
+    private produtosService: ProdutosService,
+  ) {}
 
   @Get(':id')
   @ApiOperation({ summary: 'Busca venda por id' })
@@ -56,11 +62,38 @@ export class VendasController {
     @User('empresa') empresa: Empresa,
   ): Promise<ReturnVendasDto> {
     createVendaDto.empresa = empresa;
+
+    if (createVendaDto.servicos?.length > 0) {
+      const servicosVenda = [];
+      for (const servicoId of createVendaDto.servicos) {
+        const servico = await this.servicoService.findServicoById(
+          Number(servicoId),
+        );
+
+        servicosVenda.push(servico);
+      }
+
+      createVendaDto.servicos = servicosVenda;
+    }
+
+    if (createVendaDto.produtos?.length > 0) {
+      const produtosVenda = [];
+      for (const produtoId of createVendaDto.produtos) {
+        const produto = await this.produtosService.findProdutoById(
+          Number(produtoId),
+        );
+
+        produtosVenda.push(produto);
+      }
+
+      createVendaDto.produtos = produtosVenda;
+    }
+
     const venda = await this.vendasService.createVenda(createVendaDto);
 
     return {
       venda,
-      message: 'Venda cadastrado com sucesso',
+      message: 'Venda cadastrada com sucesso',
     };
   }
 }

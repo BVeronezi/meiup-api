@@ -34,13 +34,13 @@ export class Vendas extends BaseEntity {
   @JoinTable({
     name: 'produtos_venda',
   })
-  produtos: Produtos;
+  produtos: Produtos[];
 
   @ManyToMany(() => Servicos)
   @JoinTable({
     name: 'servicos_venda',
   })
-  servicos: Servicos;
+  servicos: Servicos[];
 
   @Column({ nullable: false, type: 'date' })
   dataVenda: Date;

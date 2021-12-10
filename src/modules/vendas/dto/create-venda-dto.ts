@@ -17,15 +17,15 @@ export class CreateVendaDto {
 
   @ApiPropertyOptional({
     description: 'Produtos vendidos',
-    type: 'number',
+    type: [Number],
   })
-  produtos: Produtos;
+  produtos: Produtos[];
 
   @ApiPropertyOptional({
     description: 'Serviços realizados',
-    type: 'number',
+    type: [Number],
   })
-  servicos: Servicos;
+  servicos: Servicos[];
 
   @IsNotEmpty({
     message: 'Informe qual a data da venda',
