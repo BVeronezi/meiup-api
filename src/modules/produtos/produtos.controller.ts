@@ -45,7 +45,7 @@ export class ProdutosController {
   @Get()
   @ApiOperation({
     summary:
-      'Busca produtos pelos filtro de descricação ou retorna todos caso não informe a descricação',
+      'Busca produtos pelos filtro de descrição ou retorna todos caso não informe a descrição',
   })
   async findProdutos(
     @Query() query: FindProdutosQueryDto,
