@@ -31,7 +31,11 @@ export class ProdutosVendaService {
     );
   }
 
-  async deleteProdutoVenda(produtos: [number], vendaId: number) {
+  async deleteProdutoVenda(
+    produtos: [number],
+    vendaId: number,
+    empresaId: number,
+  ) {
     const produtosExcluidos = [];
 
     for (const produto of produtos) {
@@ -39,6 +43,7 @@ export class ProdutosVendaService {
         where: {
           produtoId: produto,
           venda: vendaId,
+          empresaId: empresaId,
         },
       });
 

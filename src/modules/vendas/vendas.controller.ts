@@ -166,6 +166,7 @@ export class VendasController {
   @ApiOperation({ summary: 'Remove produto da venda por id' })
   async removeProdutoVenda(
     @Param('vendaId') vendaId: number,
+    @User('empresa') empresa: Empresa,
     @Body(ValidationPipe) removeProdutoVendaDto: RemoveProdutoVendaDto,
   ) {
     if (removeProdutoVendaDto.produtos.length > 0) {
@@ -174,6 +175,7 @@ export class VendasController {
       await this.produtosVendaService.deleteProdutoVenda(
         removeProdutoVendaDto.produtos,
         Number(venda.id),
+        Number(empresa.id),
       );
 
       return {

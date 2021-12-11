@@ -33,10 +33,10 @@ export class ProdutosVendaController {
 
       return {
         found,
-        message: 'Vendas encontradas',
+        message: 'Produto(s) venda encontrado(s)',
       };
     } catch (error) {
-      throw new NotFoundException('Venda não encontrada');
+      throw new NotFoundException('Produto(s) venda não encontrado(s)');
     }
   }
 }

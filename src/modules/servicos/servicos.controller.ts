@@ -15,9 +15,11 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Role } from '../auth/role.decorator';
 import { Empresa } from '../empresa/empresa.entity';
+import { ProdutosServicoService } from '../produtos_servico/produtos_servico.service';
 import { UserRole } from '../usuario/enum/user-roles.enum';
 import { CreateServicosDto } from './dto/create-servicos-dto';
 import { FindServicosQueryDto } from './dto/find-servicos-query-dto';
+import { RemoveProdutosServicoDto } from './dto/remove-produto-servico-dto';
 import { ReturnServicosDto } from './dto/return-servicos-dto';
 import { UpdateServicosDto } from './dto/update-servicos-dto';
 import { ServicosService } from './servicos.service';
@@ -27,7 +29,10 @@ import { ServicosService } from './servicos.service';
 @UseGuards(AuthGuard())
 @ApiBearerAuth('access-token')
 export class ServicosController {
-  constructor(private servicosService: ServicosService) {}
+  constructor(
+    private servicosService: ServicosService,
+    private produtosServicoService: ProdutosServicoService,
+  ) {}
 
   @Get(':id')
   @ApiOperation({ summary: 'Busca produto por id' })
@@ -64,6 +69,14 @@ export class ServicosController {
     createServicosDto.empresa = empresa;
     const servico = await this.servicosService.createServico(createServicosDto);
 
+    if (createServicosDto.produtos?.length > 0) {
+      await this.servicosService.adicionaProdutoServico(
+        createServicosDto.produtos,
+        servico,
+        empresa,
+      );
+    }
+
     return {
       servico,
       message: 'Serviço cadastrado com sucesso',
@@ -88,5 +101,27 @@ export class ServicosController {
     return {
       message: 'Serviço removido com sucesso',
     };
+  }
+
+  @Delete('/produtosServico/:servicoId')
+  @ApiOperation({ summary: 'Remove produto do servico por id' })
+  async removeProdutoServico(
+    @Param('servicoId') servicoId: number,
+    @User('empresa') empresa: Empresa,
+    @Body(ValidationPipe) removeProdutoServicoDto: RemoveProdutosServicoDto,
+  ) {
+    if (removeProdutoServicoDto.produtos.length > 0) {
+      const servico = await this.servicosService.findServicoById(servicoId);
+
+      await this.produtosServicoService.deleteProdutoServico(
+        removeProdutoServicoDto.produtos,
+        Number(servico.id),
+        Number(empresa.id),
+      );
+
+      return {
+        message: 'Produto(s) removido(s) com sucesso do serviço',
+      };
+    }
   }
 }

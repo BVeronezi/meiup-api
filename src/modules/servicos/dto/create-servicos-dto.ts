@@ -32,6 +32,12 @@ export class CreateServicosDto {
   })
   margemLucro: number;
 
+  @ApiPropertyOptional({
+    description: 'Produtos utilizados',
+    type: [{}],
+  })
+  produtos: [{ id: number; quantidade: number }];
+
   @ApiProperty({
     description: 'Empresa vinculada ao item',
   })

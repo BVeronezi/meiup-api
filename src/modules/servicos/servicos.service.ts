@@ -1,5 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Empresa } from '../empresa/empresa.entity';
+import { ProdutosService } from '../produtos/produtos.service';
+import { FindProdutosServicoQueryDto } from '../produtos_servico/dto/find-produtos-servico-dto';
+import { ProdutosServicoService } from '../produtos_servico/produtos_servico.service';
 import { CreateServicosDto } from './dto/create-servicos-dto';
 import { FindServicosQueryDto } from './dto/find-servicos-query-dto';
 import { UpdateServicosDto } from './dto/update-servicos-dto';
@@ -11,6 +15,8 @@ export class ServicosService {
   constructor(
     @InjectRepository(ServicosRepository)
     private servicosRepository: ServicosRepository,
+    private produtosServicoService: ProdutosServicoService,
+    private produtosService: ProdutosService,
   ) {}
 
   async createServico(createServicosDto: CreateServicosDto): Promise<Servicos> {
@@ -36,6 +42,46 @@ export class ServicosService {
     return servicos;
   }
 
+  async adicionaProdutoServico(
+    arrProdutos: [{ id: number; quantidade: number }],
+    servico: Servicos,
+    empresa: Empresa,
+  ) {
+    const params: FindProdutosServicoQueryDto = {
+      servicoId: Number(servico.id),
+      sort: undefined,
+      page: 1,
+      limit: 100,
+    };
+
+    const produtosServico =
+      await this.produtosServicoService.findProdutosServico(
+        params,
+        String(empresa.id),
+      );
+
+    const arrNovosProdutos = arrProdutos
+      .map((e) => e.id)
+      .filter((p) => !produtosServico.map((p) => p.produtoId).includes(p));
+
+    for (const item of arrProdutos) {
+      if (arrNovosProdutos.includes(item.id)) {
+        const produto = await this.produtosService.findProdutoById(
+          Number(item.id),
+        );
+
+        const params = {
+          produto: produto,
+          quantidade: item.quantidade,
+          servico: servico,
+          empresa: empresa,
+        };
+
+        await this.produtosServicoService.createProdutoServico(params);
+      }
+    }
+  }
+
   async updateServico(updateServicoDto: UpdateServicosDto, id: string) {
     const result = await this.servicosRepository.update(
       { id },
@@ -44,7 +90,6 @@ export class ServicosService {
         custo: updateServicoDto.custo,
         valor: updateServicoDto.valor,
         margemLucro: updateServicoDto.margemLucro,
-        // atualizar produto
       },
     );
 

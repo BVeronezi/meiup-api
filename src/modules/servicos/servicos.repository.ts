@@ -36,14 +36,13 @@ export class ServicosRepository extends Repository<Servicos> {
   }
 
   async createServico(createServicosDto: CreateServicosDto): Promise<Servicos> {
-    const { nome, custo, valor, margemLucro, produtos } = createServicosDto;
+    const { nome, custo, valor, margemLucro } = createServicosDto;
 
     const servico = this.create();
     servico.nome = nome;
     servico.custo = custo;
     servico.valor = valor;
     servico.margemLucro = margemLucro;
-    servico.produtosUtilizados = produtos;
 
     try {
       return await servico.save();
