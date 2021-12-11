@@ -16,11 +16,12 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
 import { ProdutosVendaService } from '../produtos_venda/produtos_venda.service';
-import { ServicosService } from '../servicos/servicos.service';
+import { ServicosVendaService } from '../servicos_venda/servicos_venda.service';
 import { Usuario } from '../usuario/usuario.entity';
 import { CreateVendaDto } from './dto/create-venda-dto';
 import { FindVendasQueryDto } from './dto/find-vendas-query-dto';
-import { RemoveProdutoVendaDto } from './dto/remove-produto-venda';
+import { RemoveProdutoVendaDto } from './dto/remove-produto-venda-dto';
+import { RemoveServicoVendaDto } from './dto/remove-servico-venda-dto';
 import { ReturnVendasDto } from './dto/return-venda-dto';
 import { UpdateVendaDto } from './dto/update-venda-dto';
 import { VendasService } from './vendas.service';
@@ -32,8 +33,8 @@ import { VendasService } from './vendas.service';
 export class VendasController {
   constructor(
     private vendasService: VendasService,
-    private servicoService: ServicosService,
     private produtosVendaService: ProdutosVendaService,
+    private servicosVendaService: ServicosVendaService,
   ) {}
 
   @Get(':id')
@@ -198,6 +199,28 @@ export class VendasController {
 
       return {
         message: 'Produto(s) removido(s) com sucesso da venda',
+      };
+    }
+  }
+
+  @Delete('/servicosVenda/:vendaId')
+  @ApiOperation({ summary: 'Remove servico da venda por id' })
+  async removeServicoVenda(
+    @Param('vendaId') vendaId: number,
+    @User('empresa') empresa: Empresa,
+    @Body(ValidationPipe) removeServicoVendaDto: RemoveServicoVendaDto,
+  ) {
+    if (removeServicoVendaDto.servicos.length > 0) {
+      const venda = await this.vendasService.findVendaById(vendaId);
+
+      await this.servicosVendaService.deleteServicoVenda(
+        removeServicoVendaDto.servicos,
+        Number(venda.id),
+        Number(empresa.id),
+      );
+
+      return {
+        message: 'Servico(s) removido(s) com sucesso da venda',
       };
     }
   }
