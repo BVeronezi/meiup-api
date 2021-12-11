@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ProdutosService } from '../produtos/produtos.service';
+import { FindProdutosServicoQueryDto } from '../produtos_servico/dto/find-produtos-servico-dto';
+import { ProdutosServicoService } from '../produtos_servico/produtos_servico.service';
 import { ServicoVendaDto } from './dto/create-servico-venda-dto';
 import { FindServicosVendasQueryDto } from './dto/find-servicos-venda-dto';
 import { ServicosVenda } from './servicos_venda.entity';
@@ -10,6 +13,8 @@ export class ServicosVendaService {
   constructor(
     @InjectRepository(ServicosVendaRepository)
     private servicosVendaRepository: ServicosVendaRepository,
+    private produtosService: ProdutosService,
+    private produtosServicoService: ProdutosServicoService,
   ) {}
 
   async findServicosVenda(
@@ -39,6 +44,29 @@ export class ServicosVendaService {
     const servicosExcluidos = [];
 
     for (const servico of servicos) {
+      const paramsProdutoServico: FindProdutosServicoQueryDto = {
+        servicoId: servico,
+        sort: undefined,
+        page: 1,
+        limit: 100,
+      };
+
+      const produtosServico =
+        await this.produtosServicoService.findProdutosServico(
+          paramsProdutoServico,
+          String(empresaId),
+        );
+
+      for (const item of produtosServico) {
+        const produto = await this.produtosService.findProdutoById(
+          Number(item.id),
+        );
+
+        produto.estoque = Number(produto.estoque) + Number(item.quantidade);
+
+        await produto.save();
+      }
+
       const servicoVenda = await this.servicosVendaRepository.findOne({
         where: {
           servicoId: servico,

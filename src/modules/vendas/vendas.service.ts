@@ -109,8 +109,62 @@ export class VendasService {
       throw new NotFoundException('Venda já cancelada');
     }
 
+    await this.estornoEstoqueProdutoVenda(Number(venda.id), String(empresa.id));
+    await this.estornoEstoqueProdutoServicoVenda(
+      Number(venda.id),
+      String(empresa.id),
+    );
+
+    venda.status = StatusVenda.CANCELADA;
+    return await venda.save();
+  }
+
+  async estornoEstoqueProdutoServicoVenda(vendaId: number, empresaId: string) {
+    const params: FindServicosVendasQueryDto = {
+      vendaId: vendaId,
+      sort: undefined,
+      page: 1,
+      limit: 100,
+    };
+
+    const servicosVenda = await this.servicosVendaService.findServicosVenda(
+      params,
+      empresaId,
+    );
+
+    if (servicosVenda.length > 0) {
+      for (const servico of servicosVenda) {
+        const paramsProdutoServico: FindProdutosServicoQueryDto = {
+          servicoId: servico,
+          sort: undefined,
+          page: 1,
+          limit: 100,
+        };
+
+        const produtosServico =
+          await this.produtosServicoService.findProdutosServico(
+            paramsProdutoServico,
+            empresaId,
+          );
+
+        for (const item of produtosServico) {
+          const produto = await this.produtosService.findProdutoById(
+            Number(item.id),
+          );
+
+          produto.estoque = Number(produto.estoque) + Number(item.quantidade);
+
+          await produto.save();
+        }
+      }
+    }
+
+    return;
+  }
+
+  async estornoEstoqueProdutoVenda(vendaId: number, empresaId: string) {
     const params: FindProdutosVendasQueryDto = {
-      vendaId: Number(venda.id),
+      vendaId: vendaId,
       sort: undefined,
       page: 1,
       limit: 100,
@@ -118,7 +172,7 @@ export class VendasService {
 
     const produtosVenda = await this.produtosVendaService.findProdutosVenda(
       params,
-      String(empresa.id),
+      empresaId,
     );
 
     if (produtosVenda.length > 0) {
@@ -134,8 +188,7 @@ export class VendasService {
       }
     }
 
-    venda.status = StatusVenda.CANCELADA;
-    return await venda.save();
+    return;
   }
 
   async adicionaProdutoVenda(

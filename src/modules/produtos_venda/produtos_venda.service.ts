@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ProdutosService } from '../produtos/produtos.service';
 import { ProdutoVendaDto } from './dto/create-produto-venda-dto';
 import { FindProdutosVendasQueryDto } from './dto/find-produtos-venda-dto';
 import { ProdutosVenda } from './produtos_venda.entity';
@@ -10,6 +11,7 @@ export class ProdutosVendaService {
   constructor(
     @InjectRepository(ProdutosVendaRepository)
     private produtosVendaRepository: ProdutosVendaRepository,
+    private produtoService: ProdutosService,
   ) {}
 
   async findProdutosVenda(
@@ -38,14 +40,23 @@ export class ProdutosVendaService {
   ) {
     const produtosExcluidos = [];
 
-    for (const produto of produtos) {
+    for (const item of produtos) {
       const produtoVenda = await this.produtosVendaRepository.findOne({
         where: {
-          produtoId: produto,
+          produtoId: item,
           venda: vendaId,
           empresaId: empresaId,
         },
       });
+
+      const produto = await this.produtoService.findProdutoById(
+        Number(produtoVenda.produto),
+      );
+
+      produto.estoque =
+        Number(produto.estoque) + Number(produtoVenda.quantidade);
+
+      await produto.save();
 
       if (produtoVenda) {
         produtosExcluidos.push(produtoVenda.id);
