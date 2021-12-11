@@ -2,7 +2,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
 import { Clientes } from 'src/modules/clientes/clientes.entity';
 import { Servicos } from 'src/modules/servicos/servicos.entity';
-
 export class UpdateVendaDto {
   @IsOptional()
   @ApiProperty({
@@ -27,8 +26,23 @@ export class UpdateVendaDto {
 
   @IsOptional()
   @ApiProperty({
+    description: 'Valor total',
+    type: 'decimal',
+  })
+  valorTotal: number;
+
+  @IsOptional()
+  @ApiProperty({
     description: 'Valor do pagamento',
     type: 'decimal',
   })
   pagamento: number;
+
+  @IsOptional()
+  @ApiProperty({
+    description: 'Valor troco',
+    type: 'decimal',
+    default: 0,
+  })
+  valorTroco: number;
 }

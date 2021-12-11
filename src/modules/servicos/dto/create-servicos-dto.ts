@@ -1,8 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { Empresa } from 'src/modules/empresa/empresa.entity';
-import { Produtos } from 'src/modules/produtos/produtos.entity';
-
 export class CreateServicosDto {
   @IsNotEmpty({
     message: 'Informe um nome para o serviço',
@@ -33,12 +31,6 @@ export class CreateServicosDto {
     type: 'number',
   })
   margemLucro: number;
-
-  @ApiPropertyOptional({
-    description: 'Produtos que podem ser utilizados no serviço',
-    type: 'number',
-  })
-  produtos: Produtos;
 
   @ApiProperty({
     description: 'Empresa vinculada ao item',

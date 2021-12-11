@@ -12,18 +12,22 @@ import {
 } from 'typeorm';
 import { Clientes } from '../clientes/clientes.entity';
 import { Empresa } from '../empresa/empresa.entity';
-import { Produtos } from '../produtos/produtos.entity';
 import { Servicos } from '../servicos/servicos.entity';
 import { Usuario } from '../usuario/usuario.entity';
 import { StatusVenda } from './enum/venda-status-enum';
-
 @Entity()
 export class Vendas extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
   @Column({ nullable: false, type: 'decimal' })
+  valorTotal: number;
+
+  @Column({ nullable: false, type: 'decimal' })
   pagamento: number;
+
+  @Column({ nullable: false, type: 'decimal' })
+  troco: number;
 
   @ManyToOne(() => Clientes, {
     eager: true,

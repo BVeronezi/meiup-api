@@ -7,11 +7,8 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
-  ManyToMany,
-  JoinTable,
 } from 'typeorm';
 import { Empresa } from '../empresa/empresa.entity';
-import { Produtos } from '../produtos/produtos.entity';
 
 @Entity()
 export class Servicos extends BaseEntity {
@@ -35,12 +32,6 @@ export class Servicos extends BaseEntity {
   })
   @JoinColumn()
   empresa: Empresa;
-
-  @ManyToMany(() => Produtos)
-  @JoinTable({
-    name: 'produtos_servicos',
-  })
-  produtosUtilizados: Produtos;
 
   @CreateDateColumn()
   dataCriacao: Date;

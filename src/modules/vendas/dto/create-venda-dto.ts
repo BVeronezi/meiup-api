@@ -38,6 +38,15 @@ export class CreateVendaDto {
   dataVenda: Date;
 
   @IsNotEmpty({
+    message: 'Informe o valor total da venda',
+  })
+  @ApiProperty({
+    description: 'Valor total',
+    type: 'decimal',
+  })
+  valorTotal: number;
+
+  @IsNotEmpty({
     message: 'Informe o valor do pagamento realizado pelo cliente',
   })
   @ApiProperty({
@@ -45,6 +54,16 @@ export class CreateVendaDto {
     type: 'decimal',
   })
   pagamento: number;
+
+  @IsNotEmpty({
+    message: 'Valor do troco',
+  })
+  @ApiProperty({
+    description: 'Valor troco',
+    type: 'decimal',
+    default: 0,
+  })
+  valorTroco: number;
 
   @ApiProperty({
     description: 'Empresa vinculada ao item',
