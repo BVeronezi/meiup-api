@@ -19,11 +19,11 @@ export class UpdateClienteDto {
 
   @IsOptional()
   @ApiPropertyOptional()
-  celular: number;
+  celular: string;
 
   @IsOptional()
   @ApiPropertyOptional()
-  telefone: number;
+  telefone: string;
 
   @IsOptional()
   @ApiPropertyOptional()

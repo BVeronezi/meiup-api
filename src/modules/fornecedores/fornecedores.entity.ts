@@ -23,14 +23,14 @@ export class Fornecedores extends BaseEntity {
   @Column({ nullable: true, type: 'varchar', length: 200 })
   email: string;
 
-  @Column({ nullable: false, type: 'integer' })
-  cpfCnpj: number;
+  @Column({ nullable: false, type: 'varchar' })
+  cpfCnpj: string;
 
-  @Column({ nullable: true, type: 'integer' })
-  celular: number;
+  @Column({ nullable: true, type: 'varchar' })
+  celular: string;
 
-  @Column({ nullable: true, type: 'integer' })
-  telefone: number;
+  @Column({ nullable: true, type: 'varchar' })
+  telefone: string;
 
   @Column({ nullable: true, type: 'varchar' })
   situacaoCadastral: string;

@@ -35,16 +35,16 @@ export class CreateClienteDto {
   dataNascimento: Date;
 
   @ApiPropertyOptional({
-    type: 'number',
+    type: 'string',
     description: 'Celular para cadastro no sistema',
   })
-  celular?: number;
+  celular?: string;
 
   @ApiPropertyOptional({
     type: 'number',
     description: 'Telefone para cadastro no sistema',
   })
-  telefone?: number;
+  telefone?: string;
 
   @ApiProperty({
     description: 'Empresa vinculada ao usuário',

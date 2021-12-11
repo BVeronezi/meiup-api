@@ -50,12 +50,8 @@ export class FornecedoresService {
         email: updateFornecedorDto.email,
         cpfCnpj: updateFornecedorDto.cpfCnpj,
         situacaoCadastral: updateFornecedorDto.situacaoCadastral,
-        celular: updateFornecedorDto.celular
-          ? Number(updateFornecedorDto.celular)
-          : 0,
-        telefone: updateFornecedorDto.telefone
-          ? Number(updateFornecedorDto.telefone)
-          : 0,
+        celular: updateFornecedorDto.celular,
+        telefone: updateFornecedorDto.telefone,
       },
     );
 
@@ -72,7 +68,7 @@ export class FornecedoresService {
     }
   }
 
-  async deleteForneceor(fornecedorId: number) {
+  async deleteFornecedor(fornecedorId: number) {
     const result = await this.fornecedoresRepository.delete({
       id: String(fornecedorId),
     });

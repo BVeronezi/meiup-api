@@ -36,9 +36,9 @@ export class CreateFornecedorDto {
   })
   @ApiProperty({
     description: 'CPF/CNPJ para cadastro no sistema',
-    type: 'number',
+    type: 'string',
   })
-  cpfCnpj: number;
+  cpfCnpj: string;
 
   @ApiPropertyOptional({
     description: 'Situação cadastral do fornecedor junto a Receita Federal',
@@ -47,16 +47,16 @@ export class CreateFornecedorDto {
   situacaoCadastral: string;
 
   @ApiPropertyOptional({
-    type: 'number',
+    type: 'string',
     description: 'Celular para cadastro no sistema',
   })
-  celular?: number;
+  celular?: string;
 
   @ApiPropertyOptional({
-    type: 'number',
+    type: 'string',
     description: 'Telefone para cadastro no sistema',
   })
-  telefone?: number;
+  telefone?: string;
 
   @ApiProperty({
     description: 'Empresa vinculada ao usuário',

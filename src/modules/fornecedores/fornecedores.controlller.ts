@@ -93,7 +93,7 @@ export class FornecedoresController {
   @Role(UserRole.MEI)
   @Role(UserRole.ADMIN)
   async deleteFornecedor(@Param('id') id: number) {
-    await this.fornecedoresService.deleteForneceor(id);
+    await this.fornecedoresService.deleteFornecedor(id);
     return {
       message: 'Fornecedor removido com sucesso',
     };

@@ -23,11 +23,11 @@ export class Clientes extends BaseEntity {
   @Column({ nullable: false, type: 'varchar', length: 200 })
   email: string;
 
-  @Column({ nullable: true, type: 'integer' })
-  celular: number;
+  @Column({ nullable: true, type: 'varchar' })
+  celular: string;
 
-  @Column({ nullable: true, type: 'integer' })
-  telefone: number;
+  @Column({ nullable: true, type: 'varchar' })
+  telefone: string;
 
   @Column({ nullable: true })
   dataNascimento: Date;

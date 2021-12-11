@@ -19,7 +19,7 @@ export class UpdateFornecedorDto {
 
   @IsOptional()
   @ApiProperty()
-  cpfCnpj: number;
+  cpfCnpj: string;
 
   @IsOptional()
   @ApiProperty()
@@ -27,11 +27,11 @@ export class UpdateFornecedorDto {
 
   @IsOptional()
   @ApiPropertyOptional()
-  celular: number;
+  celular: string;
 
   @IsOptional()
   @ApiPropertyOptional()
-  telefone: number;
+  telefone: string;
 
   @ApiPropertyOptional({
     description: 'Endereco vinculado ao usuário',

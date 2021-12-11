@@ -44,12 +44,8 @@ export class ClientesService {
       {
         nome: updateClienteDto.nome,
         email: updateClienteDto.email,
-        celular: updateClienteDto.celular
-          ? Number(updateClienteDto.celular)
-          : 0,
-        telefone: updateClienteDto.telefone
-          ? Number(updateClienteDto.telefone)
-          : 0,
+        celular: updateClienteDto.celular,
+        telefone: updateClienteDto.telefone,
         dataNascimento: updateClienteDto.dataNascimento,
       },
     );
