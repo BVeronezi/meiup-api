@@ -4,6 +4,7 @@ import { Clientes } from 'src/modules/clientes/clientes.entity';
 import { Empresa } from 'src/modules/empresa/empresa.entity';
 import { Produtos } from 'src/modules/produtos/produtos.entity';
 import { Servicos } from 'src/modules/servicos/servicos.entity';
+import { Usuario } from 'src/modules/usuario/usuario.entity';
 
 export class CreateVendaDto {
   @IsNotEmpty({
@@ -17,13 +18,13 @@ export class CreateVendaDto {
 
   @ApiPropertyOptional({
     description: 'Produtos vendidos',
-    type: [Number],
+    type: [{}],
   })
-  produtos: Produtos[];
+  produtos: [{ id: number; quantidade: number }];
 
   @ApiPropertyOptional({
     description: 'Serviços realizados',
-    type: [Number],
+    type: [{}],
   })
   servicos: Servicos[];
 
@@ -49,4 +50,9 @@ export class CreateVendaDto {
     description: 'Empresa vinculada ao item',
   })
   empresa: Empresa;
+
+  @ApiProperty({
+    description: 'Usuario que criou a venda',
+  })
+  usuario: Usuario;
 }

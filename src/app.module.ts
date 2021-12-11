@@ -19,6 +19,7 @@ import { ServicosModule } from './modules/servicos/servicos.module';
 import { VendasModule } from './modules/vendas/vendas.module';
 import { PromocoesModule } from './modules/promocoes/promocoes.module';
 import { AgendaModule } from './modules/agenda/agenda.module';
+import { ProdutosVendaModule } from './modules/produtos_venda/produtos_venda.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { AgendaModule } from './modules/agenda/agenda.module';
     VendasModule,
     PromocoesModule,
     AgendaModule,
+    ProdutosVendaModule,
   ],
   controllers: [],
   providers: [],

@@ -15,6 +15,7 @@ import { Empresa } from '../empresa/empresa.entity';
 import { Produtos } from '../produtos/produtos.entity';
 import { Servicos } from '../servicos/servicos.entity';
 import { Usuario } from '../usuario/usuario.entity';
+import { StatusVenda } from './enum/venda-status-enum';
 
 @Entity()
 export class Vendas extends BaseEntity {
@@ -30,12 +31,6 @@ export class Vendas extends BaseEntity {
   @JoinColumn()
   cliente: Clientes;
 
-  @ManyToMany(() => Produtos)
-  @JoinTable({
-    name: 'produtos_venda',
-  })
-  produtos: Produtos[];
-
   @ManyToMany(() => Servicos)
   @JoinTable({
     name: 'servicos_venda',
@@ -44,6 +39,9 @@ export class Vendas extends BaseEntity {
 
   @Column({ nullable: false, type: 'date' })
   dataVenda: Date;
+
+  @Column({ nullable: false, type: 'integer', default: 0 })
+  status: StatusVenda;
 
   @ManyToOne(() => Empresa, {
     eager: true,
@@ -56,4 +54,10 @@ export class Vendas extends BaseEntity {
 
   @UpdateDateColumn()
   dataAlteracao: Date;
+
+  @ManyToOne(() => Usuario, {
+    eager: true,
+  })
+  @JoinColumn()
+  usuario: Usuario;
 }
