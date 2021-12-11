@@ -2,8 +2,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { Clientes } from 'src/modules/clientes/clientes.entity';
 import { Empresa } from 'src/modules/empresa/empresa.entity';
-import { Produtos } from 'src/modules/produtos/produtos.entity';
-import { Servicos } from 'src/modules/servicos/servicos.entity';
 import { Usuario } from 'src/modules/usuario/usuario.entity';
 
 export class CreateVendaDto {
@@ -26,7 +24,7 @@ export class CreateVendaDto {
     description: 'Serviços realizados',
     type: [{}],
   })
-  servicos: Servicos[];
+  servicos: [{ id: number }];
 
   @IsNotEmpty({
     message: 'Informe qual a data da venda',

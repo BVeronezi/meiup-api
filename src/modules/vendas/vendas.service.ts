@@ -8,6 +8,8 @@ import { ProdutosServicoService } from '../produtos_servico/produtos_servico.ser
 import { FindProdutosVendasQueryDto } from '../produtos_venda/dto/find-produtos-venda-dto';
 import { ProdutosVendaService } from '../produtos_venda/produtos_venda.service';
 import { ServicosService } from '../servicos/servicos.service';
+import { FindServicosVendasQueryDto } from '../servicos_venda/dto/find-servicos-venda-dto';
+import { ServicosVendaService } from '../servicos_venda/servicos_venda.service';
 import { CreateVendaDto } from './dto/create-venda-dto';
 import { FindVendasQueryDto } from './dto/find-vendas-query-dto';
 import { UpdateVendaDto } from './dto/update-venda-dto';
@@ -21,6 +23,7 @@ export class VendasService {
     private vendasRepository: VendasRepository,
     private clienteService: ClientesService,
     private produtosVendaService: ProdutosVendaService,
+    private servicosVendaService: ServicosVendaService,
     private produtosService: ProdutosService,
     private produtosServicoService: ProdutosServicoService,
     private servicoService: ServicosService,
@@ -187,41 +190,81 @@ export class VendasService {
     }
   }
 
-  async baixaEstoqueProdutoServico(
-    createVendaDto: CreateVendaDto,
+  async adicionaServicoVenda(
+    arrServicos: [{ id: number }],
+    venda: Vendas,
     empresa: Empresa,
   ) {
-    const servicosVenda = [];
-    for (const servicoId of createVendaDto.servicos) {
-      const servico = await this.servicoService.findServicoById(
-        Number(servicoId),
+    if (
+      venda.status == StatusVenda.CANCELADA ||
+      venda.status == StatusVenda.FINALIZADA
+    ) {
+      throw new NotFoundException(
+        'Venda não está aberta para realizar alterações!',
       );
-
-      const params: FindProdutosServicoQueryDto = {
-        servicoId: Number(servico.id),
-        sort: undefined,
-        page: 1,
-        limit: 100,
-      };
-
-      const produtosServico =
-        await this.produtosServicoService.findProdutosServico(
-          params,
-          empresa.id,
-        );
-
-      for (const item of produtosServico) {
-        const produto = await this.produtosService.findProdutoById(
-          Number(item.id),
-        );
-
-        produto.estoque = Number(produto.estoque) - Number(item.quantidade);
-
-        await produto.save();
-      }
     }
 
-    return (createVendaDto.servicos = servicosVenda);
+    const params: FindServicosVendasQueryDto = {
+      vendaId: Number(venda.id),
+      sort: undefined,
+      page: 1,
+      limit: 100,
+    };
+
+    const servicosVenda = await this.servicosVendaService.findServicosVenda(
+      params,
+      String(empresa.id),
+    );
+
+    const arrNovosServicos = arrServicos.filter(
+      (p) => !servicosVenda.map((p) => p.servicoId).includes(p),
+    );
+
+    for (const item of arrNovosServicos) {
+      if (arrNovosServicos.includes(item)) {
+        const servico = await this.servicoService.findServicoById(Number(item));
+
+        await this.baixaEstoqueProdutoServico(
+          Number(servico.id),
+          String(empresa.id),
+        );
+
+        const params = {
+          servico: servico,
+          venda: venda,
+          empresa: empresa,
+        };
+
+        await this.servicosVendaService.createServicoVenda(params);
+      }
+    }
+  }
+
+  async baixaEstoqueProdutoServico(servicoId: number, empresaId: string) {
+    const paramsProdutoServico: FindProdutosServicoQueryDto = {
+      servicoId: servicoId,
+      sort: undefined,
+      page: 1,
+      limit: 100,
+    };
+
+    const produtosServico =
+      await this.produtosServicoService.findProdutosServico(
+        paramsProdutoServico,
+        empresaId,
+      );
+
+    for (const item of produtosServico) {
+      const produto = await this.produtosService.findProdutoById(
+        Number(item.id),
+      );
+
+      produto.estoque = Number(produto.estoque) - Number(item.quantidade);
+
+      await produto.save();
+    }
+
+    return;
   }
 
   async findVendas(

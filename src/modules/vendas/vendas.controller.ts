@@ -15,7 +15,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
-import { FindProdutosServicoQueryDto } from '../produtos_servico/dto/find-produtos-servico-dto';
 import { ProdutosVendaService } from '../produtos_venda/produtos_venda.service';
 import { ServicosService } from '../servicos/servicos.service';
 import { Usuario } from '../usuario/usuario.entity';
@@ -119,12 +118,12 @@ export class VendasController {
 
       return {
         venda,
-        message: 'Produtos adicionados com sucesso na venda',
+        message: 'Produto(s) adicionado(s) com sucesso na venda',
       };
     }
   }
 
-  @Post('/produtoServico/:vendaId')
+  @Post('/servicoVenda/:vendaId')
   @ApiOperation({ summary: 'Adiciona serviço na venda por id' })
   async adicionaProdutoServico(
     @Body(ValidationPipe) updateVendaDto: UpdateVendaDto,
@@ -134,9 +133,15 @@ export class VendasController {
     if (updateVendaDto.produtos.length > 0) {
       const venda = await this.vendasService.findVendaById(vendaId);
 
+      await this.vendasService.adicionaServicoVenda(
+        updateVendaDto.produtos,
+        venda,
+        empresa,
+      );
+
       return {
         venda,
-        message: 'Produtos adicionados com sucesso na venda',
+        message: 'Serviço(s) adicionado(s) com sucesso na venda',
       };
     }
   }
@@ -151,14 +156,15 @@ export class VendasController {
     createVendaDto.empresa = empresa;
     createVendaDto.usuario = usuario;
 
+    const venda = await this.vendasService.createVenda(createVendaDto);
+
     if (createVendaDto.servicos?.length > 0) {
-      await this.vendasService.baixaEstoqueProdutoServico(
-        createVendaDto,
+      await this.vendasService.adicionaServicoVenda(
+        createVendaDto.servicos,
+        venda,
         empresa,
       );
     }
-
-    const venda = await this.vendasService.createVenda(createVendaDto);
 
     if (createVendaDto.produtos?.length > 0) {
       await this.vendasService.adicionaProdutoVenda(
