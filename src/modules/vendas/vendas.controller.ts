@@ -15,6 +15,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
+import { FindProdutosServicoQueryDto } from '../produtos_servico/dto/find-produtos-servico-dto';
 import { ProdutosVendaService } from '../produtos_venda/produtos_venda.service';
 import { ServicosService } from '../servicos/servicos.service';
 import { Usuario } from '../usuario/usuario.entity';
@@ -123,6 +124,23 @@ export class VendasController {
     }
   }
 
+  @Post('/produtoServico/:vendaId')
+  @ApiOperation({ summary: 'Adiciona serviço na venda por id' })
+  async adicionaProdutoServico(
+    @Body(ValidationPipe) updateVendaDto: UpdateVendaDto,
+    @User('empresa') empresa: Empresa,
+    @Param('vendaId') vendaId: number,
+  ) {
+    if (updateVendaDto.produtos.length > 0) {
+      const venda = await this.vendasService.findVendaById(vendaId);
+
+      return {
+        venda,
+        message: 'Produtos adicionados com sucesso na venda',
+      };
+    }
+  }
+
   @Post()
   @ApiOperation({ summary: 'Cria venda' })
   async createVenda(
@@ -134,16 +152,10 @@ export class VendasController {
     createVendaDto.usuario = usuario;
 
     if (createVendaDto.servicos?.length > 0) {
-      const servicosVenda = [];
-      for (const servicoId of createVendaDto.servicos) {
-        const servico = await this.servicoService.findServicoById(
-          Number(servicoId),
-        );
-
-        servicosVenda.push(servico);
-      }
-
-      createVendaDto.servicos = servicosVenda;
+      await this.vendasService.baixaEstoqueProdutoServico(
+        createVendaDto,
+        empresa,
+      );
     }
 
     const venda = await this.vendasService.createVenda(createVendaDto);

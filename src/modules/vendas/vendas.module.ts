@@ -3,6 +3,7 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientesModule } from '../clientes/clientes.module';
 import { ProdutosModule } from '../produtos/produtos.module';
+import { ProdutosServicoModule } from '../produtos_servico/produtos_servico.module';
 import { ProdutosVendaModule } from '../produtos_venda/produtos_venda.module';
 import { ServicosModule } from '../servicos/servicos.module';
 import { VendasController } from './vendas.controller';
@@ -17,6 +18,7 @@ import { VendasService } from './vendas.service';
     ProdutosModule,
     ClientesModule,
     ProdutosVendaModule,
+    ProdutosServicoModule,
   ],
   controllers: [VendasController],
   providers: [VendasService],

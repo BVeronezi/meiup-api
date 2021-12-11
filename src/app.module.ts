@@ -21,6 +21,7 @@ import { PromocoesModule } from './modules/promocoes/promocoes.module';
 import { AgendaModule } from './modules/agenda/agenda.module';
 import { ProdutosVendaModule } from './modules/produtos_venda/produtos_venda.module';
 import { ProdutosServicoModule } from './modules/produtos_servico/produtos_servico.module';
+import { ServicosVendaModule } from './modules/servicos_venda/servicos_venda.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { ProdutosServicoModule } from './modules/produtos_servico/produtos_servi
     AgendaModule,
     ProdutosVendaModule,
     ProdutosServicoModule,
+    ServicosVendaModule,
   ],
   controllers: [],
   providers: [],
