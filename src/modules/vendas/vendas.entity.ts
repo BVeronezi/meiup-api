@@ -23,7 +23,7 @@ export class Vendas extends BaseEntity {
   @Column({ nullable: false, type: 'decimal' })
   pagamento: number;
 
-  @Column({ nullable: false, type: 'decimal' })
+  @Column({ nullable: false, type: 'decimal', default: 0 })
   troco: number;
 
   @ManyToOne(() => Clientes, {

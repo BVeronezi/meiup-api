@@ -93,7 +93,7 @@ export class VendasController {
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Atualiza o cliente e pagamento da venda por id' })
+  @ApiOperation({ summary: 'Atualiza o cliente e valores da venda por id' })
   async updateVenda(
     @Body(ValidationPipe) updateVendaDto: UpdateVendaDto,
     @Param('id') id: string,

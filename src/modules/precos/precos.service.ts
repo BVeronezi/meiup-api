@@ -24,6 +24,16 @@ export class PrecosService {
     id: string,
   ): Promise<Precos> {
     if (id) {
+      if (
+        createPrecosDto.precoVendaVarejo &&
+        createPrecosDto.precoCompra &&
+        createPrecosDto.margemLucro == 0
+      ) {
+        createPrecosDto.margemLucro =
+          Number(createPrecosDto.precoVendaVarejo) -
+          Number(createPrecosDto.precoCompra);
+      }
+
       const result = await this.precosRepository.update(
         { id },
         createPrecosDto,

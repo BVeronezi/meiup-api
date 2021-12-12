@@ -53,9 +53,6 @@ export class CreateVendaDto {
   })
   pagamento: number;
 
-  @IsNotEmpty({
-    message: 'Valor do troco',
-  })
   @ApiProperty({
     description: 'Valor troco',
     type: 'decimal',

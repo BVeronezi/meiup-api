@@ -45,7 +45,7 @@ export class Produtos extends BaseEntity {
   @Column({ nullable: true, type: 'decimal' })
   estoqueMinimo: number;
 
-  @OneToOne(() => Precos, (precos) => precos.produto, {
+  @OneToOne(() => Precos, {
     eager: true,
     cascade: true,
     onDelete: 'CASCADE',

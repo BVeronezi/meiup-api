@@ -49,16 +49,21 @@ export class ProdutosService {
       const fornecedoresCadastrados = [];
       const precoId = produto.precos ? produto.precos.id : null;
 
-      const precos = await this.precosService.updateOrCreatePrecos(
-        updateProdutoDto.precos,
-        precoId,
-      );
+      if (updateProdutoDto.precos) {
+        const precos = await this.precosService.updateOrCreatePrecos(
+          updateProdutoDto.precos,
+          precoId,
+        );
 
-      for (const fornecedorCadastrado of produto.fornecedoresProduto) {
-        fornecedoresCadastrados.push(fornecedorCadastrado.id);
+        produto.precos = precos;
+        await produto.save();
       }
 
       if (updateProdutoDto.fornecedoresProduto.length > 0) {
+        for (const fornecedorCadastrado of produto.fornecedoresProduto) {
+          fornecedoresCadastrados.push(fornecedorCadastrado.id);
+        }
+
         for (const idFornecedor of updateProdutoDto.fornecedoresProduto) {
           const fornecedorJaCadastrado = fornecedoresCadastrados.filter(
             (f) => f !== idFornecedor,
@@ -75,7 +80,6 @@ export class ProdutosService {
         }
 
         produto.fornecedoresProduto = fornecedoresProduto;
-
         await produto.save();
       }
 
@@ -92,8 +96,6 @@ export class ProdutosService {
             estoqueMaximo: updateProdutoDto.estoqueMaximo ?? 0,
           },
         );
-
-        produto.precos = precos;
       } catch (error) {
         throw new Error(error.message);
       }
@@ -140,13 +142,14 @@ export class ProdutosService {
   }
 
   async deleteProduto(produtoId: number) {
-    const result = await this.produtosRepository.delete({
+    const produto = await this.findProdutoById(produtoId);
+
+    if (produto.precos) {
+      await this.precosService.deletePreco(produto.precos.id);
+    }
+
+    await this.produtosRepository.delete({
       id: String(produtoId),
     });
-    if (result.affected === 0) {
-      throw new NotFoundException(
-        'Não foi encontrado produto com o ID informado',
-      );
-    }
   }
 }

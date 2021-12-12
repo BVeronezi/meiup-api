@@ -67,7 +67,9 @@ export class VendasService {
         await this.vendasRepository.update(
           { id },
           {
+            valorTotal: updateVendaDto.valorTotal,
             pagamento: updateVendaDto.pagamento,
+            troco: updateVendaDto.valorTroco,
           },
         );
       } catch (error) {

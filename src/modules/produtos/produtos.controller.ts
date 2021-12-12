@@ -127,14 +127,16 @@ export class ProdutosController {
     @Body(ValidationPipe) updateProdutoDto: UpdateProdutoDto,
     @Param('id') id: string,
   ) {
-    const idCategoria = Number(updateProdutoDto.categoria);
+    if (updateProdutoDto.categoria) {
+      const idCategoria = Number(updateProdutoDto.categoria);
 
-    const categoria = await this.categoriasService.findCategoriaById(
-      idCategoria,
-    );
+      const categoria = await this.categoriasService.findCategoriaById(
+        idCategoria,
+      );
 
-    if (!categoria) {
-      throw new Error('Categoria não cadastrada');
+      if (!categoria) {
+        throw new Error('Categoria não cadastrada');
+      }
     }
 
     return this.produtosService.updateProduto(updateProdutoDto, id);
@@ -146,6 +148,7 @@ export class ProdutosController {
   @Role(UserRole.ADMIN)
   async deleteProduto(@Param('id') id: number) {
     await this.produtosService.deleteProduto(id);
+
     return {
       message: 'Produto removido com sucesso',
     };

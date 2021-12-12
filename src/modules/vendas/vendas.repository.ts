@@ -36,12 +36,22 @@ export class VendasRepository extends Repository<Vendas> {
   }
 
   async createVenda(createVendaDto: CreateVendaDto): Promise<Vendas> {
-    const { cliente, dataVenda, pagamento, empresa, usuario } = createVendaDto;
+    const {
+      cliente,
+      dataVenda,
+      valorTotal,
+      pagamento,
+      valorTroco,
+      empresa,
+      usuario,
+    } = createVendaDto;
 
     const venda = this.create();
     venda.cliente = cliente;
     venda.dataVenda = dataVenda;
+    venda.valorTotal = valorTotal;
     venda.pagamento = pagamento;
+    venda.troco = valorTroco;
     venda.empresa = empresa;
     venda.usuario = usuario;
 
