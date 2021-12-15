@@ -26,7 +26,7 @@ export class UsuarioService {
     return await this.userRepository.creteUserSocial(profile, token);
   }
 
-  async findUserById(userId: number): Promise<Usuario> {
+  async findUserById(userId: string): Promise<Usuario> {
     const user = await this.userRepository.findOne(userId, {
       select: ['email', 'nome', 'role', 'id'],
     });
@@ -58,7 +58,7 @@ export class UsuarioService {
     );
 
     if (result.affected > 0) {
-      const user = await this.findUserById(Number(id));
+      const user = await this.findUserById(id);
 
       if (updateUserDto.endereco) {
         this.endereco(updateUserDto, user);
