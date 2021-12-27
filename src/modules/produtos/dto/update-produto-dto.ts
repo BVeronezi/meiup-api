@@ -22,10 +22,11 @@ export class UpdateProdutoDto {
 
   @IsOptional()
   @ApiProperty({
-    description: 'Unidade para cadastro no sistema: Quilograma;Caixa;Fardo',
-    type: 'string',
+    description:
+      'Unidade para cadastro no sistema: 1 - Quilograma ;2 - Caixa; 3 - Fardo',
+    type: 'number',
   })
-  unidade: string;
+  unidade: number;
 
   @IsOptional()
   @ApiProperty({

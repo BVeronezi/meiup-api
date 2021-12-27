@@ -26,8 +26,8 @@ export class Produtos extends BaseEntity {
   @Column({ nullable: true, type: 'integer' })
   tipoItem: number;
 
-  @Column({ nullable: true, type: 'varchar' })
-  unidade: string;
+  @Column({ nullable: true, type: 'integer' })
+  unidade: number;
 
   @ManyToOne(() => Categorias, {
     cascade: false,

@@ -78,12 +78,10 @@ export class ProdutosController {
       idCategoria,
     );
 
-    if (!categoria) {
-      throw new Error('Categoria não cadastrada');
-    }
-
+    createProdutoDto.categoria = categoria;
     createProdutoDto.empresa = empresa;
-    if (createProdutoDto.fornecedoresProduto.length > 0) {
+
+    if (createProdutoDto.fornecedoresProduto?.length > 0) {
       const fornecedoresProduto = [];
 
       for (const idFornecedor of createProdutoDto.fornecedoresProduto) {
@@ -134,9 +132,7 @@ export class ProdutosController {
         idCategoria,
       );
 
-      if (!categoria) {
-        throw new Error('Categoria não cadastrada');
-      }
+      updateProdutoDto.categoria = categoria;
     }
 
     return this.produtosService.updateProduto(updateProdutoDto, id);

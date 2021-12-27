@@ -29,10 +29,11 @@ export class CreateProdutoDto {
     message: 'Informe a unidade do item',
   })
   @ApiProperty({
-    description: 'Unidade para cadastro no sistema: Quilograma;Caixa;Fardo',
-    type: 'string',
+    description:
+      'Unidade para cadastro no sistema: 1 - Quilograma; 2 - Caixa; 3 - Fardo',
+    type: 'number',
   })
-  unidade: string;
+  unidade: number;
 
   @IsNotEmpty({
     message: 'Informe a categoria',

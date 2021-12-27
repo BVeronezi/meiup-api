@@ -10,7 +10,7 @@ export class ProdutosRepository extends Repository<Produtos> {
     empresaId: string,
   ): Promise<{ produtos: Produtos[]; total: number }> {
     queryDto.page = queryDto.page < 1 ? 1 : queryDto.page ?? 1;
-    queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit ?? 100;
+    queryDto.limit = queryDto.limit > 10 ? 10 : queryDto.limit ?? 10;
 
     const { descricao } = queryDto;
     const query = this.createQueryBuilder('produtos');
@@ -25,10 +25,12 @@ export class ProdutosRepository extends Repository<Produtos> {
       });
     }
 
-    query.skip((queryDto.page - 1) * queryDto.limit);
+    query.skip((Number(queryDto.page) - 1) * queryDto.limit);
     query.take(+queryDto.limit);
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
-    query.select(['produtos.id', 'produtos.descricao']);
+    query.select(['produtos.id', 'produtos.descricao', 'categoria', 'precos']);
+    query.leftJoin('produtos.categoria', 'categoria');
+    query.leftJoin('produtos.precos', 'precos');
 
     const [produtos, total] = await query.getManyAndCount();
 

@@ -59,7 +59,7 @@ export class ProdutosService {
         await produto.save();
       }
 
-      if (updateProdutoDto.fornecedoresProduto.length > 0) {
+      if (updateProdutoDto.fornecedoresProduto?.length > 0) {
         for (const fornecedorCadastrado of produto.fornecedoresProduto) {
           fornecedoresCadastrados.push(fornecedorCadastrado.id);
         }
