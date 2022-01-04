@@ -209,6 +209,7 @@ export class VendasService {
       await produto.save();
 
       const params = {
+        id: null,
         produto: produto,
         quantidade: item.quantidade,
         precoUnitario: item.precoUnitario,

@@ -1,9 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Empresa } from 'src/modules/empresa/empresa.entity';
 import { Produtos } from 'src/modules/produtos/produtos.entity';
 import { Vendas } from 'src/modules/vendas/vendas.entity';
+
 export class ProdutoVendaDto {
+  @IsOptional()
+  @ApiProperty({
+    description: 'Id produto venda',
+    type: 'string',
+  })
+  id: string;
+
   @IsNotEmpty({
     message: 'Informe o produto',
   })

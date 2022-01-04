@@ -23,19 +23,19 @@ export class ProdutosVenda extends BaseEntity {
   @JoinColumn()
   produto: Produtos;
 
-  @Column({ nullable: false, default: 0 })
+  @Column({ nullable: false, default: 0, type: 'decimal' })
   quantidade: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'decimal' })
   precoUnitario: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'decimal' })
   outrasDespesas: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'decimal' })
   desconto: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'decimal' })
   valorTotal: number;
 
   @ManyToOne(() => Vendas, {

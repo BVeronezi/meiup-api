@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProdutosService } from '../produtos/produtos.service';
-import { ProdutoVendaDto } from './dto/create-produto-venda-dto';
 import { FindProdutosVendasQueryDto } from './dto/find-produtos-venda-dto';
+import { ProdutoVendaDto } from './dto/produto-venda-dto';
 import { ProdutosVenda } from './produtos_venda.entity';
 import { ProdutosVendaRepository } from './produtos_venda.repository';
 
@@ -41,6 +41,14 @@ export class ProdutosVendaService {
   ): Promise<ProdutosVenda> {
     return await this.produtosVendaRepository.createProdutoVenda(
       createProdutoVendaDto,
+    );
+  }
+
+  async updateProdutoVenda(
+    updateProdutoVendaDto: ProdutoVendaDto,
+  ): Promise<ProdutosVenda> {
+    return await this.produtosVendaRepository.updateProdutoVenda(
+      updateProdutoVendaDto,
     );
   }
 

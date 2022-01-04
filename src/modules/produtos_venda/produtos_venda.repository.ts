@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { ProdutoVendaDto } from './dto/create-produto-venda-dto';
 import { FindProdutosVendasQueryDto } from './dto/find-produtos-venda-dto';
+import { ProdutoVendaDto } from './dto/produto-venda-dto';
 import { ProdutosVenda } from './produtos_venda.entity';
 
 @EntityRepository(ProdutosVenda)
@@ -42,11 +42,24 @@ export class ProdutosVendaRepository extends Repository<ProdutosVenda> {
   async createProdutoVenda(
     createProdutoVendaDto: ProdutoVendaDto,
   ): Promise<ProdutosVenda> {
-    const { produto, quantidade, venda, empresa } = createProdutoVendaDto;
+    const {
+      produto,
+      quantidade,
+      precoUnitario,
+      outrasDespesas,
+      desconto,
+      valorTotal,
+      venda,
+      empresa,
+    } = createProdutoVendaDto;
 
     const produtosVenda = this.create();
     produtosVenda.produto = produto;
-    produtosVenda.quantidade = quantidade;
+    produtosVenda.quantidade = Number(quantidade);
+    produtosVenda.precoUnitario = Number(precoUnitario);
+    produtosVenda.outrasDespesas = Number(outrasDespesas);
+    produtosVenda.desconto = Number(desconto);
+    produtosVenda.valorTotal = +Number(valorTotal);
     produtosVenda.venda = venda;
     produtosVenda.empresa = empresa;
 
@@ -55,5 +68,37 @@ export class ProdutosVendaRepository extends Repository<ProdutosVenda> {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async updateProdutoVenda(
+    updateProdutoVendaDto: ProdutoVendaDto,
+  ): Promise<ProdutosVenda> {
+    const {
+      id,
+      produto,
+      quantidade,
+      precoUnitario,
+      outrasDespesas,
+      desconto,
+      valorTotal,
+    } = updateProdutoVendaDto;
+
+    try {
+      await this.update(
+        { id },
+        {
+          produto,
+          quantidade,
+          precoUnitario,
+          outrasDespesas,
+          desconto,
+          valorTotal,
+        },
+      );
+    } catch (error) {
+      throw new Error(error.message);
+    }
+
+    return;
   }
 }
