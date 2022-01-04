@@ -49,9 +49,6 @@ export class ServicosService {
   ) {
     const params: FindProdutosServicoQueryDto = {
       servicoId: Number(servico.id),
-      sort: undefined,
-      page: 1,
-      limit: 100,
     };
 
     const produtosServico =

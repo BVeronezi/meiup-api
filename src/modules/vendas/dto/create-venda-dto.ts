@@ -3,7 +3,6 @@ import { IsNotEmpty } from 'class-validator';
 import { Clientes } from 'src/modules/clientes/clientes.entity';
 import { Empresa } from 'src/modules/empresa/empresa.entity';
 import { Usuario } from 'src/modules/usuario/usuario.entity';
-
 export class CreateVendaDto {
   @IsNotEmpty({
     message: 'Informe qual o cliente',
@@ -18,13 +17,13 @@ export class CreateVendaDto {
     description: 'Produtos vendidos',
     type: [{}],
   })
-  produtos: [{ id: number; quantidade: number }];
+  produtos: any;
 
   @ApiPropertyOptional({
     description: 'Serviços realizados',
     type: [{}],
   })
-  servicos: [{ id: number }];
+  servicos: any;
 
   @IsNotEmpty({
     message: 'Informe qual a data da venda',
@@ -35,18 +34,12 @@ export class CreateVendaDto {
   })
   dataVenda: Date;
 
-  @IsNotEmpty({
-    message: 'Informe o valor total da venda',
-  })
   @ApiProperty({
     description: 'Valor total',
     type: 'decimal',
   })
   valorTotal: number;
 
-  @IsNotEmpty({
-    message: 'Informe o valor do pagamento realizado pelo cliente',
-  })
   @ApiProperty({
     description: 'Valor do pagamento',
     type: 'decimal',

@@ -3,11 +3,20 @@ import { IsNotEmpty } from 'class-validator';
 
 export class RemoveProdutoVendaDto {
   @IsNotEmpty({
-    message: 'Informe quais produtos serão removidos da venda',
+    message: 'Informe o id do produto que será removido',
   })
   @ApiProperty({
-    description: 'Produtos',
-    type: [Number],
+    description: 'Produto',
+    type: Number,
   })
-  produtos: [number];
+  produto: number;
+
+  @IsNotEmpty({
+    message: 'Informe o id do produto venda que será removido',
+  })
+  @ApiProperty({
+    description: 'ID Produto venda',
+    type: Number,
+  })
+  produtoVenda: number;
 }

@@ -23,8 +23,20 @@ export class ProdutosVenda extends BaseEntity {
   @JoinColumn()
   produto: Produtos;
 
-  @Column({ nullable: true, type: 'integer', default: 0 })
+  @Column({ nullable: false, default: 0 })
   quantidade: number;
+
+  @Column({ nullable: true })
+  precoUnitario: number;
+
+  @Column({ nullable: true })
+  outrasDespesas: number;
+
+  @Column({ nullable: true })
+  desconto: number;
+
+  @Column({ nullable: true })
+  valorTotal: number;
 
   @ManyToOne(() => Vendas, {
     eager: true,

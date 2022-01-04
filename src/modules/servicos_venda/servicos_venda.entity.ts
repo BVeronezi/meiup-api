@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
+  Column,
 } from 'typeorm';
 import { Empresa } from '../empresa/empresa.entity';
 import { Servicos } from '../servicos/servicos.entity';
@@ -21,6 +22,18 @@ export class ServicosVenda extends BaseEntity {
   })
   @JoinColumn()
   servico: Servicos;
+
+  @Column({ nullable: true })
+  precoUnitario: number;
+
+  @Column({ nullable: true })
+  outrasDespesas: number;
+
+  @Column({ nullable: true })
+  desconto: number;
+
+  @Column({ nullable: true })
+  valorTotal: number;
 
   @ManyToOne(() => Vendas, {
     eager: true,

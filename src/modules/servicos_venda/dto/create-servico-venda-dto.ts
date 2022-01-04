@@ -18,10 +18,37 @@ export class ServicoVendaDto {
     message: 'Informe a venda',
   })
   @ApiProperty({
-    description: 'Venda vinculada ao produto',
+    description: 'Venda vinculada ao serviço',
     type: 'number',
   })
   venda: Vendas;
+
+  @IsNotEmpty({
+    message: 'Informe o preço unitário do serviço',
+  })
+  @ApiProperty({
+    description: 'Preço unitário do serviço',
+    type: 'number',
+  })
+  precoUnitario: number;
+
+  @ApiProperty({
+    description: 'Outras despesas do serviço',
+    type: 'number',
+  })
+  outrasDespesas: number;
+
+  @ApiProperty({
+    description: 'Desconto do serviço',
+    type: 'number',
+  })
+  desconto: number;
+
+  @ApiProperty({
+    description: 'Valor total do serviço',
+    type: 'number',
+  })
+  valorTotal: number;
 
   @ApiProperty({
     description: 'Empresa vinculada ao item',

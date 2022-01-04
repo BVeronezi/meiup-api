@@ -17,13 +17,13 @@ export class Vendas extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ nullable: false, type: 'decimal' })
+  @Column({ nullable: true, type: 'decimal' })
   valorTotal: number;
 
-  @Column({ nullable: false, type: 'decimal' })
+  @Column({ nullable: true, type: 'decimal' })
   pagamento: number;
 
-  @Column({ nullable: false, type: 'decimal', default: 0 })
+  @Column({ nullable: true, type: 'decimal', default: 0 })
   troco: number;
 
   @ManyToOne(() => Clientes, {

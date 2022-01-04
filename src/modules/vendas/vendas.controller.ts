@@ -108,20 +108,17 @@ export class VendasController {
     @User('empresa') empresa: Empresa,
     @Param('vendaId') vendaId: number,
   ) {
-    if (updateVendaDto.produtos.length > 0) {
-      const venda = await this.vendasService.findVendaById(vendaId);
+    const venda = await this.vendasService.findVendaById(vendaId);
 
-      await this.vendasService.adicionaProdutoVenda(
-        updateVendaDto.produtos,
-        venda,
-        empresa,
-      );
+    const produtoVenda: any = await this.vendasService.adicionaProdutoVenda(
+      updateVendaDto,
+      venda,
+      empresa,
+    );
 
-      return {
-        venda,
-        message: 'Produto(s) adicionado(s) com sucesso na venda',
-      };
-    }
+    return {
+      produtoVenda: produtoVenda,
+    };
   }
 
   @Post('/servicoVenda/:vendaId')
@@ -181,34 +178,28 @@ export class VendasController {
     };
   }
 
-  @Delete('/produtosVenda/:vendaId')
+  @Delete('/produtoVenda/:vendaId')
   @ApiOperation({ summary: 'Remove produto da venda por id' })
   async removeProdutoVenda(
     @Param('vendaId') vendaId: number,
-    @User('empresa') empresa: Empresa,
     @Body(ValidationPipe) removeProdutoVendaDto: RemoveProdutoVendaDto,
   ) {
-    if (removeProdutoVendaDto.produtos.length > 0) {
-      const venda = await this.vendasService.findVendaById(vendaId);
+    await this.produtosVendaService.deleteProdutoVenda(
+      removeProdutoVendaDto,
+      vendaId,
+    );
 
-      await this.produtosVendaService.deleteProdutoVenda(
-        removeProdutoVendaDto.produtos,
-        Number(venda.id),
-        Number(empresa.id),
-      );
-
-      return {
-        message: 'Produto(s) removido(s) com sucesso da venda',
-      };
-    }
+    return {
+      message: 'Produto removido com sucesso da venda',
+    };
   }
 
   @Delete('/servicosVenda/:vendaId')
   @ApiOperation({ summary: 'Remove servico da venda por id' })
   async removeServicoVenda(
+    @Body(ValidationPipe) removeServicoVendaDto: RemoveServicoVendaDto,
     @Param('vendaId') vendaId: number,
     @User('empresa') empresa: Empresa,
-    @Body(ValidationPipe) removeServicoVendaDto: RemoveServicoVendaDto,
   ) {
     if (removeServicoVendaDto.servicos.length > 0) {
       const venda = await this.vendasService.findVendaById(vendaId);

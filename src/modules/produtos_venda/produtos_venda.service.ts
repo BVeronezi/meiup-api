@@ -17,12 +17,23 @@ export class ProdutosVendaService {
   async findProdutosVenda(
     queryDto: FindProdutosVendasQueryDto,
     empresaId: string,
-  ) {
+  ): Promise<{ produtosVenda: ProdutosVenda[]; total: number }> {
     const produtosVenda = await this.produtosVendaRepository.findProdutosVenda(
       queryDto,
       empresaId,
     );
     return produtosVenda;
+  }
+
+  async findProdutosVendaById(
+    vendaId: number,
+    produtoId: number,
+  ): Promise<ProdutosVenda> {
+    const produtoVenda = await this.produtosVendaRepository.findOne({
+      where: { venda: vendaId, produto: produtoId },
+    });
+
+    return produtoVenda;
   }
 
   async createProdutoVenda(
@@ -33,39 +44,25 @@ export class ProdutosVendaService {
     );
   }
 
-  async deleteProdutoVenda(
-    produtos: [number],
-    vendaId: number,
-    empresaId: number,
-  ) {
-    const produtosExcluidos = [];
+  async deleteProdutoVenda(item: any, vendaId: number) {
+    const resultProdutoVenda = await this.produtosVendaRepository.findOne({
+      where: {
+        id: item.produtoVenda,
+        venda: vendaId,
+      },
+    });
 
-    for (const item of produtos) {
-      const produtoVenda = await this.produtosVendaRepository.findOne({
-        where: {
-          produtoId: item,
-          venda: vendaId,
-          empresaId: empresaId,
-        },
-      });
+    const produto = await this.produtoService.findProdutoById(
+      Number(item.produto.id),
+    );
 
-      const produto = await this.produtoService.findProdutoById(
-        Number(produtoVenda.produto),
-      );
+    produto.estoque =
+      Number(produto.estoque) + Number(resultProdutoVenda.quantidade);
 
-      produto.estoque =
-        Number(produto.estoque) + Number(produtoVenda.quantidade);
+    await produto.save();
 
-      await produto.save();
-
-      if (produtoVenda) {
-        produtosExcluidos.push(produtoVenda.id);
-        await this.produtosVendaRepository.delete({
-          id: String(produtoVenda.id),
-        });
-      }
-    }
-
-    return produtosExcluidos;
+    return await this.produtosVendaRepository.delete({
+      id: String(item.produtoVenda),
+    });
   }
 }

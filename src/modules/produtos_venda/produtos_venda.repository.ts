@@ -8,7 +8,7 @@ export class ProdutosVendaRepository extends Repository<ProdutosVenda> {
   async findProdutosVenda(
     queryDto: FindProdutosVendasQueryDto,
     empresaId: string,
-  ) {
+  ): Promise<{ produtosVenda: ProdutosVenda[]; total: number }> {
     const { vendaId } = queryDto;
     const query = this.createQueryBuilder('produtos_venda');
 
@@ -19,17 +19,24 @@ export class ProdutosVendaRepository extends Repository<ProdutosVenda> {
     query.andWhere('produtos_venda.vendaId = :vendaId', {
       vendaId: vendaId,
     });
+
+    query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
     query.select([
       'produtos_venda.id',
+      'produto',
       'produtos_venda.quantidade',
-      'produtos_venda.produtoId',
+      'produtos_venda.precoUnitario',
+      'produtos_venda.outrasDespesas',
+      'produtos_venda.desconto',
+      'produtos_venda.valorTotal',
       'produtos_venda.vendaId',
       'produtos_venda.empresaId',
     ]);
+    query.leftJoin('produtos_venda.produto', 'produto');
 
-    const produtosVenda = await query.getRawMany();
+    const [produtosVenda, total] = await query.getManyAndCount();
 
-    return produtosVenda;
+    return { produtosVenda, total };
   }
 
   async createProdutoVenda(

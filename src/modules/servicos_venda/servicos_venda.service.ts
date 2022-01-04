@@ -46,9 +46,6 @@ export class ServicosVendaService {
     for (const servico of servicos) {
       const paramsProdutoServico: FindProdutosServicoQueryDto = {
         servicoId: servico,
-        sort: undefined,
-        page: 1,
-        limit: 100,
       };
 
       const produtosServico =

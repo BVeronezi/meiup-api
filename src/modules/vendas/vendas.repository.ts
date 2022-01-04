@@ -9,9 +9,6 @@ export class VendasRepository extends Repository<Vendas> {
     queryDto: FindVendasQueryDto,
     empresaId: string,
   ): Promise<{ vendas: Vendas[]; total: number }> {
-    queryDto.page = queryDto.page < 1 ? 1 : queryDto.page ?? 1;
-    queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit ?? 100;
-
     const { cliente } = queryDto;
     const query = this.createQueryBuilder('vendas');
 
@@ -25,10 +22,23 @@ export class VendasRepository extends Repository<Vendas> {
       });
     }
 
-    query.skip((queryDto.page - 1) * queryDto.limit);
-    query.take(+queryDto.limit);
+    if (queryDto.limit) {
+      query.take(+queryDto.limit);
+    }
+
+    if (queryDto.page) {
+      query.skip((Number(queryDto.page) - 1) * queryDto.limit ?? 10);
+    }
+
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
-    query.select(['vendas.id', 'vendas.cliente', 'vendas.dataVenda']);
+    query.select([
+      'vendas.id',
+      'cliente',
+      'vendas.dataVenda',
+      'vendas.valorTotal',
+      'vendas.status',
+    ]);
+    query.leftJoin('vendas.cliente', 'cliente');
 
     const [vendas, total] = await query.getManyAndCount();
 

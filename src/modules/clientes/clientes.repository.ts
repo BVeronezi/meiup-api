@@ -30,7 +30,13 @@ export class ClientesRepository extends Repository<Clientes> {
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
-    query.select(['clientes.id', 'clientes.nome', 'clientes.email']);
+    query.select([
+      'clientes.id',
+      'clientes.nome',
+      'clientes.celular',
+      'clientes.telefone',
+      'clientes.email',
+    ]);
 
     const [clientes, total] = await query.getManyAndCount();
 
