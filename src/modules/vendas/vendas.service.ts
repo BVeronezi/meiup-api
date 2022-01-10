@@ -200,17 +200,11 @@ export class VendasService {
     );
 
     if (!response) {
-      const produto = await this.produtosService.findProdutoById(
-        Number(item.produto),
-      );
-
-      produto.estoque = Number(produto.estoque) - Number(item.quantidade);
-
-      await produto.save();
+      const produto = await this.baixaEstoqueProdutoVenda(item);
 
       const params = {
         id: null,
-        produto: produto,
+        produto,
         quantidade: item.quantidade,
         precoUnitario: item.precoUnitario,
         outrasDespesas: item.outrasDespesas,
@@ -222,7 +216,30 @@ export class VendasService {
 
       return await this.produtosVendaService.createProdutoVenda(params);
     } else {
-      return false;
+      await this.estornoEstoqueProdutoVenda(
+        Number(venda.id),
+        String(empresa.id),
+      );
+
+      const produto: any = await this.baixaEstoqueProdutoVenda(item);
+
+      const params = {
+        id: String(response.id),
+        produto,
+        quantidade: item.quantidade,
+        precoUnitario: item.precoUnitario,
+        outrasDespesas: item.outrasDespesas,
+        desconto: item.desconto,
+        valorTotal: item.valorTotal,
+        venda: venda,
+        empresa: empresa,
+      };
+
+      try {
+        await this.produtosVendaService.updateProdutoVenda(params);
+      } catch (error) {
+        throw new Error(error.message);
+      }
     }
   }
 
@@ -275,6 +292,16 @@ export class VendasService {
         await this.servicosVendaService.createServicoVenda(params);
       }
     }
+  }
+
+  async baixaEstoqueProdutoVenda(item) {
+    const produto = await this.produtosService.findProdutoById(
+      Number(item.produto),
+    );
+
+    produto.estoque = Number(produto.estoque) - Number(item.quantidade);
+
+    return await produto.save();
   }
 
   async baixaEstoqueProdutoServico(servicoId: number, empresaId: string) {

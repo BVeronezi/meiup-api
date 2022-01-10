@@ -61,7 +61,7 @@ export class ProdutosVendaService {
     });
 
     const produto = await this.produtoService.findProdutoById(
-      Number(item.produto.id),
+      Number(item.produto),
     );
 
     produto.estoque =
