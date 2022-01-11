@@ -135,7 +135,7 @@ export class VendasService {
     if (response.servicosVenda.length > 0) {
       for (const key of response.servicosVenda) {
         const paramsProdutoServico: FindProdutosServicoQueryDto = {
-          servicoId: Number(key.servico),
+          servicoId: Number(key.servico.id),
           sort: undefined,
         };
 
@@ -273,7 +273,7 @@ export class VendasService {
       const params = {
         id: null,
         servico: servico,
-        precoUnitario: item.precoUnitario,
+        valorServico: item.valorServico,
         outrasDespesas: item.outrasDespesas,
         desconto: item.desconto,
         valorTotal: item.valorTotal,
@@ -294,9 +294,9 @@ export class VendasService {
       );
 
       const params = {
-        id: null,
+        id: response.id,
         servico: servico,
-        precoUnitario: item.precoUnitario,
+        valorServico: item.valorServico,
         outrasDespesas: item.outrasDespesas,
         desconto: item.desconto,
         valorTotal: item.valorTotal,

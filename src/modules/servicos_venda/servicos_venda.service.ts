@@ -32,11 +32,11 @@ export class ServicosVendaService {
     vendaId: number,
     produtoId: number,
   ): Promise<ServicosVenda> {
-    const produtoVenda = await this.servicosVendaRepository.findOne({
-      where: { venda: vendaId, produto: produtoId },
+    const servicoVenda = await this.servicosVendaRepository.findOne({
+      where: { venda: vendaId, servico: produtoId },
     });
 
-    return produtoVenda;
+    return servicoVenda;
   }
 
   async createServicoVenda(
@@ -55,17 +55,18 @@ export class ServicosVendaService {
     );
   }
 
-  async deleteServicoVenda(item: any, servicoId: number, empresaId: number) {
+  async deleteServicoVenda(item: any, vendaId: number, empresaId: number) {
     const servicosVenda = await this.servicosVendaRepository.findOne({
       where: {
         id: item.servicoVenda,
-        servico: servicoId,
+        servico: item.servico,
+        venda: vendaId,
         empresa: empresaId,
       },
     });
 
     const paramsProdutoServico: FindProdutosServicoQueryDto = {
-      servicoId,
+      servicoId: item.servico,
     };
 
     const response = await this.produtosServicoService.findProdutosServico(

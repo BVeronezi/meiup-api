@@ -24,7 +24,7 @@ export class ServicosVenda extends BaseEntity {
   servico: Servicos;
 
   @Column({ nullable: true, type: 'decimal' })
-  precoUnitario: number;
+  valorServico: number;
 
   @Column({ nullable: true, type: 'decimal' })
   outrasDespesas: number;

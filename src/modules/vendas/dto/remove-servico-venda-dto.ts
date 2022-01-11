@@ -3,11 +3,11 @@ import { IsNotEmpty } from 'class-validator';
 
 export class RemoveServicoVendaDto {
   @IsNotEmpty({
-    message: 'Informe quais serviços serão removidos da venda',
+    message: 'Informe quail serviço será removido da venda',
   })
   @ApiProperty({
     description: 'Serviços',
-    type: [Number],
+    type: Number,
   })
-  servicos: [number];
+  servico: number;
 }

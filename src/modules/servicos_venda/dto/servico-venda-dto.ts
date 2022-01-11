@@ -34,10 +34,10 @@ export class ServicoVendaDto {
     message: 'Informe o preço unitário do serviço',
   })
   @ApiProperty({
-    description: 'Preço unitário do serviço',
+    description: 'Valor do serviço',
     type: 'number',
   })
-  precoUnitario: number;
+  valorServico: number;
 
   @ApiProperty({
     description: 'Outras despesas do serviço',

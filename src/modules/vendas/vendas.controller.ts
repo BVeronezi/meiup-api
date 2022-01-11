@@ -121,7 +121,7 @@ export class VendasController {
     };
   }
 
-  @Post('/servicoVenda/:vendaId')
+  @Post('/servicosVenda/:vendaId')
   @ApiOperation({ summary: 'Adiciona serviço na venda por id' })
   async adicionaProdutoServico(
     @Body(ValidationPipe) updateVendaDto: UpdateVendaDto,

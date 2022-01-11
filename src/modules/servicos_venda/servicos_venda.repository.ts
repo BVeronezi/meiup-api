@@ -30,14 +30,14 @@ export class ServicosVendaRepository extends Repository<ServicosVenda> {
     query.select([
       'servicos_venda.id',
       'servico',
-      'servicos_venda.precoUnitario',
+      'servicos_venda.valorServico',
       'servicos_venda.outrasDespesas',
       'servicos_venda.desconto',
       'servicos_venda.valorTotal',
       'servicos_venda.vendaId',
       'servicos_venda.empresaId',
     ]);
-    query.leftJoin('produtos_venda.servico', 'servico');
+    query.leftJoin('servicos_venda.servico', 'servico');
 
     const [servicosVenda, total] = await query.getManyAndCount();
 
@@ -49,7 +49,7 @@ export class ServicosVendaRepository extends Repository<ServicosVenda> {
   ): Promise<ServicosVenda> {
     const {
       servico,
-      precoUnitario,
+      valorServico,
       outrasDespesas,
       desconto,
       valorTotal,
@@ -59,10 +59,10 @@ export class ServicosVendaRepository extends Repository<ServicosVenda> {
 
     const servicosVenda = this.create();
     servicosVenda.servico = servico;
-    servicosVenda.precoUnitario = Number(precoUnitario);
+    servicosVenda.valorServico = Number(valorServico);
     servicosVenda.outrasDespesas = Number(outrasDespesas);
     servicosVenda.desconto = Number(desconto);
-    servicosVenda.valorTotal = +Number(valorTotal);
+    servicosVenda.valorTotal = Number(valorTotal);
     servicosVenda.venda = venda;
     servicosVenda.empresa = empresa;
 
@@ -76,7 +76,7 @@ export class ServicosVendaRepository extends Repository<ServicosVenda> {
   async updateServicoVenda(
     updateServicoVendaDto: ServicoVendaDto,
   ): Promise<ServicosVenda> {
-    const { id, servico, precoUnitario, outrasDespesas, desconto, valorTotal } =
+    const { id, servico, valorServico, outrasDespesas, desconto, valorTotal } =
       updateServicoVendaDto;
 
     try {
@@ -84,7 +84,7 @@ export class ServicosVendaRepository extends Repository<ServicosVenda> {
         { id },
         {
           servico,
-          precoUnitario,
+          valorServico,
           outrasDespesas,
           desconto,
           valorTotal,
