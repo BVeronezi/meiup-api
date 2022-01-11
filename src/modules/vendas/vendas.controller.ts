@@ -128,20 +128,18 @@ export class VendasController {
     @User('empresa') empresa: Empresa,
     @Param('vendaId') vendaId: number,
   ) {
-    if (updateVendaDto.produtos.length > 0) {
-      const venda = await this.vendasService.findVendaById(vendaId);
+    const venda = await this.vendasService.findVendaById(vendaId);
 
-      await this.vendasService.adicionaServicoVenda(
-        updateVendaDto.produtos,
-        venda,
-        empresa,
-      );
+    await this.vendasService.adicionaServicoVenda(
+      updateVendaDto,
+      venda,
+      empresa,
+    );
 
-      return {
-        venda,
-        message: 'Serviço(s) adicionado(s) com sucesso na venda',
-      };
-    }
+    return {
+      venda,
+      message: 'Serviço adicionado com sucesso na venda',
+    };
   }
 
   @Post()
@@ -201,18 +199,16 @@ export class VendasController {
     @Param('vendaId') vendaId: number,
     @User('empresa') empresa: Empresa,
   ) {
-    if (removeServicoVendaDto.servicos.length > 0) {
-      const venda = await this.vendasService.findVendaById(vendaId);
+    const venda = await this.vendasService.findVendaById(vendaId);
 
-      await this.servicosVendaService.deleteServicoVenda(
-        removeServicoVendaDto.servicos,
-        Number(venda.id),
-        Number(empresa.id),
-      );
+    await this.servicosVendaService.deleteServicoVenda(
+      removeServicoVendaDto,
+      Number(venda.id),
+      Number(empresa.id),
+    );
 
-      return {
-        message: 'Servico(s) removido(s) com sucesso da venda',
-      };
-    }
+    return {
+      message: 'Servico(s) removido(s) com sucesso da venda',
+    };
   }
 }

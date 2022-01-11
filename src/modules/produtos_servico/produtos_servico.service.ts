@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProdutoServicoDto } from './dto/create-produto-servico-dto';
 import { FindProdutosServicoQueryDto } from './dto/find-produtos-servico-dto';
+import { ProdutoServicoDto } from './dto/produto-servico-dto';
 import { ProdutosServico } from './produtos_servico.entity';
 import { ProdutosServicoRepository } from './produtos_servico.respository';
 
@@ -15,13 +15,24 @@ export class ProdutosServicoService {
   async findProdutosServico(
     queryDto: FindProdutosServicoQueryDto,
     empresaId: string,
-  ) {
+  ): Promise<{ produtosServico: ProdutosServico[]; total: number }> {
     const produtosServico =
       await this.produtosServicoRepository.findProdutosServico(
         queryDto,
         empresaId,
       );
     return produtosServico;
+  }
+
+  async findProdutosServicoById(
+    servicoId: number,
+    produtoId: number,
+  ): Promise<ProdutosServico> {
+    const produtoServico = await this.produtosServicoRepository.findOne({
+      where: { servico: servicoId, produto: produtoId },
+    });
+
+    return produtoServico;
   }
 
   async createProdutoServico(
@@ -32,30 +43,26 @@ export class ProdutosServicoService {
     );
   }
 
-  async deleteProdutoServico(
-    produtos: [number],
-    servicoId: number,
-    empresaId: number,
-  ) {
-    const produtosExcluidos = [];
+  async updateProdutoServico(
+    updateProdutoServicoDto: ProdutoServicoDto,
+  ): Promise<ProdutosServico> {
+    return await this.produtosServicoRepository.updateProdutoServico(
+      updateProdutoServicoDto,
+    );
+  }
 
-    for (const produto of produtos) {
-      const produtoServico = await this.produtosServicoRepository.findOne({
-        where: {
-          produtoId: produto,
-          venda: servicoId,
-          empresaId: empresaId,
-        },
-      });
+  async deleteProdutoServico(item: any, servicoId: number, empresaId: number) {
+    const produtoServico = await this.produtosServicoRepository.findOne({
+      where: {
+        id: item.produtoServico,
+        produto: String(item.produto),
+        servico: servicoId,
+        empresa: empresaId,
+      },
+    });
 
-      if (produtoServico) {
-        produtosExcluidos.push(produtoServico.id);
-        await this.produtosServicoRepository.delete({
-          id: String(produtoServico.id),
-        });
-      }
-    }
-
-    return produtosExcluidos;
+    return await this.produtosServicoRepository.delete({
+      id: String(produtoServico.id),
+    });
   }
 }

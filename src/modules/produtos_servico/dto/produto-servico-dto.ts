@@ -1,10 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Empresa } from 'src/modules/empresa/empresa.entity';
 import { Produtos } from 'src/modules/produtos/produtos.entity';
 import { Servicos } from 'src/modules/servicos/servicos.entity';
 
 export class ProdutoServicoDto {
+  @IsOptional()
+  @ApiProperty({
+    description: 'Id produto serviço',
+    type: 'string',
+  })
+  id: string;
+
   @IsNotEmpty({
     message: 'Informe o produto',
   })
@@ -23,9 +30,6 @@ export class ProdutoServicoDto {
   })
   quantidade: number;
 
-  @IsNotEmpty({
-    message: 'Informe o servico',
-  })
   @ApiProperty({
     description: 'Produto vinculada ao servico',
     type: 'number',

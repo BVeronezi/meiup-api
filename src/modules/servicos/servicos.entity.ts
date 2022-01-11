@@ -18,13 +18,13 @@ export class Servicos extends BaseEntity {
   @Column({ nullable: false, type: 'varchar' })
   nome: string;
 
-  @Column({ nullable: false, type: 'decimal' })
+  @Column({ nullable: true, type: 'decimal' })
   custo: number;
 
-  @Column({ nullable: false, type: 'decimal' })
+  @Column({ nullable: true, type: 'decimal' })
   valor: number;
 
-  @Column({ nullable: false, type: 'decimal' })
+  @Column({ nullable: true, type: 'decimal' })
   margemLucro: number;
 
   @ManyToOne(() => Empresa, {

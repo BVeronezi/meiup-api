@@ -28,7 +28,13 @@ export class ServicosRepository extends Repository<Servicos> {
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
-    query.select(['servicos.id', 'servicos.nome']);
+    query.select([
+      'servicos.id',
+      'servicos.nome',
+      'servicos.custo',
+      'servicos.valor',
+      'servicos.margemLucro',
+    ]);
 
     const [servicos, total] = await query.getManyAndCount();
 
@@ -36,13 +42,11 @@ export class ServicosRepository extends Repository<Servicos> {
   }
 
   async createServico(createServicosDto: CreateServicosDto): Promise<Servicos> {
-    const { nome, custo, valor, margemLucro } = createServicosDto;
+    const { nome, empresa } = createServicosDto;
 
     const servico = this.create();
     servico.nome = nome;
-    servico.custo = custo;
-    servico.valor = valor;
-    servico.margemLucro = margemLucro;
+    servico.empresa = empresa;
 
     try {
       return await servico.save();

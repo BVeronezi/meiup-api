@@ -1,10 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Empresa } from 'src/modules/empresa/empresa.entity';
 import { Servicos } from 'src/modules/servicos/servicos.entity';
 import { Vendas } from 'src/modules/vendas/vendas.entity';
 
 export class ServicoVendaDto {
+  @IsOptional()
+  @ApiProperty({
+    description: 'Id servico venda',
+    type: 'string',
+  })
+  id: string;
+
   @IsNotEmpty({
     message: 'Informe o serviço',
   })

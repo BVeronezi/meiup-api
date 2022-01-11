@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProdutosService } from '../produtos/produtos.service';
 import { FindProdutosServicoQueryDto } from '../produtos_servico/dto/find-produtos-servico-dto';
 import { ProdutosServicoService } from '../produtos_servico/produtos_servico.service';
-import { ServicoVendaDto } from './dto/create-servico-venda-dto';
 import { FindServicosVendasQueryDto } from './dto/find-servicos-venda-dto';
+import { ServicoVendaDto } from './dto/servico-venda-dto';
 import { ServicosVenda } from './servicos_venda.entity';
 import { ServicosVendaRepository } from './servicos_venda.repository';
 
@@ -20,12 +20,23 @@ export class ServicosVendaService {
   async findServicosVenda(
     queryDto: FindServicosVendasQueryDto,
     empresaId: string,
-  ) {
+  ): Promise<{ servicosVenda: ServicosVenda[]; total: number }> {
     const servicosVenda = await this.servicosVendaRepository.findServicosVenda(
       queryDto,
       empresaId,
     );
     return servicosVenda;
+  }
+
+  async findProdutosVendaById(
+    vendaId: number,
+    produtoId: number,
+  ): Promise<ServicosVenda> {
+    const produtoVenda = await this.servicosVendaRepository.findOne({
+      where: { venda: vendaId, produto: produtoId },
+    });
+
+    return produtoVenda;
   }
 
   async createServicoVenda(
@@ -36,50 +47,42 @@ export class ServicosVendaService {
     );
   }
 
-  async deleteServicoVenda(
-    servicos: [number],
-    vendaId: number,
-    empresaId: number,
-  ) {
-    const servicosExcluidos = [];
+  async updateServicoVenda(
+    updateServicoVendaDto: ServicoVendaDto,
+  ): Promise<ServicosVenda> {
+    return await this.servicosVendaRepository.updateServicoVenda(
+      updateServicoVendaDto,
+    );
+  }
 
-    for (const servico of servicos) {
-      const paramsProdutoServico: FindProdutosServicoQueryDto = {
-        servicoId: servico,
-      };
+  async deleteServicoVenda(item: any, servicoId: number, empresaId: number) {
+    const servicosVenda = await this.servicosVendaRepository.findOne({
+      where: {
+        id: item.servicoVenda,
+        servico: servicoId,
+        empresa: empresaId,
+      },
+    });
 
-      const produtosServico =
-        await this.produtosServicoService.findProdutosServico(
-          paramsProdutoServico,
-          String(empresaId),
-        );
+    const paramsProdutoServico: FindProdutosServicoQueryDto = {
+      servicoId,
+    };
 
-      for (const item of produtosServico) {
-        const produto = await this.produtosService.findProdutoById(
-          Number(item.id),
-        );
+    const response = await this.produtosServicoService.findProdutosServico(
+      paramsProdutoServico,
+      String(empresaId),
+    );
 
-        produto.estoque = Number(produto.estoque) + Number(item.quantidade);
-
-        await produto.save();
-      }
-
-      const servicoVenda = await this.servicosVendaRepository.findOne({
-        where: {
-          servicoId: servico,
-          venda: vendaId,
-          empresaId: empresaId,
-        },
-      });
-
-      if (servicoVenda) {
-        servicosExcluidos.push(servicoVenda.id);
-        await this.servicosVendaRepository.delete({
-          id: String(servicoVenda.id),
-        });
-      }
+    for (const item of response.produtosServico) {
+      const produto = await this.produtosService.findProdutoById(
+        Number(item.id),
+      );
+      produto.estoque = Number(produto.estoque) + Number(item.quantidade);
+      await produto.save();
     }
 
-    return servicosExcluidos;
+    return await this.servicosVendaRepository.delete({
+      id: String(servicosVenda.id),
+    });
   }
 }

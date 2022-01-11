@@ -29,4 +29,10 @@ export class UpdateServicosDto {
     type: 'number',
   })
   margemLucro: number;
+
+  @ApiPropertyOptional({
+    description: 'Produtos utilizados',
+    type: 'number',
+  })
+  produto: number;
 }

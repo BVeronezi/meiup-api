@@ -42,39 +42,42 @@ export class ServicosService {
     return servicos;
   }
 
-  async adicionaProdutoServico(
-    arrProdutos: [{ id: number; quantidade: number }],
-    servico: Servicos,
-    empresa: Empresa,
-  ) {
-    const params: FindProdutosServicoQueryDto = {
-      servicoId: Number(servico.id),
-    };
-
+  async adicionaProdutoServico(item: any, servico: Servicos, empresa: Empresa) {
     const produtosServico =
-      await this.produtosServicoService.findProdutosServico(
-        params,
-        String(empresa.id),
+      await this.produtosServicoService.findProdutosServicoById(
+        Number(servico.id),
+        Number(item.produto),
       );
 
-    const arrNovosProdutos = arrProdutos
-      .map((e) => e.id)
-      .filter((p) => !produtosServico.map((p) => p.produtoId).includes(p));
+    if (!produtosServico) {
+      const produto = await this.produtosService.findProdutoById(
+        Number(item.produto),
+      );
+      const params = {
+        id: null,
+        produto: produto,
+        quantidade: item.quantidade,
+        servico: servico,
+        empresa: empresa,
+      };
+      return await this.produtosServicoService.createProdutoServico(params);
+    } else {
+      const produto = await this.produtosService.findProdutoById(
+        Number(item.produto),
+      );
 
-    for (const item of arrProdutos) {
-      if (arrNovosProdutos.includes(item.id)) {
-        const produto = await this.produtosService.findProdutoById(
-          Number(item.id),
-        );
+      const params = {
+        id: String(produtosServico.id),
+        produto,
+        quantidade: item.quantidade,
+        servico: servico,
+        empresa: empresa,
+      };
 
-        const params = {
-          produto: produto,
-          quantidade: item.quantidade,
-          servico: servico,
-          empresa: empresa,
-        };
-
-        await this.produtosServicoService.createProdutoServico(params);
+      try {
+        return await this.produtosServicoService.updateProdutoServico(params);
+      } catch (error) {
+        throw new Error(error.message);
       }
     }
   }
@@ -102,10 +105,35 @@ export class ServicosService {
     }
   }
 
-  async deleteServico(servicoId: number) {
+  async deleteServico(servicoId: number, empresaId: number) {
+    const params: FindProdutosServicoQueryDto = {
+      servicoId: servicoId,
+      sort: undefined,
+    };
+
+    const response = await this.produtosServicoService.findProdutosServico(
+      params,
+      String(empresaId),
+    );
+
+    if (response.produtosServico.length > 0) {
+      for (const key of response.produtosServico) {
+        const item = {
+          id: key.id,
+          produto: key.produto.id,
+        };
+        await this.produtosServicoService.deleteProdutoServico(
+          item,
+          servicoId,
+          empresaId,
+        );
+      }
+    }
+
     const result = await this.servicosRepository.delete({
       id: String(servicoId),
     });
+
     if (result.affected === 0) {
       throw new NotFoundException(
         'Não foi encontrado serviço com o ID informado',

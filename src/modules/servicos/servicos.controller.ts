@@ -69,14 +69,6 @@ export class ServicosController {
     createServicosDto.empresa = empresa;
     const servico = await this.servicosService.createServico(createServicosDto);
 
-    if (createServicosDto.produtos?.length > 0) {
-      await this.servicosService.adicionaProdutoServico(
-        createServicosDto.produtos,
-        servico,
-        empresa,
-      );
-    }
-
     return {
       servico,
       message: 'Serviço cadastrado com sucesso',
@@ -96,10 +88,34 @@ export class ServicosController {
   @ApiOperation({ summary: 'Remove serviço por id' })
   @Role(UserRole.MEI)
   @Role(UserRole.ADMIN)
-  async deleteServico(@Param('id') id: number) {
-    await this.servicosService.deleteServico(id);
+  async deleteServico(
+    @Param('id') id: number,
+    @User('empresa') empresa: Empresa,
+  ) {
+    await this.servicosService.deleteServico(id, Number(empresa.id));
     return {
       message: 'Serviço removido com sucesso',
+    };
+  }
+
+  @Post('/produtosServico/:servicoId')
+  @ApiOperation({ summary: 'Adiciona produto no serviço por id' })
+  async adicionaProdutoServico(
+    @Body(ValidationPipe) updateServicoDto: UpdateServicosDto,
+    @User('empresa') empresa: Empresa,
+    @Param('servicoId') servicoId: number,
+  ) {
+    const servico = await this.servicosService.findServicoById(servicoId);
+
+    const produtoServico: any =
+      await this.servicosService.adicionaProdutoServico(
+        updateServicoDto,
+        servico,
+        empresa,
+      );
+
+    return {
+      produtoServico: produtoServico,
     };
   }
 
@@ -110,18 +126,16 @@ export class ServicosController {
     @User('empresa') empresa: Empresa,
     @Body(ValidationPipe) removeProdutoServicoDto: RemoveProdutosServicoDto,
   ) {
-    if (removeProdutoServicoDto.produtos.length > 0) {
-      const servico = await this.servicosService.findServicoById(servicoId);
+    const servico = await this.servicosService.findServicoById(servicoId);
 
-      await this.produtosServicoService.deleteProdutoServico(
-        removeProdutoServicoDto.produtos,
-        Number(servico.id),
-        Number(empresa.id),
-      );
+    await this.produtosServicoService.deleteProdutoServico(
+      removeProdutoServicoDto,
+      Number(servico.id),
+      Number(empresa.id),
+    );
 
-      return {
-        message: 'Produto(s) removido(s) com sucesso do serviço',
-      };
-    }
+    return {
+      message: 'Produto removido com sucesso do serviço',
+    };
   }
 }
