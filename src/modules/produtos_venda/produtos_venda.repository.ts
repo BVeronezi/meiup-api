@@ -9,9 +9,6 @@ export class ProdutosVendaRepository extends Repository<ProdutosVenda> {
     queryDto: FindProdutosVendasQueryDto,
     empresaId: string,
   ): Promise<{ produtosVenda: ProdutosVenda[]; total: number }> {
-    queryDto.page = queryDto.page < 1 ? 1 : queryDto.page ?? 1;
-    queryDto.limit = queryDto.limit > 10 ? 10 : queryDto.limit ?? 10;
-
     const { vendaId } = queryDto;
     const query = this.createQueryBuilder('produtos_venda');
 
@@ -23,8 +20,14 @@ export class ProdutosVendaRepository extends Repository<ProdutosVenda> {
       vendaId: vendaId,
     });
 
-    query.skip((Number(queryDto.page) - 1) * queryDto.limit);
-    query.take(+queryDto.limit);
+    if (queryDto.page && queryDto.limit) {
+      queryDto.page = queryDto.page < 1 ? 1 : queryDto.page ?? 1;
+      queryDto.limit = queryDto.limit > 10 ? 10 : queryDto.limit ?? 10;
+
+      query.skip((Number(queryDto.page) - 1) * queryDto.limit);
+      query.take(+queryDto.limit);
+    }
+
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
     query.select([
       'produtos_venda.id',

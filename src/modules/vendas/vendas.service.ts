@@ -198,6 +198,8 @@ export class VendasService {
       );
     }
 
+    let produtoVenda;
+
     const response = await this.produtosVendaService.findProdutosVendaById(
       Number(venda.id),
       Number(item.produto),
@@ -218,7 +220,7 @@ export class VendasService {
         empresa: empresa,
       };
 
-      return await this.produtosVendaService.createProdutoVenda(params);
+      produtoVenda = await this.produtosVendaService.createProdutoVenda(params);
     } else {
       await this.estornoEstoqueProdutoVenda(
         Number(venda.id),
@@ -240,11 +242,22 @@ export class VendasService {
       };
 
       try {
-        return await this.produtosVendaService.updateProdutoVenda(params);
+        produtoVenda = await this.produtosVendaService.updateProdutoVenda(
+          params,
+        );
       } catch (error) {
         throw new Error(error.message);
       }
     }
+
+    const valorTotal = await this.calculaTotalVenda(
+      Number(venda.id),
+      String(empresa.id),
+    );
+    venda.valorTotal = valorTotal;
+    await venda.save();
+
+    return { produtoVenda, valorTotal };
   }
 
   async adicionaServicoVenda(item: any, venda: Vendas, empresa: Empresa) {
@@ -256,6 +269,8 @@ export class VendasService {
         'Venda não está aberta para realizar alterações!',
       );
     }
+
+    let servicoVenda;
 
     const response = await this.servicosVendaService.findProdutosVendaById(
       Number(venda.id),
@@ -281,7 +296,7 @@ export class VendasService {
         empresa: empresa,
       };
 
-      return await this.servicosVendaService.createServicoVenda(params);
+      await this.servicosVendaService.createServicoVenda(params);
     } else {
       await this.estornoEstoqueProdutoServicoVenda(
         Number(venda.id),
@@ -305,11 +320,20 @@ export class VendasService {
       };
 
       try {
-        return await this.servicosVendaService.updateServicoVenda(params);
+        await this.servicosVendaService.updateServicoVenda(params);
       } catch (error) {
         throw new Error(error.message);
       }
     }
+
+    const valorTotal = await this.calculaTotalVenda(
+      Number(venda.id),
+      String(empresa.id),
+    );
+    venda.valorTotal = valorTotal;
+    await venda.save();
+
+    return { servicoVenda, valorTotal };
   }
 
   async baixaEstoqueProdutoVenda(item) {
@@ -353,5 +377,39 @@ export class VendasService {
   ): Promise<{ vendas: Vendas[]; total: number }> {
     const vendas = await this.vendasRepository.findVendas(queryDto, empresaId);
     return vendas;
+  }
+
+  async calculaTotalVenda(vendaId: number, empresaId: string) {
+    let valorTotal = 0;
+
+    const paramsProduto: FindProdutosVendasQueryDto = {
+      vendaId: vendaId,
+    };
+
+    const resultProdutosVenda =
+      await this.produtosVendaService.findProdutosVenda(
+        paramsProduto,
+        empresaId,
+      );
+
+    for (const produtoVenda of resultProdutosVenda.produtosVenda) {
+      valorTotal += Number(produtoVenda.valorTotal);
+    }
+
+    const paramsServico: FindServicosVendasQueryDto = {
+      vendaId: vendaId,
+    };
+
+    const resultServicosVenda =
+      await this.servicosVendaService.findServicosVenda(
+        paramsServico,
+        empresaId,
+      );
+
+    for (const servicoVenda of resultServicosVenda.servicosVenda) {
+      valorTotal += Number(servicoVenda.valorTotal);
+    }
+
+    return valorTotal;
   }
 }

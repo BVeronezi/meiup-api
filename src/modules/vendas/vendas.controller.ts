@@ -110,14 +110,16 @@ export class VendasController {
   ) {
     const venda = await this.vendasService.findVendaById(vendaId);
 
-    const produtoVenda: any = await this.vendasService.adicionaProdutoVenda(
+    const response: any = await this.vendasService.adicionaProdutoVenda(
       updateVendaDto,
       venda,
       empresa,
     );
 
     return {
-      produtoVenda: produtoVenda,
+      produtoVenda: response.produtoVenda,
+      valorVenda: response.valorTotal,
+      message: 'Produto adicionado com sucesso na venda',
     };
   }
 
@@ -130,14 +132,15 @@ export class VendasController {
   ) {
     const venda = await this.vendasService.findVendaById(vendaId);
 
-    await this.vendasService.adicionaServicoVenda(
+    const response = await this.vendasService.adicionaServicoVenda(
       updateVendaDto,
       venda,
       empresa,
     );
 
     return {
-      venda,
+      servicoVenda: response.servicoVenda,
+      valorVenda: response.valorTotal,
       message: 'Serviço adicionado com sucesso na venda',
     };
   }
@@ -180,14 +183,26 @@ export class VendasController {
   @ApiOperation({ summary: 'Remove produto da venda por id' })
   async removeProdutoVenda(
     @Param('vendaId') vendaId: number,
+    @User('empresa') empresa: Empresa,
     @Body(ValidationPipe) removeProdutoVendaDto: RemoveProdutoVendaDto,
   ) {
+    const venda = await this.vendasService.findVendaById(vendaId);
+
     await this.produtosVendaService.deleteProdutoVenda(
       removeProdutoVendaDto,
-      vendaId,
+      Number(venda.id),
     );
 
+    const valorVenda = await this.vendasService.calculaTotalVenda(
+      Number(venda.id),
+      empresa.id,
+    );
+
+    venda.valorTotal = valorVenda;
+    await venda.save();
+
     return {
+      valorVenda: valorVenda,
       message: 'Produto removido com sucesso da venda',
     };
   }
@@ -207,7 +222,16 @@ export class VendasController {
       Number(empresa.id),
     );
 
+    const valorVenda = await this.vendasService.calculaTotalVenda(
+      Number(venda.id),
+      empresa.id,
+    );
+
+    venda.valorTotal = valorVenda;
+    await venda.save();
+
     return {
+      valorVenda: valorVenda,
       message: 'Servico(s) removido(s) com sucesso da venda',
     };
   }

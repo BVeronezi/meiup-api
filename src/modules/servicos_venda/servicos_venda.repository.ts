@@ -9,9 +9,6 @@ export class ServicosVendaRepository extends Repository<ServicosVenda> {
     queryDto: FindServicosVendasQueryDto,
     empresaId: string,
   ): Promise<{ servicosVenda: ServicosVenda[]; total: number }> {
-    queryDto.page = queryDto.page < 1 ? 1 : queryDto.page ?? 1;
-    queryDto.limit = queryDto.limit > 10 ? 10 : queryDto.limit ?? 10;
-
     const { vendaId } = queryDto;
     const query = this.createQueryBuilder('servicos_venda');
 
@@ -23,8 +20,14 @@ export class ServicosVendaRepository extends Repository<ServicosVenda> {
       vendaId: vendaId,
     });
 
-    query.skip((Number(queryDto.page) - 1) * queryDto.limit);
-    query.take(+queryDto.limit);
+    if (queryDto.page && queryDto.limit) {
+      queryDto.page = queryDto.page < 1 ? 1 : queryDto.page ?? 1;
+      queryDto.limit = queryDto.limit > 10 ? 10 : queryDto.limit ?? 10;
+
+      query.skip((Number(queryDto.page) - 1) * queryDto.limit);
+      query.take(+queryDto.limit);
+    }
+
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
 
     query.select([
