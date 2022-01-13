@@ -76,7 +76,7 @@ export class ServicosVendaService {
 
     for (const item of response.produtosServico) {
       const produto = await this.produtosService.findProdutoById(
-        Number(item.id),
+        Number(item.produto.id),
       );
       produto.estoque = Number(produto.estoque) + Number(item.quantidade);
       await produto.save();

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientesService } from '../clientes/clientes.service';
 import { Empresa } from '../empresa/empresa.entity';
@@ -94,6 +98,16 @@ export class VendasService {
 
     if (venda.status == StatusVenda.FINALIZADA) {
       throw new NotFoundException('Venda já finalizada!');
+    }
+
+    if (!venda?.valorTotal || venda?.valorTotal === 0) {
+      throw new BadRequestException('Não é possível finalizar venda sem valor');
+    }
+
+    if (venda?.valorTotal > venda.pagamento) {
+      throw new BadRequestException(
+        'Não é possível finalizar venda, pagamento menor que o valor total',
+      );
     }
 
     venda.status = StatusVenda.FINALIZADA;
@@ -211,17 +225,17 @@ export class VendasService {
       const params = {
         id: null,
         produto,
-        quantidade: item.quantidade,
-        precoUnitario: item.precoUnitario,
-        outrasDespesas: item.outrasDespesas,
-        desconto: item.desconto,
-        valorTotal: item.valorTotal,
+        quantidade: Number(item.quantidade),
+        precoUnitario: Number(item.precoUnitario),
+        outrasDespesas: Number(item.outrasDespesas),
+        desconto: Number(item.desconto),
+        valorTotal: Number(item.valorTotal),
         venda: venda,
         empresa: empresa,
       };
 
       produtoVenda = await this.produtosVendaService.createProdutoVenda(params);
-    } else {
+    } else if (response.id) {
       await this.estornoEstoqueProdutoVenda(
         Number(venda.id),
         String(empresa.id),
@@ -232,11 +246,11 @@ export class VendasService {
       const params = {
         id: String(response.id),
         produto,
-        quantidade: item.quantidade,
-        precoUnitario: item.precoUnitario,
-        outrasDespesas: item.outrasDespesas,
-        desconto: item.desconto,
-        valorTotal: item.valorTotal,
+        quantidade: Number(item.quantidade),
+        precoUnitario: Number(item.precoUnitario),
+        outrasDespesas: Number(item.outrasDespesas),
+        desconto: Number(item.desconto),
+        valorTotal: Number(item.valorTotal),
         venda: venda,
         empresa: empresa,
       };

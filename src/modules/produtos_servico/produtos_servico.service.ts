@@ -35,6 +35,14 @@ export class ProdutosServicoService {
     return produtoServico;
   }
 
+  async findProduto(produtoId: number) {
+    const produtoServico = await this.produtosServicoRepository.count({
+      where: { produto: produtoId },
+    });
+
+    return produtoServico;
+  }
+
   async createProdutoServico(
     createProdutoServicoDto: ProdutoServicoDto,
   ): Promise<ProdutosServico> {

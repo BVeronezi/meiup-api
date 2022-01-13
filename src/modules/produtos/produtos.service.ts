@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { PrecosService } from '../precos/precos.service';
+import { ProdutosServicoService } from '../produtos_servico/produtos_servico.service';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
 import { FornecedorProdutoDto } from './dto/fornecedor-produto-dto';
@@ -16,6 +17,7 @@ export class ProdutosService {
     private produtosRepository: ProdutosRepository,
     private precosService: PrecosService,
     private fornecedoresService: FornecedoresService,
+    private produtoServicoService: ProdutosServicoService,
   ) {}
 
   async createProduto(createProdutoDto: CreateProdutoDto): Promise<Produtos> {
@@ -144,12 +146,19 @@ export class ProdutosService {
   async deleteProduto(produtoId: number) {
     const produto = await this.findProdutoById(produtoId);
 
-    if (produto.precos) {
-      await this.precosService.deletePreco(produto.precos.id);
-    }
+    const produtoServico = await this.produtoServicoService.findProduto(
+      Number(produto.id),
+    );
 
-    await this.produtosRepository.delete({
-      id: String(produtoId),
-    });
+    if (produtoServico > 0) {
+      return false;
+    } else {
+      if (produto.precos) {
+        await this.precosService.deletePreco(produto.precos.id);
+      }
+      return await this.produtosRepository.delete({
+        id: String(produtoId),
+      });
+    }
   }
 }

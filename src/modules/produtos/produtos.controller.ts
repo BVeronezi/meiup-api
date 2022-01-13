@@ -143,11 +143,7 @@ export class ProdutosController {
   @Role(UserRole.MEI)
   @Role(UserRole.ADMIN)
   async deleteProduto(@Param('id') id: number) {
-    await this.produtosService.deleteProduto(id);
-
-    return {
-      message: 'Produto removido com sucesso',
-    };
+    return await this.produtosService.deleteProduto(id);
   }
 
   @Delete('/fornecedor/:id')

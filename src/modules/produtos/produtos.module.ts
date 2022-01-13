@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriasModule } from '../categorias/categorias.module';
 import { FornecedoresModule } from '../fornecedores/fornecedores.module';
 import { PrecosModule } from '../precos/precos.module';
+import { ProdutosServicoModule } from '../produtos_servico/produtos_servico.module';
 import { ProdutosController } from './produtos.controller';
 import { ProdutosRepository } from './produtos.repository';
 import { ProdutosService } from './produtos.service';
@@ -15,6 +16,7 @@ import { ProdutosService } from './produtos.service';
     CategoriasModule,
     PrecosModule,
     FornecedoresModule,
+    ProdutosServicoModule,
   ],
   controllers: [ProdutosController],
   providers: [ProdutosService],
