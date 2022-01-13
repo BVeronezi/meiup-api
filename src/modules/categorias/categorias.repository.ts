@@ -10,7 +10,7 @@ export class CategoriasRepository extends Repository<Categorias> {
     empresaId: string,
   ): Promise<{ categorias: Categorias[]; total: number }> {
     queryDto.page = queryDto.page < 1 ? 1 : queryDto.page ?? 1;
-    queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit ?? 100;
+    queryDto.limit = queryDto.limit > 10 ? 10 : queryDto.limit ?? 10;
 
     const { nome } = queryDto;
     const query = this.createQueryBuilder('categorias');
