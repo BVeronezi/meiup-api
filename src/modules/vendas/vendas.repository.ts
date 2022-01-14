@@ -16,12 +16,6 @@ export class VendasRepository extends Repository<Vendas> {
       empresaId: Number(empresaId),
     });
 
-    if (cliente) {
-      query.andWhere('vendas.clienteId = :clienteId', {
-        clienteId: cliente,
-      });
-    }
-
     if (queryDto.limit) {
       query.take(+queryDto.limit);
     }
@@ -31,6 +25,7 @@ export class VendasRepository extends Repository<Vendas> {
     }
 
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
+    query.leftJoin('vendas.cliente', 'cliente');
     query.select([
       'vendas.id',
       'cliente',
@@ -38,7 +33,10 @@ export class VendasRepository extends Repository<Vendas> {
       'vendas.valorTotal',
       'vendas.status',
     ]);
-    query.leftJoin('vendas.cliente', 'cliente');
+
+    if (cliente) {
+      query.andWhere('cliente.nome ILIKE :nome', { nome: `%${cliente}%` });
+    }
 
     const [vendas, total] = await query.getManyAndCount();
 
