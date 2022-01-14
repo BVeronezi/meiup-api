@@ -1,5 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Clientes } from '../clientes/clientes.entity';
+import { Empresa } from '../empresa/empresa.entity';
+import { Fornecedores } from '../fornecedores/fornecedores.entity';
 import { Usuario } from '../usuario/usuario.entity';
 import { CreateEnderecoDto } from './dto/create-endereco.dto';
 import { Endereco } from './endereco.entity';
@@ -15,7 +18,6 @@ export class EnderecoService {
   async updateOrCreateEndereco(
     createEnderecoDto: CreateEnderecoDto,
     id: string,
-    usuario?: Usuario,
   ): Promise<Endereco> {
     if (id) {
       const result = await this.enderecoRepository.update(
@@ -29,7 +31,7 @@ export class EnderecoService {
         return endereco;
       }
     } else {
-      return this.enderecoRepository.createEndereco(createEnderecoDto, usuario);
+      return this.enderecoRepository.createEndereco(createEnderecoDto);
     }
   }
 

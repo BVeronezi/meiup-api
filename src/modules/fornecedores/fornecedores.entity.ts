@@ -35,7 +35,7 @@ export class Fornecedores extends BaseEntity {
   @Column({ nullable: true, type: 'varchar' })
   situacaoCadastral: string;
 
-  @OneToOne(() => Endereco, (endereco) => endereco.fornecedor, {
+  @OneToOne(() => Endereco, {
     eager: true,
     cascade: true,
     onDelete: 'CASCADE',
@@ -55,4 +55,5 @@ export class Fornecedores extends BaseEntity {
 
   @UpdateDateColumn()
   dataAlteracao: Date;
+  fornecedor: Promise<Endereco>;
 }

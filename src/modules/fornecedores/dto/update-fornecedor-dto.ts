@@ -34,7 +34,7 @@ export class UpdateFornecedorDto {
   telefone: string;
 
   @ApiPropertyOptional({
-    description: 'Endereco vinculado ao usuário',
+    description: 'Endereco vinculado ao fornecedor',
   })
   endereco: Endereco;
 }

@@ -6,7 +6,8 @@ import { FindFornecedoresQueryDto } from './dto/find-fornecedores-query.dto';
 import { UpdateFornecedorDto } from './dto/update-fornecedor-dto';
 import { FornecedoresRepository } from './fornecedores.repository';
 import { Fornecedores } from './fornecedores.entity';
-
+import { isEmpty, values } from 'lodash';
+import { Usuario } from '../usuario/usuario.entity';
 @Injectable()
 export class FornecedoresService {
   constructor(
@@ -42,7 +43,11 @@ export class FornecedoresService {
     return fornecedores;
   }
 
-  async updateFornecedor(updateFornecedorDto: UpdateFornecedorDto, id: string) {
+  async updateFornecedor(
+    updateFornecedorDto: UpdateFornecedorDto,
+    id: string,
+    usuario: Usuario,
+  ) {
     const result = await this.fornecedoresRepository.update(
       { id },
       {
@@ -58,8 +63,11 @@ export class FornecedoresService {
     if (result.affected > 0) {
       const fornecedor = await this.findFornecedorById(Number(id));
 
-      if (updateFornecedorDto.endereco) {
-        this.endereco(updateFornecedorDto, fornecedor);
+      if (!values(updateFornecedorDto.endereco).every(isEmpty)) {
+        const endereco = await this.endereco(updateFornecedorDto, usuario);
+
+        fornecedor.endereco = endereco;
+        await fornecedor.save();
       }
 
       return fornecedor;
@@ -69,14 +77,21 @@ export class FornecedoresService {
   }
 
   async deleteFornecedor(fornecedorId: number) {
-    const result = await this.fornecedoresRepository.delete({
-      id: String(fornecedorId),
-    });
-    if (result.affected === 0) {
+    const fornecedor = await this.findFornecedorById(fornecedorId);
+
+    if (!fornecedor) {
       throw new NotFoundException(
         'Não foi encontrado fornecedor com o ID informado',
       );
     }
+
+    if (fornecedor.endereco) {
+      await this.enderecoService.deleteEndereco(fornecedor.endereco.id);
+    }
+
+    return await this.fornecedoresRepository.delete({
+      id: String(fornecedorId),
+    });
   }
 
   async endereco(createFornecedorDto, fornecedor) {
@@ -85,7 +100,6 @@ export class FornecedoresService {
     const endereco = await this.enderecoService.updateOrCreateEndereco(
       createFornecedorDto.endereco,
       enderecoId,
-      fornecedor.id,
     );
 
     return endereco;

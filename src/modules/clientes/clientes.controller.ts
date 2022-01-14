@@ -19,7 +19,8 @@ import { CreateClienteDto } from './dto/create-cliente-dto';
 import { FindClientesQueryDto } from './dto/find-clientes-query.dto';
 import { ReturnClienteDto } from './dto/return-cliente-dto';
 import { UpdateClienteDto } from './dto/update-cliente-dto';
-
+import { isEmpty } from 'lodash';
+import { Usuario } from '../usuario/usuario.entity';
 @Controller('api/v1/clientes')
 @ApiTags('Clientes')
 @UseGuards(AuthGuard())
@@ -58,8 +59,9 @@ export class ClientesController {
   async updateCliente(
     @Body(ValidationPipe) updateClienteDto: UpdateClienteDto,
     @Param('id') id: string,
+    @User('usuario') usuario: Usuario,
   ) {
-    return this.clientesService.updateCliente(updateClienteDto, id);
+    return this.clientesService.updateCliente(updateClienteDto, id, usuario);
   }
 
   @Post()
@@ -67,9 +69,14 @@ export class ClientesController {
   async createCliente(
     @Body() createClienteDto: CreateClienteDto,
     @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ): Promise<ReturnClienteDto> {
     createClienteDto.empresa = empresa;
     const cliente = await this.clientesService.createCliente(createClienteDto);
+
+    if (!isEmpty(createClienteDto.endereco)) {
+      await this.clientesService.endereco(createClienteDto, usuario, cliente);
+    }
 
     return {
       cliente,

@@ -21,7 +21,4 @@ export class CreateEnderecoDto {
 
   @ApiPropertyOptional()
   complemento: string;
-
-  @ApiPropertyOptional()
-  usuarioId: string;
 }

@@ -16,6 +16,7 @@ import { User } from 'src/decorators/user.decorator';
 import { Role } from '../auth/role.decorator';
 import { Empresa } from '../empresa/empresa.entity';
 import { UserRole } from '../usuario/enum/user-roles.enum';
+import { Usuario } from '../usuario/usuario.entity';
 import { CreateFornecedorDto } from './dto/create-fornecedor-dto';
 import { FindFornecedoresQueryDto } from './dto/find-fornecedores-query.dto';
 import { ReturnFornecedorDto } from './dto/return-fornecedor-dto';
@@ -65,8 +66,13 @@ export class FornecedoresController {
   async updateFornecedor(
     @Body(ValidationPipe) updateFornecedorDto: UpdateFornecedorDto,
     @Param('id') id: string,
+    @User('usuario') usuario: Usuario,
   ) {
-    return this.fornecedoresService.updateFornecedor(updateFornecedorDto, id);
+    return this.fornecedoresService.updateFornecedor(
+      updateFornecedorDto,
+      id,
+      usuario,
+    );
   }
 
   @Post()

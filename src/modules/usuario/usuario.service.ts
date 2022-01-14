@@ -6,7 +6,7 @@ import { FindUsuariosQueryDto } from './dto/find-usuarios-query.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './usuario.entity';
 import { UsuarioRepository } from './usuario.repository';
-
+import { isEmpty, values } from 'lodash';
 @Injectable()
 export class UsuarioService {
   constructor(
@@ -60,8 +60,10 @@ export class UsuarioService {
     if (result.affected > 0) {
       const user = await this.findUserById(id);
 
-      if (updateUserDto.endereco) {
-        this.endereco(updateUserDto, user);
+      if (!values(updateUserDto.endereco).every(isEmpty)) {
+        const endereco = await this.endereco(updateUserDto, user);
+        user.endereco = endereco;
+        await user.save();
       }
 
       return user;
@@ -71,12 +73,19 @@ export class UsuarioService {
   }
 
   async deleteUser(userId: string) {
-    const result = await this.userRepository.delete({ id: userId });
-    if (result.affected === 0) {
+    const user = await this.findUserById(userId);
+
+    if (!user) {
       throw new NotFoundException(
         'Não foi encontrado um usuário com o ID informado',
       );
     }
+
+    if (user.endereco) {
+      await this.enderecoService.deleteEndereco(user.endereco.id);
+    }
+
+    return await this.userRepository.delete({ id: userId });
   }
 
   async findUsers(
@@ -93,7 +102,6 @@ export class UsuarioService {
     const endereco = await this.enderecoService.updateOrCreateEndereco(
       createUserDto.endereco,
       enderecoId,
-      user.id,
     );
 
     return endereco;

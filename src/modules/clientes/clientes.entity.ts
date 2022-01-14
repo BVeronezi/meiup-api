@@ -32,7 +32,7 @@ export class Clientes extends BaseEntity {
   @Column({ nullable: true })
   dataNascimento: Date;
 
-  @OneToOne(() => Endereco, (endereco) => endereco.cliente, {
+  @OneToOne(() => Endereco, {
     eager: true,
     cascade: true,
     onDelete: 'CASCADE',

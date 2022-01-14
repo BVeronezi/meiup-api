@@ -10,7 +10,7 @@ export class ClientesRepository extends Repository<Clientes> {
     empresaId: string,
   ): Promise<{ clientes: Clientes[]; total: number }> {
     queryDto.page = queryDto.page < 1 ? 1 : queryDto.page ?? 1;
-    queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit ?? 100;
+    queryDto.limit = queryDto.limit > 10 ? 10 : queryDto.limit ?? 10;
 
     const { email, nome } = queryDto;
     const query = this.createQueryBuilder('clientes');
@@ -44,15 +44,8 @@ export class ClientesRepository extends Repository<Clientes> {
   }
 
   async createCliente(createClienteDto: CreateClienteDto): Promise<Clientes> {
-    const {
-      nome,
-      email,
-      celular,
-      telefone,
-      dataNascimento,
-      endereco,
-      empresa,
-    } = createClienteDto;
+    const { nome, email, celular, telefone, dataNascimento, empresa } =
+      createClienteDto;
 
     const cliente = this.create();
     cliente.nome = nome;
@@ -60,7 +53,6 @@ export class ClientesRepository extends Repository<Clientes> {
     cliente.celular = celular;
     cliente.telefone = telefone;
     cliente.dataNascimento = dataNascimento;
-    cliente.endereco = endereco;
     cliente.empresa = empresa;
 
     try {

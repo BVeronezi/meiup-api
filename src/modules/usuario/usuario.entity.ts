@@ -54,7 +54,7 @@ export class Usuario extends BaseEntity {
   @JoinColumn()
   empresa: Empresa;
 
-  @OneToOne(() => Endereco, (endereco) => endereco.usuario, {
+  @OneToOne(() => Endereco, {
     eager: true,
     cascade: true,
     onDelete: 'CASCADE',

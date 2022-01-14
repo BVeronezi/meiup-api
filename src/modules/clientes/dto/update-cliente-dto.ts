@@ -30,7 +30,7 @@ export class UpdateClienteDto {
   dataNascimento: Date;
 
   @ApiPropertyOptional({
-    description: 'Endereco vinculado ao usuário',
+    description: 'Endereco vinculado ao cliente',
   })
   endereco: Endereco;
 }

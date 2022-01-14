@@ -5,7 +5,7 @@ import { Empresa } from './empresa.entity';
 import { EmpresaRepository } from './empresa.repository';
 import { UpdateEmpresaDto } from './dto/update-empresa.dto';
 import { EnderecoService } from '../endereco/endereco.service';
-
+import { isEmpty, values } from 'lodash';
 @Injectable()
 export class EmpresaService {
   constructor(
@@ -36,14 +36,16 @@ export class EmpresaService {
 
       const enderecoId = empresa.endereco ? empresa.endereco.id : null;
 
-      const endereco = await this.enderecoService.updateOrCreateEndereco(
-        updateCompanyDto.endereco,
-        enderecoId,
-      );
+      if (!values(updateCompanyDto.endereco).every(isEmpty)) {
+        const endereco = await this.enderecoService.updateOrCreateEndereco(
+          updateCompanyDto.endereco,
+          enderecoId,
+        );
 
-      empresa.endereco = endereco;
+        empresa.endereco = endereco;
 
-      empresa.save();
+        await empresa.save();
+      }
 
       return empresa;
     } else {

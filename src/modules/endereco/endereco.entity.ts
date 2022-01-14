@@ -5,13 +5,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
-  JoinColumn,
 } from 'typeorm';
-import { Clientes } from '../clientes/clientes.entity';
-import { Fornecedores } from '../fornecedores/fornecedores.entity';
-import { Usuario } from '../usuario/usuario.entity';
-
 @Entity()
 export class Endereco extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -37,27 +31,6 @@ export class Endereco extends BaseEntity {
 
   @Column({ nullable: true, type: 'varchar' })
   complemento: string;
-
-  @OneToOne(() => Usuario, (usuario) => usuario.endereco, {
-    onDelete: 'CASCADE',
-    orphanedRowAction: 'delete',
-  })
-  @JoinColumn()
-  usuario: Usuario;
-
-  @OneToOne(() => Clientes, (cliente) => cliente.endereco, {
-    onDelete: 'CASCADE',
-    orphanedRowAction: 'delete',
-  })
-  @JoinColumn()
-  cliente: Clientes;
-
-  @OneToOne(() => Fornecedores, (fornecedores) => fornecedores.endereco, {
-    onDelete: 'CASCADE',
-    orphanedRowAction: 'delete',
-  })
-  @JoinColumn()
-  fornecedor: Fornecedores;
 
   @CreateDateColumn()
   dataCriacao: Date;

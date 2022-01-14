@@ -1,5 +1,8 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
+import { Clientes } from '../clientes/clientes.entity';
+import { Empresa } from '../empresa/empresa.entity';
+import { Fornecedores } from '../fornecedores/fornecedores.entity';
 import { Usuario } from '../usuario/usuario.entity';
 import { CreateEnderecoDto } from './dto/create-endereco.dto';
 import { Endereco } from './endereco.entity';
@@ -8,7 +11,6 @@ import { Endereco } from './endereco.entity';
 export class EnderecoRepository extends Repository<Endereco> {
   async createEndereco(
     createEnderecoDto: CreateEnderecoDto,
-    usuario: Usuario,
   ): Promise<Endereco> {
     const { cep, endereco, estado, numero, bairro, cidade, complemento } =
       createEnderecoDto;
@@ -21,11 +23,9 @@ export class EnderecoRepository extends Repository<Endereco> {
     enderecoInstance.bairro = bairro;
     enderecoInstance.cidade = cidade;
     enderecoInstance.complemento = complemento;
-    enderecoInstance.usuario = usuario;
 
     try {
-      await enderecoInstance.save();
-      return enderecoInstance;
+      return await enderecoInstance.save();
     } catch (error) {
       throw new InternalServerErrorException(
         'Erro ao salvar o endereco no banco de dados',

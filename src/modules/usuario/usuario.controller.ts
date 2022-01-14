@@ -25,7 +25,7 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { UserRole } from './enum/user-roles.enum';
 import { Usuario } from './usuario.entity';
 import { UsuarioService } from './usuario.service';
-
+import { isEmpty, values } from 'lodash';
 @Controller('api/v1/usuario')
 @ApiTags('Usuários')
 @UseGuards(AuthGuard(), RolesGuard)
@@ -39,12 +39,11 @@ export class UsuariosController {
   ): Promise<ReturnUsuarioDto> {
     const user = await this.usuarioService.createUser(createUserDto);
 
-    if (createUserDto.endereco) {
+    if (!values(createUserDto.endereco).every(isEmpty)) {
       const endereco = await this.usuarioService.endereco(createUserDto, user);
 
       user.endereco = endereco;
-
-      user.save();
+      await user.save();
     }
 
     return {

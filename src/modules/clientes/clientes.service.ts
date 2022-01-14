@@ -6,7 +6,7 @@ import { ClientesRepository } from './clientes.repository';
 import { CreateClienteDto } from './dto/create-cliente-dto';
 import { FindClientesQueryDto } from './dto/find-clientes-query.dto';
 import { UpdateClienteDto } from './dto/update-cliente-dto';
-
+import { isEmpty, values } from 'lodash';
 @Injectable()
 export class ClientesService {
   constructor(
@@ -38,7 +38,7 @@ export class ClientesService {
     return clientes;
   }
 
-  async updateCliente(updateClienteDto: UpdateClienteDto, id: string) {
+  async updateCliente(updateClienteDto: UpdateClienteDto, id: string, usuario) {
     const result = await this.clientesRepository.update(
       { id },
       {
@@ -53,8 +53,14 @@ export class ClientesService {
     if (result.affected > 0) {
       const cliente = await this.findClienteById(Number(id));
 
-      if (updateClienteDto.endereco) {
-        this.endereco(updateClienteDto, cliente);
+      if (!values(updateClienteDto.endereco).every(isEmpty)) {
+        const endereco = await this.endereco(
+          updateClienteDto,
+          usuario,
+          cliente,
+        );
+        cliente.endereco = endereco;
+        await cliente.save();
       }
 
       return cliente;
@@ -64,23 +70,29 @@ export class ClientesService {
   }
 
   async deleteCliente(clienteId: number) {
-    const result = await this.clientesRepository.delete({
-      id: String(clienteId),
-    });
-    if (result.affected === 0) {
+    const cliente = await this.findClienteById(clienteId);
+
+    if (!cliente) {
       throw new NotFoundException(
         'Não foi encontrado cliente com o ID informado',
       );
     }
+
+    if (cliente.endereco) {
+      await this.enderecoService.deleteEndereco(cliente.endereco.id);
+    }
+
+    return await this.clientesRepository.delete({
+      id: String(clienteId),
+    });
   }
 
-  async endereco(createClienteDto, cliente) {
+  async endereco(createClienteDto, usuario, cliente) {
     const enderecoId = cliente.endereco ? cliente.endereco.id : null;
 
     const endereco = await this.enderecoService.updateOrCreateEndereco(
       createClienteDto.endereco,
       enderecoId,
-      cliente.id,
     );
 
     return endereco;
