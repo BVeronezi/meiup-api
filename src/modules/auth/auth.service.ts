@@ -34,8 +34,6 @@ export class AuthService {
     try {
       let user = await this.usuarioService.findUserByGoogleId(profile.id);
 
-      console.log(user);
-
       if (!user) {
         user = await this.usuarioService.registerOAuthUser(profile, token);
 
