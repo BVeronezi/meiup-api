@@ -10,9 +10,9 @@ import { isEmpty, values } from 'lodash';
 @Injectable()
 export class UsuarioService {
   constructor(
-    @InjectRepository(Usuario)
-    private readonly userRepository: UsuarioRepository,
-    private readonly enderecoService: EnderecoService,
+    @InjectRepository(UsuarioRepository)
+    private userRepository: UsuarioRepository,
+    private enderecoService: EnderecoService,
   ) {}
 
   async createUser(createUserDto: CreateUsuarioDto): Promise<Usuario> {

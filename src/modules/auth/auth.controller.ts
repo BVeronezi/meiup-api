@@ -107,7 +107,7 @@ export class AuthController {
 
   @Patch(':id/change-password')
   @ApiOperation({ summary: 'Altera a senha do usuário pelo sistema' })
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard('jwt'))
   async changePassword(
     @Param('id') id: string,
     @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
@@ -126,7 +126,7 @@ export class AuthController {
 
   @Get('/me')
   @ApiOperation({ summary: 'Retorna os dados do usuário' })
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard('jwt'))
   getMe(@GetUser() user: Usuario): Usuario {
     return user;
   }
