@@ -1,0 +1,43 @@
+section
+    p Olá, #{nome}!
+    p Recebemos seu pedido de recuperação de senha.
+    p Para dar continuidade ao processo, por favor clique no botão abaixo:
+
+    br
+
+    a.btn(target="__blank", href=url + '/' + hash) Cadastrar nova Senha
+    br
+    br
+    br
+    sub Caso não tenha solicitado a troca de senha, por favor, desconsidere este e-mail
+style.
+    p,
+    sub {
+    	font-family: sans-serif;
+    }
+    sub {
+    	font-size: 0.6rem;
+    }
+    section {
+    	margin: 0 auto;
+    	display: block;
+    	width: auto;
+    	max-width: 600px;
+    }
+    .btn {
+    	display: block;
+    	max-width: 400px;
+    	padding: 12px 0px;
+    	cursor: pointer;
+    	border: none;
+    	background: rgb(69, 143, 246);
+    	height: auto;
+    	font-size: 1.1rem;
+    	font-weight: lighter;
+    	font-family: sans-serif;
+    	text-decoration: none;
+    	color: white;
+    	text-align: center;
+    	border-radius: 34px;
+    	margin: 0 auto;
+    }
