@@ -1,9 +1,5 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
-import { Clientes } from '../clientes/clientes.entity';
-import { Empresa } from '../empresa/empresa.entity';
-import { Fornecedores } from '../fornecedores/fornecedores.entity';
-import { Usuario } from '../usuario/usuario.entity';
 import { CreateEnderecoDto } from './dto/create-endereco.dto';
 import { Endereco } from './endereco.entity';
 

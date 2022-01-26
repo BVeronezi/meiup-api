@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import { Empresa } from 'src/modules/empresa/empresa.entity';
-import { Servicos } from 'src/modules/servicos/servicos.entity';
-import { Vendas } from 'src/modules/vendas/vendas.entity';
+import { Empresa } from '../../empresa/empresa.entity';
+import { Servicos } from '../../servicos/servicos.entity';
+import { Vendas } from '../../vendas/vendas.entity';
 
 export class ServicoVendaDto {
   @IsOptional()

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsOptional } from 'class-validator';
-import { Endereco } from 'src/modules/endereco/endereco.entity';
+import { Endereco } from '../../endereco/endereco.entity';
 
 export class UpdateClienteDto {
   @IsOptional()

@@ -7,7 +7,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
-  ManyToOne,
   OneToOne,
 } from 'typeorm';
 import { Endereco } from '../endereco/endereco.entity';

@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { Clientes } from 'src/modules/clientes/clientes.entity';
-import { Empresa } from 'src/modules/empresa/empresa.entity';
-import { Usuario } from 'src/modules/usuario/usuario.entity';
+import { Clientes } from '../../clientes/clientes.entity';
+import { Empresa } from '../../empresa/empresa.entity';
+import { Usuario } from '../../usuario/usuario.entity';
 export class CreateVendaDto {
   @IsNotEmpty({
     message: 'Informe qual o cliente',

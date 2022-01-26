@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { Empresa } from 'src/modules/empresa/empresa.entity';
+import { Empresa } from '../../empresa/empresa.entity';
 
 export class CreateCategoriaDto {
   @IsNotEmpty({

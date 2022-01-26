@@ -10,9 +10,9 @@ import { isEmpty, values } from 'lodash';
 @Injectable()
 export class UsuarioService {
   constructor(
-    @InjectRepository(UsuarioRepository)
-    private userRepository: UsuarioRepository,
-    private enderecoService: EnderecoService,
+    @InjectRepository(Usuario)
+    private readonly userRepository: UsuarioRepository,
+    private readonly enderecoService: EnderecoService,
   ) {}
 
   async createUser(createUserDto: CreateUsuarioDto): Promise<Usuario> {
@@ -98,12 +98,10 @@ export class UsuarioService {
 
   async endereco(createUserDto, user) {
     const enderecoId = user.endereco ? user.endereco.id : null;
-
     const endereco = await this.enderecoService.updateOrCreateEndereco(
       createUserDto.endereco,
       enderecoId,
     );
-
     return endereco;
   }
 }

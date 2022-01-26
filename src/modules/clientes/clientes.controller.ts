@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from 'src/decorators/user.decorator';
+import { User } from '../../decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
 import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente-dto';

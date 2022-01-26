@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
-import { Clientes } from 'src/modules/clientes/clientes.entity';
+import { Clientes } from '../../clientes/clientes.entity';
 export class UpdateVendaDto {
   @IsOptional()
   @ApiProperty({

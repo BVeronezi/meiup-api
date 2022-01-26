@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EnderecoModule } from '../endereco/endereco.module';
@@ -10,7 +10,7 @@ import { UsuarioService } from './usuario.service';
   imports: [
     TypeOrmModule.forFeature([UsuarioRepository]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    EnderecoModule,
+    forwardRef(() => EnderecoModule),
   ],
   controllers: [UsuariosController],
   providers: [UsuarioService],

@@ -13,7 +13,6 @@ import {
 import * as bcrypt from 'bcrypt';
 import { Empresa } from '../empresa/empresa.entity';
 import { Endereco } from '../endereco/endereco.entity';
-
 @Entity()
 @Unique(['email'])
 export class Usuario extends BaseEntity {

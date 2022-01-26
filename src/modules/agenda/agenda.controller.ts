@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from 'src/decorators/user.decorator';
+import { User } from '../../decorators/user.decorator';
 import { Usuario } from '../usuario/usuario.entity';
 import { AgendaService } from './agenda.service';
 import { CreateAgendaDto } from './dto/create-agenda-dto';

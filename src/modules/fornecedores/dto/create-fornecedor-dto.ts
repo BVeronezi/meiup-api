@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, MaxLength } from 'class-validator';
-import { Empresa } from 'src/modules/empresa/empresa.entity';
-import { Endereco } from 'src/modules/endereco/endereco.entity';
+import { Empresa } from '../../empresa/empresa.entity';
+import { Endereco } from '../../endereco/endereco.entity';
 
 export class CreateFornecedorDto {
   @IsNotEmpty({

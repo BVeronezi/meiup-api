@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from 'src/decorators/user.decorator';
 import { GetUser } from '../auth/get-user.decorator';
 import { Role } from '../auth/role.decorator';
 import { RolesGuard } from '../auth/roles.guard';
@@ -26,6 +25,7 @@ import { UserRole } from './enum/user-roles.enum';
 import { Usuario } from './usuario.entity';
 import { UsuarioService } from './usuario.service';
 import { isEmpty, values } from 'lodash';
+import { User } from '../../decorators/user.decorator';
 @Controller('api/v1/usuario')
 @ApiTags('Usuários')
 @UseGuards(AuthGuard(), RolesGuard)

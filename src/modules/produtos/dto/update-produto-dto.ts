@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
-import { Categorias } from 'src/modules/categorias/categorias.entity';
-import { Fornecedores } from 'src/modules/fornecedores/fornecedores.entity';
-import { Precos } from 'src/modules/precos/precos.entity';
+import { Categorias } from '../../categorias/categorias.entity';
+import { Fornecedores } from '../../fornecedores/fornecedores.entity';
+import { Precos } from '../../precos/precos.entity';
 
 export class UpdateProdutoDto {
   @IsOptional()

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from 'src/decorators/user.decorator';
+import { User } from '../../decorators/user.decorator';
 import { Role } from '../auth/role.decorator';
 import { CategoriasService } from '../categorias/categorias.service';
 import { Empresa } from '../empresa/empresa.entity';

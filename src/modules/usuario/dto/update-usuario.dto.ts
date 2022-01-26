@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsEmail, IsOptional, IsDate } from 'class-validator';
-import { Endereco } from 'src/modules/endereco/endereco.entity';
+import { Endereco } from '../../endereco/endereco.entity';
 import { UserRole } from '../enum/user-roles.enum';
 
 export class UpdateUsuarioDto {

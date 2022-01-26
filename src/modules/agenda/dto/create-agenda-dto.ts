@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { Usuario } from 'src/modules/usuario/usuario.entity';
+import { Usuario } from '../../usuario/usuario.entity';
 
 export class CreateAgendaDto {
   @IsNotEmpty({

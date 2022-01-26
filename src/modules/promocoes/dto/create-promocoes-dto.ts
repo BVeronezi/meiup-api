@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { Empresa } from 'src/modules/empresa/empresa.entity';
-import { Produtos } from 'src/modules/produtos/produtos.entity';
-import { Servicos } from 'src/modules/servicos/servicos.entity';
+import { Empresa } from '../../empresa/empresa.entity';
+import { Produtos } from '../../produtos/produtos.entity';
+import { Servicos } from '../../servicos/servicos.entity';
 
 export class CreatePromocaoDto {
   @IsNotEmpty({

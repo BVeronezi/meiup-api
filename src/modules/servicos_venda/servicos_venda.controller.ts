@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from 'src/decorators/user.decorator';
+import { User } from '../../decorators/user.decorator';
 import { Empresa } from '../empresa/empresa.entity';
 import { FindServicosVendasQueryDto } from './dto/find-servicos-venda-dto';
 import { ServicosVendaService } from './servicos_venda.service';
