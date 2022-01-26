@@ -66,7 +66,7 @@ export class AuthService {
     }
   }
 
-  async signUp(createUserDto: CreateUsuarioDto): Promise<Usuario> {
+  async cadastra(createUserDto: CreateUsuarioDto): Promise<Usuario> {
     const user = await this.userRepository.createUser(
       createUserDto,
       UserRole.MEI,
@@ -79,7 +79,7 @@ export class AuthService {
     return user;
   }
 
-  async signIn(credentialsDto: CredentialsDto) {
+  async login(credentialsDto: CredentialsDto) {
     const user = await this.userRepository.checkCredentials(credentialsDto);
 
     if (user === null) {
@@ -107,14 +107,6 @@ export class AuthService {
       nome: user.nome,
       roles: user.role,
     };
-  }
-
-  async confirmEmail(confirmationToken: string): Promise<void> {
-    const result = await this.userRepository.update(
-      { confirmationToken },
-      { confirmationToken: null },
-    );
-    if (result.affected === 0) throw new NotFoundException('Token inválido');
   }
 
   async sendRecoverPasswordEmail(email: string): Promise<void> {

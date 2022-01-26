@@ -53,32 +53,23 @@ export class AuthController {
     return 'JWT is working!';
   }
 
-  @Post('/signup')
+  @Post('/cadastra')
   @ApiOperation({ summary: 'Realiza o cadastro do usuário no sistema' })
-  async signUp(
+  async cadastra(
     @Body(ValidationPipe) createUserDto: CreateUsuarioDto,
   ): Promise<{ message: string }> {
-    await this.authService.signUp(createUserDto);
+    await this.authService.cadastra(createUserDto);
     return {
       message: 'Cadastro realizado com sucesso',
     };
   }
 
-  @Post('/signin')
+  @Post('/login')
   @ApiOperation({ summary: 'Realiza o login do usuário no sistema' })
-  async signIn(
+  async login(
     @Body(ValidationPipe) credentiaslsDto: CredentialsDto,
   ): Promise<{ token: string }> {
-    return await this.authService.signIn(credentiaslsDto);
-  }
-
-  @Patch(':token')
-  @ApiOperation({ summary: 'Confirma o e-mail' })
-  async confirmEmail(@Param('token') token: string) {
-    await this.authService.confirmEmail(token);
-    return {
-      message: 'Email confirmado',
-    };
+    return await this.authService.login(credentiaslsDto);
   }
 
   @Post('/send-recover-email')
