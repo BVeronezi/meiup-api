@@ -75,25 +75,4 @@ describe('AuthService', () => {
     const { salt } = user;
     expect(salt).toBeDefined();
   });
-
-  // it('deve retornar erro se tentar cadastrar o mesmo email', async () => {
-  //   fakeUsuarioService.findByEmail = () =>
-  //     Promise.resolve({
-  //       id: '123',
-  //       email: 'test@example.com',
-  //       senha: '123456',
-  //     } as Usuario);
-
-  //   const params: CreateUsuarioDto = {
-  //     nome: 'Teste',
-  //     email: 'test@example.com',
-  //     senha: '123456',
-  //     role: UserRole.USER,
-  //     empresa: { id: '5' } as Empresa,
-  //   };
-
-  //   await expect(service.cadastra(params)).rejects.toThrowError(
-  //     BadRequestException,
-  //   );
-  // });
 });

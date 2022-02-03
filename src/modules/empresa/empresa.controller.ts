@@ -21,7 +21,7 @@ import { UpdateEmpresaDto } from './dto/update-empresa.dto';
 
 @Controller('api/v1/empresa')
 @ApiTags('Empresa')
-@UseGuards(AuthGuard(), RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiBearerAuth('access-token')
 export class EmpresaController {
   constructor(private empresaService: EmpresaService) {}

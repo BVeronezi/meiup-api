@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
 import { Empresa } from './empresa.entity';
 import { EmpresaRepository } from './empresa.repository';
 import { UpdateEmpresaDto } from './dto/update-empresa.dto';
 import { EnderecoService } from '../endereco/endereco.service';
 import { isEmpty, values } from 'lodash';
+import { CreateEmpresaDto } from './dto/create-empresa-dto';
 @Injectable()
 export class EmpresaService {
   constructor(
@@ -14,8 +14,8 @@ export class EmpresaService {
     private enderecoService: EnderecoService,
   ) {}
 
-  async createCompany(createUserDto: CreateUsuarioDto): Promise<Empresa> {
-    return this.empresaRepository.createCompany(createUserDto);
+  async createCompany(createEmpresaDto: CreateEmpresaDto): Promise<Empresa> {
+    return this.empresaRepository.createCompany(createEmpresaDto);
   }
 
   async updateCompany(updateCompanyDto: UpdateEmpresaDto, id: string) {

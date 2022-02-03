@@ -1,12 +1,12 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
-import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
+import { CreateEmpresaDto } from './dto/create-empresa-dto';
 import { Empresa } from './empresa.entity';
 
 @EntityRepository(Empresa)
 export class EmpresaRepository extends Repository<Empresa> {
-  async createCompany(createUserDto: CreateUsuarioDto): Promise<Empresa> {
-    const { cnpj, celular, telefone, email } = createUserDto;
+  async createCompany(createEmpresaDto: CreateEmpresaDto): Promise<Empresa> {
+    const { cnpj, celular, telefone, email } = createEmpresaDto;
 
     const company = this.create();
     company.cnpj = cnpj;
