@@ -21,9 +21,10 @@ import { ReturnClienteDto } from './dto/return-cliente-dto';
 import { UpdateClienteDto } from './dto/update-cliente-dto';
 import { isEmpty } from 'lodash';
 import { Usuario } from '../usuario/usuario.entity';
+import { RolesGuard } from '../auth/roles.guard';
 @Controller('api/v1/clientes')
 @ApiTags('Clientes')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiBearerAuth('access-token')
 export class ClientesController {
   constructor(private clientesService: ClientesService) {}
@@ -61,7 +62,16 @@ export class ClientesController {
     @Param('id') id: string,
     @User('usuario') usuario: Usuario,
   ) {
-    return this.clientesService.updateCliente(updateClienteDto, id, usuario);
+    const cliente = this.clientesService.updateCliente(
+      updateClienteDto,
+      id,
+      usuario,
+    );
+
+    return {
+      cliente,
+      message: 'Cliente atualizado com sucesso',
+    };
   }
 
   @Post()
@@ -86,7 +96,7 @@ export class ClientesController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove o cliente por id' })
-  async deleteCliente(@Param('id') id: number) {
+  async deleteCliente(@Param('id') id: string) {
     await this.clientesService.deleteCliente(id);
     return {
       message: 'Cliente removido com sucesso',

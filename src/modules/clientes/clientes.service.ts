@@ -19,8 +19,10 @@ export class ClientesService {
     return await this.clientesRepository.createCliente(createClienteDto);
   }
 
-  async findClienteById(clienteId: number): Promise<Clientes> {
-    const cliente = await this.clientesRepository.findOne(clienteId);
+  async findClienteById(clienteId: string): Promise<Clientes> {
+    const cliente = await this.clientesRepository.findOne(clienteId, {
+      relations: ['endereco'],
+    });
 
     if (!cliente) throw new NotFoundException('Cliente não encontrado');
 
@@ -51,7 +53,7 @@ export class ClientesService {
     );
 
     if (result.affected > 0) {
-      const cliente = await this.findClienteById(Number(id));
+      const cliente = await this.findClienteById(id);
 
       if (!values(updateClienteDto.endereco).every(isEmpty)) {
         const endereco = await this.endereco(
@@ -69,22 +71,22 @@ export class ClientesService {
     }
   }
 
-  async deleteCliente(clienteId: number) {
+  async deleteCliente(clienteId: string) {
     const cliente = await this.findClienteById(clienteId);
 
-    if (!cliente) {
-      throw new NotFoundException(
-        'Não foi encontrado cliente com o ID informado',
-      );
-    }
-
-    if (cliente.endereco) {
+    if (cliente?.endereco) {
       await this.enderecoService.deleteEndereco(cliente.endereco.id);
     }
 
-    return await this.clientesRepository.delete({
+    const result = await this.clientesRepository.delete({
       id: String(clienteId),
     });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(
+        'Não foi encontrado um usuário com o ID informado',
+      );
+    }
   }
 
   async endereco(createClienteDto, usuario, cliente) {

@@ -1,6 +1,5 @@
 import { Test } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
-import { ReturnEmpresaDto } from './dto/return-empresa.dto';
 import { EmpresaController } from './empresa.controller';
 import { EmpresaService } from './empresa.service';
 
@@ -27,7 +26,7 @@ describe('EmpresaController', () => {
     expect(empresaController).toBeDefined();
   });
 
-  it('deve chamar o serviço de find', async () => {
+  it('Deve buscar empresa por id', async () => {
     await empresaController.findCompanyById(1);
 
     expect(empresaService.findEmpresaById).toBeCalled();

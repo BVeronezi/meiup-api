@@ -28,11 +28,11 @@ export class CreateClienteDto {
   })
   nome: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Data de nascimento para cadastro no sistema',
     type: 'date',
   })
-  dataNascimento: Date;
+  dataNascimento?: Date;
 
   @ApiPropertyOptional({
     type: 'string',

@@ -48,12 +48,12 @@ describe('EmpresaService', () => {
     service = await module.get<EmpresaService>(EmpresaService);
   });
 
-  it('should be defined', () => {
+  it('deve ser definido', () => {
     expect(service).toBeDefined();
     expect(empresaRepository).toBeDefined();
   });
 
-  describe('createUser', () => {
+  describe('Criar empresa', () => {
     let mockCreateEmpresaDto: CreateEmpresaDto;
 
     beforeEach(() => {
@@ -65,7 +65,7 @@ describe('EmpresaService', () => {
       };
     });
 
-    it('should create an user if passwords match', async () => {
+    it('deve criar a empresa', async () => {
       (empresaRepository.createCompany as jest.Mock).mockResolvedValue(
         'mockEmpresa',
       );
@@ -78,8 +78,8 @@ describe('EmpresaService', () => {
     });
   });
 
-  describe('findUserById', () => {
-    it('should return the found user', async () => {
+  describe('Pesquisar empresa', () => {
+    it('deve retornar a empresa encontrada', async () => {
       (empresaRepository.findOne as jest.Mock).mockResolvedValue('mockEmpresa');
       expect(empresaRepository.findOne).not.toHaveBeenCalled();
 
@@ -91,7 +91,7 @@ describe('EmpresaService', () => {
       expect(result).toEqual('mockEmpresa');
     });
 
-    it('should throw an error as user is not found', async () => {
+    it('deve lançar um erro porque a empresa não foi encontrada', async () => {
       (empresaRepository.findOne as jest.Mock).mockResolvedValue(null);
       expect(service.findEmpresaById('mockId')).rejects.toThrow(
         NotFoundException,
@@ -99,7 +99,7 @@ describe('EmpresaService', () => {
     });
   });
 
-  describe('updateUser', () => {
+  describe('Atualizar empresa', () => {
     let mockUpdateEmpresaDto: any;
 
     beforeEach(() => {
@@ -113,7 +113,7 @@ describe('EmpresaService', () => {
       };
     });
 
-    it('should return affected > 0 if user data is updated and return the new user', async () => {
+    it('deve retornar afetado > 0 se os dados da empresa forem atualizados e retornar a nova empresa', async () => {
       (empresaRepository.update as jest.Mock).mockResolvedValue({
         affected: 1,
       });
@@ -130,7 +130,7 @@ describe('EmpresaService', () => {
       expect(result).toEqual('mockEmpresa');
     });
 
-    it('should throw an error if no row is affected in the DB', async () => {
+    it('deve lançar um erro se nenhuma linha for afetada no banco de dados', async () => {
       (empresaRepository.update as jest.Mock).mockResolvedValue({
         affected: 0,
       });

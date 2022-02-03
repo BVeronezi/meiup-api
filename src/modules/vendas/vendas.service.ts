@@ -60,7 +60,7 @@ export class VendasService {
     if (venda) {
       if (Number(venda.cliente.id) !== Number(updateVendaDto.cliente)) {
         const cliente = await this.clienteService.findClienteById(
-          Number(updateVendaDto.cliente),
+          String(updateVendaDto.cliente),
         );
 
         venda.cliente = cliente;
