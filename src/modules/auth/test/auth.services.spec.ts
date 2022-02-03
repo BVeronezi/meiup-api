@@ -1,0 +1,99 @@
+import { createMock } from '@golevelup/ts-jest';
+import { JwtService } from '@nestjs/jwt';
+import { Test } from '@nestjs/testing';
+import { Empresa } from '../../empresa/empresa.entity';
+import { UserRole } from '../../usuario/enum/user-roles.enum';
+import { Usuario } from '../../usuario/usuario.entity';
+import { EmpresaService } from '../../empresa/empresa.service';
+import { UsuarioService } from '../../usuario/usuario.service';
+import { AuthService } from '../auth.service';
+import { CreateUsuarioDto } from 'src/modules/usuario/dto/create-usuario.dto';
+import { BadRequestException } from '@nestjs/common';
+
+describe('AuthService', () => {
+  let service: AuthService;
+  let fakeUsuarioService: Partial<UsuarioService>;
+
+  beforeEach(async () => {
+    const fakeEmpresaService: Partial<EmpresaService> = {
+      createCompany: () =>
+        Promise.resolve({ id: '5', razaoSocial: 'Teste' } as Empresa),
+    };
+
+    fakeUsuarioService = {
+      // findByEmail: () => Promise.resolve({ id: '1' } as Usuario),
+      findUserByGoogleId: () =>
+        Promise.resolve({
+          id: '123',
+          email: 'test@gmail.com',
+          nome: 'Teste',
+          role: UserRole.USER,
+        } as Usuario),
+    };
+
+    const module = await Test.createTestingModule({
+      providers: [
+        AuthService,
+        {
+          provide: AuthService,
+          useValue: createMock<AuthService>(),
+        },
+        {
+          provide: JwtService,
+          useValue: {},
+        },
+        {
+          provide: EmpresaService,
+          useValue: fakeEmpresaService,
+        },
+        {
+          provide: UsuarioService,
+          useValue: fakeUsuarioService,
+        },
+      ],
+    }).compile();
+
+    service = module.get<AuthService>(AuthService);
+  });
+
+  it('deve ser definido', () => {
+    expect(service).toBeDefined();
+  });
+
+  it('deve cadastrar um novo usuário', async () => {
+    const params: CreateUsuarioDto = {
+      nome: 'Teste',
+      email: 'test@example.com',
+      senha: '123456',
+      role: UserRole.USER,
+      empresa: { id: '5' } as Empresa,
+    };
+
+    const user = await service.cadastra(params);
+
+    expect(user.senha).not.toEqual('asdfd');
+    const { salt } = user;
+    expect(salt).toBeDefined();
+  });
+
+  // it('deve retornar erro se tentar cadastrar o mesmo email', async () => {
+  //   fakeUsuarioService.findByEmail = () =>
+  //     Promise.resolve({
+  //       id: '123',
+  //       email: 'test@example.com',
+  //       senha: '123456',
+  //     } as Usuario);
+
+  //   const params: CreateUsuarioDto = {
+  //     nome: 'Teste',
+  //     email: 'test@example.com',
+  //     senha: '123456',
+  //     role: UserRole.USER,
+  //     empresa: { id: '5' } as Empresa,
+  //   };
+
+  //   await expect(service.cadastra(params)).rejects.toThrowError(
+  //     BadRequestException,
+  //   );
+  // });
+});

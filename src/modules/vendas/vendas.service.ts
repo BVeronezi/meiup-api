@@ -104,12 +104,6 @@ export class VendasService {
       throw new BadRequestException('Não é possível finalizar venda sem valor');
     }
 
-    if (venda?.valorTotal > venda.pagamento) {
-      throw new BadRequestException(
-        'Não é possível finalizar venda, pagamento menor que o valor total',
-      );
-    }
-
     venda.status = StatusVenda.FINALIZADA;
     return await venda.save();
   }
@@ -310,7 +304,7 @@ export class VendasService {
         empresa: empresa,
       };
 
-      await this.servicosVendaService.createServicoVenda(params);
+      servicoVenda = await this.servicosVendaService.createServicoVenda(params);
     } else {
       await this.estornoEstoqueProdutoServicoVenda(
         Number(venda.id),
@@ -334,7 +328,9 @@ export class VendasService {
       };
 
       try {
-        await this.servicosVendaService.updateServicoVenda(params);
+        servicoVenda = await this.servicosVendaService.updateServicoVenda(
+          params,
+        );
       } catch (error) {
         throw new Error(error.message);
       }

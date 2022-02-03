@@ -15,7 +15,6 @@ import { UsuarioRepository } from '../usuario/usuario.repository';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialsDto } from './dto/credentials.dto';
 import { UsuarioService } from '../usuario/usuario.service';
-import { ISendEmailService } from 'src/mail/mail.service';
 
 export enum Provider {
   GOOGLE = 'google',
@@ -29,7 +28,6 @@ export class AuthService {
     private jwtService: JwtService,
     private empresaService: EmpresaService,
     private usuarioService: UsuarioService,
-    private readonly emailService: ISendEmailService,
   ) {}
 
   async validateOAuthLogin(profile: any, token: string) {
@@ -129,7 +127,7 @@ export class AuthService {
         token: user.recuperarToken,
       },
     };
-    await this.emailService.send(mail);
+    // await this.emailService.send(mail);
   }
 
   async changePassword(

@@ -57,9 +57,9 @@ export class VendasRepository extends Repository<Vendas> {
     const venda = this.create();
     venda.cliente = cliente;
     venda.dataVenda = dataVenda;
-    venda.valorTotal = valorTotal;
-    venda.pagamento = pagamento;
-    venda.troco = valorTroco;
+    venda.valorTotal = valorTotal ? Number(valorTotal) : 0;
+    venda.pagamento = pagamento ? Number(pagamento) : 0;
+    venda.troco = valorTroco ? Number(valorTroco) : 0;
     venda.empresa = empresa;
     venda.usuario = usuario;
 

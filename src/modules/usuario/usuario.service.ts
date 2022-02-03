@@ -36,6 +36,17 @@ export class UsuarioService {
     return user;
   }
 
+  async findUserByEmail(email: string): Promise<Usuario> {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: ['email', 'nome', 'role', 'id'],
+    });
+
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+
+    return user;
+  }
+
   async findUserByGoogleId(googleId: string): Promise<Usuario> {
     return await this.userRepository.findOne({
       select: ['email', 'nome', 'role', 'id'],

@@ -62,7 +62,7 @@ export class ProdutosServicoService {
   async deleteProdutoServico(item: any, servicoId: number, empresaId: number) {
     const produtoServico = await this.produtosServicoRepository.findOne({
       where: {
-        id: item.produtoServico,
+        id: item.id,
         produto: String(item.produto),
         servico: servicoId,
         empresa: empresaId,

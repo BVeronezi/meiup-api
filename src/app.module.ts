@@ -22,6 +22,7 @@ import { AgendaModule } from './modules/agenda/agenda.module';
 import { ProdutosVendaModule } from './modules/produtos_venda/produtos_venda.module';
 import { ProdutosServicoModule } from './modules/produtos_servico/produtos_servico.module';
 import { ServicosVendaModule } from './modules/servicos_venda/servicos_venda.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { ServicosVendaModule } from './modules/servicos_venda/servicos_venda.mod
     ProdutosVendaModule,
     ProdutosServicoModule,
     ServicosVendaModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],

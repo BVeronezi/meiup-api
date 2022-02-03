@@ -25,10 +25,10 @@ export class Usuario extends BaseEntity {
   @Column({ nullable: true, type: 'varchar', length: 200 })
   nome: string;
 
-  @Column({ nullable: true, type: 'integer' })
+  @Column({ nullable: true, type: 'int8' })
   celular: number;
 
-  @Column({ nullable: true, type: 'integer' })
+  @Column({ nullable: true, type: 'int8' })
   telefone: number;
 
   @Column({ nullable: false, type: 'varchar', length: 20 })

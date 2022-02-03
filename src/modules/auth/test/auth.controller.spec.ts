@@ -38,6 +38,8 @@ describe('AuthController', () => {
     };
 
     await controller.cadastra(params);
+
+    expect(service.cadastra).toBeCalled();
   });
 
   it('deve chamar o serviço de login', async () => {
