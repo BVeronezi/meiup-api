@@ -5,7 +5,7 @@ import { EnderecoService } from './endereco.service';
 
 @Controller('api/v1/endereco')
 @ApiTags('Endereco')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('access-token')
 export class EnderecoController {
   constructor(private enderecoService: EnderecoService) {}

@@ -34,7 +34,7 @@ export class EnderecoService {
   async findEnderecoById(enderecoId: string): Promise<Endereco> {
     const endereco = await this.enderecoRepository.findOne(enderecoId);
 
-    if (!endereco) throw new NotFoundException('Endereco não encontrada');
+    if (!endereco) throw new NotFoundException('Endereço não encontrado');
 
     return endereco;
   }
@@ -43,7 +43,7 @@ export class EnderecoService {
     const result = await this.enderecoRepository.delete({ id: enderecoId });
     if (result.affected === 0) {
       throw new NotFoundException(
-        'Não foi encontrado endereco com o ID informado',
+        'Não foi encontrado Endereço com o ID informado',
       );
     }
   }
