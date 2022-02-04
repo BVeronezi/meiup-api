@@ -24,7 +24,7 @@ export class Vendas extends BaseEntity {
   pagamento: number;
 
   @Column({ nullable: true, type: 'decimal', default: 0 })
-  troco: number;
+  valorTroco: number;
 
   @ManyToOne(() => Clientes, {
     eager: true,

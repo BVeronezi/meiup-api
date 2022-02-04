@@ -17,13 +17,13 @@ export class CreateVendaDto {
     description: 'Produtos vendidos',
     type: [{}],
   })
-  produtos: any;
+  produtos?: any;
 
   @ApiPropertyOptional({
     description: 'Serviços realizados',
     type: [{}],
   })
-  servicos: any;
+  servicos?: any;
 
   @IsNotEmpty({
     message: 'Informe qual a data da venda',

@@ -7,35 +7,35 @@ export class UpdateVendaDto {
     description: 'Cliente vinculado a venda',
     type: 'number',
   })
-  cliente: Clientes;
+  cliente?: Clientes;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Produtos vendidos',
     type: [{}],
   })
-  produtos: [{ id: number; quantidade: number }];
+  produtos?: any;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Serviços realizados',
     type: [{}],
   })
-  servicos: [{ id: number }];
+  servicos?: any;
 
   @IsOptional()
   @ApiProperty({
     description: 'Valor total',
     type: 'decimal',
   })
-  valorTotal: number;
+  valorTotal?: number;
 
   @IsOptional()
   @ApiProperty({
     description: 'Valor do pagamento',
     type: 'decimal',
   })
-  pagamento: number;
+  pagamento?: number;
 
   @IsOptional()
   @ApiProperty({
@@ -43,5 +43,5 @@ export class UpdateVendaDto {
     type: 'decimal',
     default: 0,
   })
-  valorTroco: number;
+  valorTroco?: number;
 }

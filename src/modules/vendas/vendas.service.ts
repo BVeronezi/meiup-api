@@ -20,10 +20,12 @@ import { UpdateVendaDto } from './dto/update-venda-dto';
 import { StatusVenda } from './enum/venda-status.enum';
 import { Vendas } from './vendas.entity';
 import { VendasRepository } from './vendas.repository';
+import { Repository } from 'typeorm';
 @Injectable()
 export class VendasService {
   constructor(
     @InjectRepository(VendasRepository)
+    private readonly repository: Repository<Vendas>,
     private vendasRepository: VendasRepository,
     private clienteService: ClientesService,
     private produtosVendaService: ProdutosVendaService,
@@ -40,7 +42,7 @@ export class VendasService {
   async findVendaById(vendaId: number): Promise<Vendas> {
     const venda = await this.vendasRepository.findOne(vendaId);
 
-    if (!venda) throw new NotFoundException('Venda não encontrado');
+    if (!venda) throw new NotFoundException('Venda não encontrada');
 
     return venda;
   }
@@ -58,7 +60,10 @@ export class VendasService {
     }
 
     if (venda) {
-      if (Number(venda.cliente.id) !== Number(updateVendaDto.cliente)) {
+      if (
+        venda.cliente?.id &&
+        Number(venda.cliente.id) !== Number(updateVendaDto.cliente)
+      ) {
         const cliente = await this.clienteService.findClienteById(
           String(updateVendaDto.cliente),
         );
@@ -73,7 +78,7 @@ export class VendasService {
           {
             valorTotal: updateVendaDto.valorTotal,
             pagamento: updateVendaDto.pagamento,
-            troco: updateVendaDto.valorTroco,
+            valorTroco: updateVendaDto.valorTroco,
           },
         );
       } catch (error) {
@@ -385,8 +390,11 @@ export class VendasService {
     queryDto: FindVendasQueryDto,
     empresaId: string,
   ): Promise<{ vendas: Vendas[]; total: number }> {
-    const vendas = await this.vendasRepository.findVendas(queryDto, empresaId);
-    return vendas;
+    try {
+      return await this.vendasRepository.findVendas(queryDto, empresaId);
+    } catch (error) {
+      throw new NotFoundException('Venda não encontrada');
+    }
   }
 
   async calculaTotalVenda(vendaId: number, empresaId: string) {

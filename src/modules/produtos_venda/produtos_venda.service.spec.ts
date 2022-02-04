@@ -35,7 +35,7 @@ describe('ProdutosServicoService', () => {
       id: '5',
       valorTotal: 100,
       pagamento: 120,
-      troco: 20,
+      valorTroco: 20,
     } as Vendas,
     empresa: { id: '5' } as Empresa,
   };

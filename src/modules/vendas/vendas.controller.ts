@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
@@ -28,7 +27,7 @@ import { VendasService } from './vendas.service';
 
 @Controller('api/v1/vendas')
 @ApiTags('Vendas')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('access-token')
 export class VendasController {
   constructor(
@@ -56,16 +55,12 @@ export class VendasController {
     @Query() query: FindVendasQueryDto,
     @User('empresa') empresa: Empresa,
   ) {
-    try {
-      const found = await this.vendasService.findVendas(query, empresa.id);
+    const found = await this.vendasService.findVendas(query, empresa.id);
 
-      return {
-        found,
-        message: 'Vendas encontradas',
-      };
-    } catch (error) {
-      throw new NotFoundException('Venda não encontrada');
-    }
+    return {
+      found,
+      message: 'Vendas encontradas',
+    };
   }
 
   @Patch('/finaliza/:id')
@@ -125,7 +120,7 @@ export class VendasController {
 
   @Post('/servicosVenda/:vendaId')
   @ApiOperation({ summary: 'Adiciona serviço na venda por id' })
-  async adicionaProdutoServico(
+  async adicionaServicoVenda(
     @Body(ValidationPipe) updateVendaDto: UpdateVendaDto,
     @User('empresa') empresa: Empresa,
     @Param('vendaId') vendaId: number,
@@ -232,7 +227,7 @@ export class VendasController {
 
     return {
       valorVenda: valorVenda,
-      message: 'Servico(s) removido(s) com sucesso da venda',
+      message: 'Serviço removido com sucesso da venda',
     };
   }
 }
