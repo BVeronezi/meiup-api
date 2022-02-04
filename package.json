@@ -105,6 +105,7 @@
       "!**/*.stub.ts",
       "!**/*.mock.ts",
       "!**/*.entity.ts",
+      "!**/*.interceptor.ts",
       "!**/*.repository.ts",
       "!**/*-dto.ts",
       "!**/*.dto.ts",
