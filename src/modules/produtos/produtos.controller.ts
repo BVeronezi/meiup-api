@@ -72,7 +72,7 @@ export class ProdutosController {
     @Body() createProdutoDto: CreateProdutoDto,
     @User('empresa') empresa: Empresa,
   ): Promise<ReturnProdutoDto> {
-    const idCategoria = Number(createProdutoDto.categoria);
+    const idCategoria = String(createProdutoDto.categoria);
 
     const categoria = await this.categoriasService.findCategoriaById(
       idCategoria,
@@ -126,7 +126,7 @@ export class ProdutosController {
     @Param('id') id: string,
   ) {
     if (updateProdutoDto.categoria) {
-      const idCategoria = Number(updateProdutoDto.categoria);
+      const idCategoria = String(updateProdutoDto.categoria);
 
       const categoria = await this.categoriasService.findCategoriaById(
         idCategoria,

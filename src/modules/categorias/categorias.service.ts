@@ -17,8 +17,12 @@ export class CategoriasService {
     private categoriasRepository: CategoriasRepository,
   ) {}
 
-  async findCategoriaById(categoriaId: number): Promise<Categorias> {
-    return await this.categoriasRepository.findOne(categoriaId);
+  async findCategoriaById(categoriaId: string): Promise<Categorias> {
+    const categoria = await this.categoriasRepository.findOne(categoriaId);
+
+    if (!categoria) throw new NotFoundException('Categoria não encontrada');
+
+    return categoria;
   }
 
   async findCategorias(
@@ -38,7 +42,7 @@ export class CategoriasService {
     return await this.categoriasRepository.createCategoria(createCategoriaDto);
   }
 
-  async updateCategoria(updateCategoriaDto: UpdateCategoriaDto, id: number) {
+  async updateCategoria(updateCategoriaDto: UpdateCategoriaDto, id: string) {
     const result = await this.categoriasRepository.update(
       { id },
       {
@@ -47,18 +51,13 @@ export class CategoriasService {
     );
 
     if (result.affected > 0) {
-      const categoria = await this.findCategoriaById(Number(id));
-
-      return {
-        categoria,
-        message: 'Categoria atualizada com sucesso',
-      };
+      return await this.findCategoriaById(String(id));
     } else {
       throw new NotFoundException('Categoria não encontrada');
     }
   }
 
-  async deleteCategoria(categoriaId: number) {
+  async deleteCategoria(categoriaId: string) {
     try {
       const result = await this.categoriasRepository.delete({
         id: categoriaId,

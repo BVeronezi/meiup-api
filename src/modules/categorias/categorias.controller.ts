@@ -24,7 +24,7 @@ import { UpdateCategoriaDto } from './dto/update-categoria-dto';
 
 @Controller('api/v1/categorias')
 @ApiTags('Categorias')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('access-token')
 export class CategoriasController {
   constructor(private categoriasService: CategoriasService) {}
@@ -82,16 +82,24 @@ export class CategoriasController {
   @Role(UserRole.ADMIN)
   async updateCategoria(
     @Body(ValidationPipe) updateCategoriaDto: UpdateCategoriaDto,
-    @Param('id') id: number,
+    @Param('id') id: string,
   ) {
-    return this.categoriasService.updateCategoria(updateCategoriaDto, id);
+    const categoria = this.categoriasService.updateCategoria(
+      updateCategoriaDto,
+      id,
+    );
+
+    return {
+      categoria,
+      message: 'Categoria atualizada com sucesso',
+    };
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove categoria por id' })
   @Role(UserRole.MEI)
   @Role(UserRole.ADMIN)
-  async deleteCategoria(@Param('id') id: number) {
+  async deleteCategoria(@Param('id') id: string) {
     await this.categoriasService.deleteCategoria(id);
     return {
       message: 'Categoria removida com sucesso',

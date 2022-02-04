@@ -13,7 +13,7 @@ import { Empresa } from '../empresa/empresa.entity';
 @Entity()
 export class Categorias extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column({ nullable: true, type: 'varchar' })
   nome: string;

@@ -110,7 +110,7 @@ describe('ClientesService', () => {
   });
 
   describe('Pesquisar clientes', () => {
-    it('should call the findUsers method of the userRepository', async () => {
+    it('deve chamar o método findClientes do clienteRepository', async () => {
       (clienteRepository.findClientes as jest.Mock).mockResolvedValue(
         'resultOfsearch',
       );
