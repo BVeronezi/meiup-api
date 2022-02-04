@@ -19,7 +19,7 @@ export class PromocoesService {
     return await this.promocoesRepository.createPromocao(createPromocaoDto);
   }
 
-  async findPromocaoById(promocaoId: number): Promise<Promocoes> {
+  async findPromocaoById(promocaoId: string): Promise<Promocoes> {
     const promocao = await this.promocoesRepository.findOne(promocaoId);
 
     if (!promocao) throw new NotFoundException('Promoção não encontrado');
@@ -52,20 +52,15 @@ export class PromocoesService {
     );
 
     if (result.affected > 0) {
-      const promocao = await this.findPromocaoById(Number(id));
-
-      return {
-        promocao,
-        message: 'Promoção atualizada com sucesso',
-      };
+      return await this.findPromocaoById(id);
     } else {
       throw new NotFoundException('Promoção não encontrado');
     }
   }
 
-  async deletePromocao(promocaoId: number) {
+  async deletePromocao(promocaoId: string) {
     const result = await this.promocoesRepository.delete({
-      id: String(promocaoId),
+      id: promocaoId,
     });
     if (result.affected === 0) {
       throw new NotFoundException(

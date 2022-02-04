@@ -24,7 +24,7 @@ import { PromocoesService } from './promocoes.service';
 
 @Controller('api/v1/promocoes')
 @ApiTags('Promoções')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('access-token')
 export class PromocoesController {
   constructor(private promocoesService: PromocoesService) {}
@@ -70,7 +70,7 @@ export class PromocoesController {
 
     return {
       promocao,
-      message: 'Promoção cadastrado com sucesso',
+      message: 'Promoção cadastrada com sucesso',
     };
   }
 
@@ -82,14 +82,22 @@ export class PromocoesController {
     @Body(ValidationPipe) updatePromocaoDto: UpdatePromocaoDto,
     @Param('id') id: string,
   ) {
-    return this.promocoesService.updatePromocao(updatePromocaoDto, id);
+    const promocao = this.promocoesService.updatePromocao(
+      updatePromocaoDto,
+      id,
+    );
+
+    return {
+      promocao,
+      message: 'Promoção atualizada com sucesso',
+    };
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove promoção por id' })
   @Role(UserRole.MEI)
   @Role(UserRole.ADMIN)
-  async deletePromocao(@Param('id') id: number) {
+  async deletePromocao(@Param('id') id: string) {
     await this.promocoesService.deletePromocao(id);
     return {
       message: 'Promoção removida com sucesso',

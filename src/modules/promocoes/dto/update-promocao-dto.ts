@@ -1,48 +1,45 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
-import { Produtos } from '../../produtos/produtos.entity';
-import { Servicos } from '../../servicos/servicos.entity';
-
 export class UpdatePromocaoDto {
   @IsOptional()
   @ApiProperty({
     description: 'Descrição da promoção',
     type: 'string',
   })
-  descricao: string;
+  descricao?: string;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Produtos em promoção',
-    type: 'number',
+    type: [{}],
   })
-  produtos: Produtos;
+  produtos?: any;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Serviços em promoção',
-    type: 'number',
+    type: [{}],
   })
-  servicos: Servicos;
+  servicos?: any;
 
   @IsOptional()
   @ApiProperty({
     description: 'Valor promocional',
     type: 'decimal',
   })
-  valorPromocional: number;
+  valorPromocional?: number;
 
   @IsOptional()
   @ApiProperty({
     description: 'Data inicio da promoção',
     type: 'date',
   })
-  dataInicio: Date;
+  dataInicio?: Date;
 
   @IsOptional()
   @ApiProperty({
     description: 'Data fim da promoção',
     type: 'date',
   })
-  dataFim: Date;
+  dataFim?: Date;
 }

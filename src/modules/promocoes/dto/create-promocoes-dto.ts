@@ -1,9 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { Empresa } from '../../empresa/empresa.entity';
-import { Produtos } from '../../produtos/produtos.entity';
-import { Servicos } from '../../servicos/servicos.entity';
-
 export class CreatePromocaoDto {
   @IsNotEmpty({
     message: 'Informe qual a descrição da promoção',
@@ -16,15 +13,15 @@ export class CreatePromocaoDto {
 
   @ApiPropertyOptional({
     description: 'Produtos em promoção',
-    type: 'number',
+    type: [{}],
   })
-  produtos: Produtos;
+  produtos?: any;
 
   @ApiPropertyOptional({
     description: 'Serviços em promoção',
-    type: 'number',
+    type: [{}],
   })
-  servicos: Servicos;
+  servicos?: any;
 
   @IsNotEmpty({
     message: 'Informe o valor promocional',
