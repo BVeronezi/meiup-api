@@ -1,10 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Categorias } from '../categorias/categorias.entity';
 import { Empresa } from '../empresa/empresa.entity';
-import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { Precos } from '../precos/precos.entity';
-import { PrecosService } from '../precos/precos.service';
 import { Produtos } from '../produtos/produtos.entity';
 import { ProdutosServicoService } from '../produtos_servico/produtos_servico.service';
 import { Servicos } from '../servicos/servicos.entity';

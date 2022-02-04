@@ -26,8 +26,8 @@ export class ProdutosVendaService {
   }
 
   async findProdutosVendaById(
-    vendaId: number,
-    produtoId: number,
+    vendaId: string,
+    produtoId: string,
   ): Promise<ProdutosVenda> {
     const produtoVenda = await this.produtosVendaRepository.findOne({
       where: { venda: vendaId, produto: produtoId },

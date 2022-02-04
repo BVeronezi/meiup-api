@@ -10,7 +10,7 @@ export class ProdutoVendaDto {
     description: 'Id produto venda',
     type: 'string',
   })
-  id: string;
+  id?: string;
 
   @IsNotEmpty({
     message: 'Informe o produto',
