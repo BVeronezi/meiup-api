@@ -28,7 +28,7 @@ import { isEmpty, values } from 'lodash';
 import { User } from '../../decorators/user.decorator';
 @Controller('api/v1/usuario')
 @ApiTags('Usuários')
-@UseGuards(AuthGuard(), RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class UsuariosController {
   constructor(private usuarioService: UsuarioService) {}
 

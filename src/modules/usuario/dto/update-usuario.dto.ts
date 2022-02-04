@@ -1,15 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsEmail, IsOptional, IsDate } from 'class-validator';
+import { IsString, IsEmail, IsOptional } from 'class-validator';
 import { Endereco } from '../../endereco/endereco.entity';
 import { UserRole } from '../enum/user-roles.enum';
-
 export class UpdateUsuarioDto {
   @IsOptional()
   @ApiProperty()
   @IsString({
     message: 'Informe um nome de usuário válido',
   })
-  nome: string;
+  nome?: string;
 
   @IsOptional()
   @ApiProperty()
@@ -19,29 +18,22 @@ export class UpdateUsuarioDto {
       message: 'Informe um endereço de email válido',
     },
   )
-  email: string;
+  email?: string;
 
   @IsOptional()
   @ApiPropertyOptional()
-  role: UserRole;
+  role?: UserRole;
 
   @IsOptional()
   @ApiPropertyOptional()
-  celular: number;
+  celular?: number;
 
   @IsOptional()
   @ApiPropertyOptional()
-  telefone: number;
+  telefone?: number;
 
   @ApiPropertyOptional({
     description: 'Endereco vinculado ao usuário',
   })
-  endereco: Endereco;
-
-  @IsOptional()
-  @ApiProperty()
-  @IsDate({
-    message: 'Data de alteração do cadastro',
-  })
-  dataAlteracao: Date;
+  endereco?: Endereco;
 }
