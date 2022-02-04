@@ -26,7 +26,7 @@ import { ServicosService } from './servicos.service';
 
 @Controller('api/v1/servicos')
 @ApiTags('Serviços')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('access-token')
 export class ServicosController {
   constructor(
@@ -81,7 +81,12 @@ export class ServicosController {
     @Body(ValidationPipe) updateServicoDto: UpdateServicosDto,
     @Param('id') id: string,
   ) {
-    return this.servicosService.updateServico(updateServicoDto, id);
+    const servico = this.servicosService.updateServico(updateServicoDto, id);
+
+    return {
+      servico,
+      message: 'Serviço atualizado com sucesso',
+    };
   }
 
   @Delete(':id')
@@ -89,7 +94,7 @@ export class ServicosController {
   @Role(UserRole.MEI)
   @Role(UserRole.ADMIN)
   async deleteServico(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @User('empresa') empresa: Empresa,
   ) {
     await this.servicosService.deleteServico(id, Number(empresa.id));
@@ -103,7 +108,7 @@ export class ServicosController {
   async adicionaProdutoServico(
     @Body(ValidationPipe) updateServicoDto: UpdateServicosDto,
     @User('empresa') empresa: Empresa,
-    @Param('servicoId') servicoId: number,
+    @Param('servicoId') servicoId: string,
   ) {
     const servico = await this.servicosService.findServicoById(servicoId);
 
@@ -122,7 +127,7 @@ export class ServicosController {
   @Delete('/produtosServico/:servicoId')
   @ApiOperation({ summary: 'Remove produto do servico por id' })
   async removeProdutoServico(
-    @Param('servicoId') servicoId: number,
+    @Param('servicoId') servicoId: string,
     @User('empresa') empresa: Empresa,
     @Body(ValidationPipe) removeProdutoServicoDto: RemoveProdutosServicoDto,
   ) {

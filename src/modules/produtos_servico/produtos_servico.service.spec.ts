@@ -110,7 +110,7 @@ describe('ProdutosServicoService', () => {
         produtoServicoRepository.findProdutosServico as jest.Mock
       ).mockResolvedValue('resultOfsearch');
       const mockFindProdutosQueryDto: FindProdutosServicoQueryDto = {
-        servicoId: 10,
+        servicoId: '10',
       };
 
       const result = await service.findProdutosServico(

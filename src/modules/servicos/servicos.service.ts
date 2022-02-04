@@ -23,7 +23,7 @@ export class ServicosService {
     return await this.servicosRepository.createServico(createServicosDto);
   }
 
-  async findServicoById(servicoId: number): Promise<Servicos> {
+  async findServicoById(servicoId: string): Promise<Servicos> {
     const servico = await this.servicosRepository.findOne(servicoId);
 
     if (!servico) throw new NotFoundException('Serviço não encontrado');
@@ -94,18 +94,13 @@ export class ServicosService {
     );
 
     if (result.affected > 0) {
-      const servico = await this.findServicoById(Number(id));
-
-      return {
-        servico,
-        message: 'Serviço atualizado com sucesso',
-      };
+      return await this.findServicoById(id);
     } else {
       throw new NotFoundException('Serviço não encontrado');
     }
   }
 
-  async deleteServico(servicoId: number, empresaId: number) {
+  async deleteServico(servicoId: string, empresaId: number) {
     const params: FindProdutosServicoQueryDto = {
       servicoId: servicoId,
       sort: undefined,

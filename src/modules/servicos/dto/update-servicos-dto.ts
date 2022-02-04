@@ -7,32 +7,32 @@ export class UpdateServicosDto {
     description: 'Nome do serviço para cadastro no sistema',
     type: 'string',
   })
-  nome: string;
+  nome?: string;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Custo do serviço',
     type: 'number',
   })
-  custo: number;
+  custo?: number;
 
   @IsOptional()
   @ApiProperty({
     description: 'Valor do serviço',
     type: 'number',
   })
-  valor: number;
+  valor?: number;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Margem de lucro do serviço',
     type: 'number',
   })
-  margemLucro: number;
+  margemLucro?: number;
 
   @ApiPropertyOptional({
     description: 'Produtos utilizados',
     type: 'number',
   })
-  produto: number;
+  produto?: number;
 }

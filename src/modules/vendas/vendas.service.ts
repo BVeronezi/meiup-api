@@ -148,7 +148,7 @@ export class VendasService {
     if (response.servicosVenda.length > 0) {
       for (const key of response.servicosVenda) {
         const paramsProdutoServico: FindProdutosServicoQueryDto = {
-          servicoId: Number(key.servico.id),
+          servicoId: String(key.servico.id),
           sort: undefined,
         };
 
@@ -294,7 +294,7 @@ export class VendasService {
 
     if (!response) {
       await this.baixaEstoqueProdutoServico(
-        Number(servico.id),
+        String(servico.id),
         String(empresa.id),
       );
 
@@ -317,7 +317,7 @@ export class VendasService {
       );
 
       await this.baixaEstoqueProdutoServico(
-        Number(servico.id),
+        String(servico.id),
         String(empresa.id),
       );
 
@@ -361,7 +361,7 @@ export class VendasService {
     return await produto.save();
   }
 
-  async baixaEstoqueProdutoServico(servicoId: number, empresaId: string) {
+  async baixaEstoqueProdutoServico(servicoId: string, empresaId: string) {
     const paramsProdutoServico: FindProdutosServicoQueryDto = {
       servicoId: servicoId,
     };
