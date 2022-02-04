@@ -28,7 +28,7 @@ import { ProdutosService } from './produtos.service';
 
 @Controller('api/v1/produtos')
 @ApiTags('Produtos')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('access-token')
 export class ProdutosController {
   constructor(
@@ -135,15 +135,27 @@ export class ProdutosController {
       updateProdutoDto.categoria = categoria;
     }
 
-    return this.produtosService.updateProduto(updateProdutoDto, id);
+    const produto = await this.produtosService.updateProduto(
+      updateProdutoDto,
+      id,
+    );
+
+    return {
+      produto,
+      message: 'Produto atualizado com sucesso',
+    };
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove produto por id' })
   @Role(UserRole.MEI)
   @Role(UserRole.ADMIN)
-  async deleteProduto(@Param('id') id: number) {
-    return await this.produtosService.deleteProduto(id);
+  async deleteProduto(@Param('id') id: string) {
+    await this.produtosService.deleteProduto(id);
+
+    return {
+      message: 'Produto removido com sucesso',
+    };
   }
 
   @Delete('/fornecedor/:id')
@@ -151,7 +163,7 @@ export class ProdutosController {
   @Role(UserRole.MEI)
   @Role(UserRole.ADMIN)
   async deleteFornecedorProduto(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body(ValidationPipe) fornecedorProdutoDto: FornecedorProdutoDto,
   ) {
     await this.produtosService.deleteFornecedorProduto(

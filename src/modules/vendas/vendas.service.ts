@@ -156,7 +156,7 @@ export class VendasService {
         if (responseProdutoServico.produtosServico.length > 0) {
           for (const key of responseProdutoServico.produtosServico) {
             const produto = await this.produtosService.findProdutoById(
-              Number(key.produto.id),
+              String(key.produto.id),
             );
 
             produto.estoque = Number(produto.estoque) + Number(key.quantidade);
@@ -184,7 +184,7 @@ export class VendasService {
     if (response.produtosVenda.length > 0) {
       for (const key of response.produtosVenda) {
         const produto = await this.produtosService.findProdutoById(
-          Number(key.produto?.id),
+          String(key.produto?.id),
         );
 
         produto.estoque = Number(produto.estoque) + Number(key.quantidade);
@@ -348,7 +348,7 @@ export class VendasService {
 
   async baixaEstoqueProdutoVenda(item) {
     const produto = await this.produtosService.findProdutoById(
-      Number(item.produto),
+      String(item.produto),
     );
 
     produto.estoque = Number(produto.estoque) - Number(item.quantidade);
@@ -369,7 +369,7 @@ export class VendasService {
     if (response.produtosServico.length > 0) {
       for (const item of response.produtosServico) {
         const produto = await this.produtosService.findProdutoById(
-          Number(item.produto.id),
+          String(item.produto.id),
         );
 
         produto.estoque = Number(produto.estoque) - Number(item.quantidade);

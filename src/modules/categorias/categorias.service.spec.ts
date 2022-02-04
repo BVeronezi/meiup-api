@@ -96,11 +96,11 @@ describe('CategoriasService', () => {
 
       const result = await service.findCategorias(
         mockFindCategoriaQueryDto,
-        'mockIdEmpresa',
+        'mockIdCategoria',
       );
       expect(categoriaRepository.findCategorias).toHaveBeenCalledWith(
         mockFindCategoriaQueryDto,
-        'mockIdEmpresa',
+        'mockIdCategoria',
       );
       expect(result).toEqual('resultOfsearch');
     });

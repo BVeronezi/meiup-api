@@ -24,7 +24,7 @@ export class ProdutosService {
     return await this.produtosRepository.createProduto(createProdutoDto);
   }
 
-  async findProdutoById(produtoId: number): Promise<Produtos> {
+  async findProdutoById(produtoId: string): Promise<Produtos> {
     const produto = await this.produtosRepository.findOne(produtoId);
 
     if (!produto) throw new NotFoundException('Produto não encontrado');
@@ -44,7 +44,7 @@ export class ProdutosService {
   }
 
   async updateProduto(updateProdutoDto: UpdateProdutoDto, id: string) {
-    const produto = await this.findProdutoById(Number(id));
+    const produto = await this.findProdutoById(id);
 
     if (produto) {
       const fornecedoresProduto = produto.fornecedoresProduto;
@@ -102,10 +102,7 @@ export class ProdutosService {
         throw new Error(error.message);
       }
 
-      return {
-        produto,
-        message: 'Produto atualizado com sucesso',
-      };
+      return produto;
     } else {
       throw new NotFoundException('Produto não encontrado');
     }
@@ -113,10 +110,10 @@ export class ProdutosService {
 
   async deleteFornecedorProduto(
     fornecedorProdutoDto: FornecedorProdutoDto,
-    produtoId: number,
+    produtoId: string,
   ) {
     try {
-      const produto = await this.findProdutoById(Number(produtoId));
+      const produto = await this.findProdutoById(produtoId);
       const fornecedoresCadastrados = [];
       const newFornecedoresProdutos = [];
 
@@ -143,7 +140,7 @@ export class ProdutosService {
     }
   }
 
-  async deleteProduto(produtoId: number) {
+  async deleteProduto(produtoId: string) {
     const produto = await this.findProdutoById(produtoId);
 
     const produtoServico = await this.produtoServicoService.findProduto(

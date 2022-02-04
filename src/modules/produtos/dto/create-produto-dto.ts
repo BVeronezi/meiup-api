@@ -47,19 +47,19 @@ export class CreateProdutoDto {
     description: 'Estoque do item',
     type: 'number',
   })
-  estoque: number;
+  estoque?: number;
 
   @ApiPropertyOptional({
     description: 'Estoque mínimo do item',
     type: 'number',
   })
-  estoqueMinimo: number;
+  estoqueMinimo?: number;
 
   @ApiPropertyOptional({
     description: 'Estoque máximo do item',
     type: 'number',
   })
-  estoqueMaximo: number;
+  estoqueMaximo?: number;
 
   @IsNotEmpty({
     message: 'Informe o preço do item',
@@ -73,7 +73,7 @@ export class CreateProdutoDto {
     description: 'Fornecedores do produto',
     type: [Number],
   })
-  fornecedoresProduto: Fornecedores[];
+  fornecedoresProduto?: Fornecedores[];
 
   @ApiProperty({
     description: 'Empresa vinculada ao item',

@@ -51,7 +51,7 @@ export class ServicosService {
 
     if (!produtosServico) {
       const produto = await this.produtosService.findProdutoById(
-        Number(item.produto),
+        String(item.produto),
       );
       const params = {
         id: null,
@@ -63,7 +63,7 @@ export class ServicosService {
       return await this.produtosServicoService.createProdutoServico(params);
     } else {
       const produto = await this.produtosService.findProdutoById(
-        Number(item.produto),
+        String(item.produto),
       );
 
       const params = {

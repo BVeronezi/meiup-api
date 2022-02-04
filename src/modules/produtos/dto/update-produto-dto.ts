@@ -10,7 +10,7 @@ export class UpdateProdutoDto {
     description: 'Descrição do produto para cadastro no sistema',
     type: 'string',
   })
-  descricao: string;
+  descricao?: string;
 
   @IsOptional()
   @ApiProperty({
@@ -18,7 +18,7 @@ export class UpdateProdutoDto {
       'Tipo de item para cadastro no sistema: 1 - Produto; 2 - Insumo; 3 - Kit; 4 - Brinde',
     type: 'number',
   })
-  tipoItem: number;
+  tipoItem?: number;
 
   @IsOptional()
   @ApiProperty({
@@ -26,47 +26,47 @@ export class UpdateProdutoDto {
       'Unidade para cadastro no sistema: 1 - Quilograma ;2 - Caixa; 3 - Fardo',
     type: 'number',
   })
-  unidade: number;
+  unidade?: number;
 
   @IsOptional()
   @ApiProperty({
     description: 'Categoria do item',
     type: 'number',
   })
-  categoria: Categorias;
+  categoria?: Categorias;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Estoque do item',
     type: 'number',
   })
-  estoque: number;
+  estoque?: number;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Estoque mínimo do item',
     type: 'number',
   })
-  estoqueMinimo: number;
+  estoqueMinimo?: number;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Estoque máximo do item',
     type: 'number',
   })
-  estoqueMaximo: number;
+  estoqueMaximo?: number;
 
   @IsOptional()
   @ApiProperty({
     description: 'Precos do item',
     type: {},
   })
-  precos: Precos;
+  precos?: Precos;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Fornecedores do produto',
     type: [Number],
   })
-  fornecedoresProduto: Fornecedores[];
+  fornecedoresProduto?: Fornecedores[];
 }

@@ -124,11 +124,11 @@ describe('ClientesService', () => {
 
       const result = await service.findClientes(
         mockFindClientesQueryDto,
-        'mockIdEmpresa',
+        'mockIdCliente',
       );
       expect(clienteRepository.findClientes).toHaveBeenCalledWith(
         mockFindClientesQueryDto,
-        'mockIdEmpresa',
+        'mockIdCliente',
       );
       expect(result).toEqual('resultOfsearch');
     });
