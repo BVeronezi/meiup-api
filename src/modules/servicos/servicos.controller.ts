@@ -130,8 +130,8 @@ export class ServicosController {
 
     await this.produtosServicoService.deleteProdutoServico(
       removeProdutoServicoDto,
-      Number(servico.id),
-      Number(empresa.id),
+      String(servico.id),
+      String(empresa.id),
     );
 
     return {

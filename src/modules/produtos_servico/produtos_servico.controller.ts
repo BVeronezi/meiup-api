@@ -14,7 +14,7 @@ import { ProdutosServicoService } from './produtos_servico.service';
 
 @Controller('api/v1/produtosServico')
 @ApiTags('Produtos serviço')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('access-token')
 export class ProdutosServicoController {
   constructor(private produtosServicoService: ProdutosServicoService) {}

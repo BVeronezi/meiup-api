@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindProdutosServicoQueryDto } from './dto/find-produtos-servico-dto';
 import { ProdutoServicoDto } from './dto/produto-servico-dto';
 import { ProdutosServico } from './produtos_servico.entity';
-import { ProdutosServicoRepository } from './produtos_servico.respository';
+import { ProdutosServicoRepository } from './produtos_servico.repository';
 
 @Injectable()
 export class ProdutosServicoService {
@@ -25,8 +25,8 @@ export class ProdutosServicoService {
   }
 
   async findProdutosServicoById(
-    servicoId: number,
-    produtoId: number,
+    servicoId: string,
+    produtoId: string,
   ): Promise<ProdutosServico> {
     const produtoServico = await this.produtosServicoRepository.findOne({
       where: { servico: servicoId, produto: produtoId },
@@ -59,7 +59,7 @@ export class ProdutosServicoService {
     );
   }
 
-  async deleteProdutoServico(item: any, servicoId: number, empresaId: number) {
+  async deleteProdutoServico(item: any, servicoId: string, empresaId: string) {
     const produtoServico = await this.produtosServicoRepository.findOne({
       where: {
         id: item.id,

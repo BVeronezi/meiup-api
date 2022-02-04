@@ -140,11 +140,11 @@ describe('ProdutosService', () => {
 
       const result = await service.findProdutos(
         mockFindProdutosQueryDto,
-        'mockIdProduto',
+        'mockIdEmpresa',
       );
       expect(produtoRepository.findProdutos).toHaveBeenCalledWith(
         mockFindProdutosQueryDto,
-        'mockIdProduto',
+        'mockIdEmpresa',
       );
       expect(result).toEqual('resultOfsearch');
     });

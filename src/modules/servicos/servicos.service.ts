@@ -45,8 +45,8 @@ export class ServicosService {
   async adicionaProdutoServico(item: any, servico: Servicos, empresa: Empresa) {
     const produtosServico =
       await this.produtosServicoService.findProdutosServicoById(
-        Number(servico.id),
-        Number(item.produto),
+        String(servico.id),
+        String(item.produto),
       );
 
     if (!produtosServico) {
@@ -124,8 +124,8 @@ export class ServicosService {
         };
         await this.produtosServicoService.deleteProdutoServico(
           item,
-          servicoId,
-          empresaId,
+          String(servicoId),
+          String(empresaId),
         );
       }
     }
