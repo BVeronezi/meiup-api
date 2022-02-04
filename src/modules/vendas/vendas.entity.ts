@@ -11,7 +11,7 @@ import {
 import { Clientes } from '../clientes/clientes.entity';
 import { Empresa } from '../empresa/empresa.entity';
 import { Usuario } from '../usuario/usuario.entity';
-import { StatusVenda } from './enum/venda-status-enum';
+import { StatusVenda } from './enum/venda-status.enum';
 @Entity()
 export class Vendas extends BaseEntity {
   @PrimaryGeneratedColumn()

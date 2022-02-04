@@ -5,7 +5,7 @@ import { PrecosService } from './precos.service';
 
 @Controller('api/v1/precos')
 @ApiTags('Preços')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('access-token')
 export class PrecosController {
   constructor(private precosService: PrecosService) {}

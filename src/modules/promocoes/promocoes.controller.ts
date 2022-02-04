@@ -19,7 +19,7 @@ import { UserRole } from '../usuario/enum/user-roles.enum';
 import { CreatePromocaoDto } from './dto/create-promocoes-dto';
 import { FindPromocoesQueryDto } from './dto/find-promocoes-query-dto';
 import { ReturnPromocaoDto } from './dto/return-promocao-dto';
-import { UpdatePromocaoDto } from './dto/update-promocao-dto-';
+import { UpdatePromocaoDto } from './dto/update-promocao-dto';
 import { PromocoesService } from './promocoes.service';
 
 @Controller('api/v1/promocoes')

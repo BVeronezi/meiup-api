@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePromocaoDto } from './dto/create-promocoes-dto';
 import { FindPromocoesQueryDto } from './dto/find-promocoes-query-dto';
-import { UpdatePromocaoDto } from './dto/update-promocao-dto-';
+import { UpdatePromocaoDto } from './dto/update-promocao-dto';
 import { Promocoes } from './promocoes.entity';
 import { PromocoesRepository } from './promocoes.repository';
 

@@ -17,7 +17,7 @@ import { ServicosVendaService } from '../servicos_venda/servicos_venda.service';
 import { CreateVendaDto } from './dto/create-venda-dto';
 import { FindVendasQueryDto } from './dto/find-vendas-query-dto';
 import { UpdateVendaDto } from './dto/update-venda-dto';
-import { StatusVenda } from './enum/venda-status-enum';
+import { StatusVenda } from './enum/venda-status.enum';
 import { Vendas } from './vendas.entity';
 import { VendasRepository } from './vendas.repository';
 @Injectable()
