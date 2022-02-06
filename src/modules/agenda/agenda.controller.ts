@@ -22,7 +22,7 @@ import { UpdateAgendaDto } from './dto/update-agenda-dto';
 
 @Controller('api/v1/agenda')
 @ApiTags('Agenda')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('access-token')
 export class AgendaController {
   constructor(private agendaService: AgendaService) {}
@@ -64,7 +64,7 @@ export class AgendaController {
 
     return {
       agenda,
-      message: 'Agenda cadastrado com sucesso',
+      message: 'Agenda cadastrada com sucesso',
     };
   }
 
@@ -74,12 +74,17 @@ export class AgendaController {
     @Body(ValidationPipe) updateAgendaDto: UpdateAgendaDto,
     @Param('id') id: string,
   ) {
-    return this.agendaService.updateAgenda(updateAgendaDto, id);
+    const agenda = this.agendaService.updateAgenda(updateAgendaDto, id);
+
+    return {
+      agenda,
+      message: 'Agenda atualizado com sucesso',
+    };
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove agenda por id' })
-  async deleteAgenda(@Param('id') id: number) {
+  async deleteAgenda(@Param('id') id: string) {
     await this.agendaService.deleteAgenda(id);
     return {
       message: 'Agenda removida com sucesso',

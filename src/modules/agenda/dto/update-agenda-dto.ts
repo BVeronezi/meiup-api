@@ -7,28 +7,28 @@ export class UpdateAgendaDto {
     description: 'Titulo',
     type: 'string',
   })
-  titulo: string;
+  titulo?: string;
 
   @IsOptional()
   @ApiProperty({
     description: 'Descrição',
     type: 'string',
   })
-  descricao: string;
+  descricao?: string;
 
   @IsOptional()
   @ApiProperty({
     description: 'Data',
     type: 'date',
   })
-  data: Date;
+  data?: Date;
 
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Participantes',
     type: 'string',
   })
-  participantes: string;
+  participantes?: string;
 
   @IsOptional()
   @ApiProperty({
@@ -36,7 +36,7 @@ export class UpdateAgendaDto {
     type: 'boolean',
     default: false,
   })
-  notificar: boolean;
+  notificar?: boolean;
 
   @IsOptional()
   @ApiProperty({
@@ -44,5 +44,5 @@ export class UpdateAgendaDto {
     type: 'boolean',
     default: false,
   })
-  notificarParticipantes: boolean;
+  notificarParticipantes?: boolean;
 }

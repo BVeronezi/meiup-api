@@ -34,21 +34,21 @@ export class CreateAgendaDto {
     description: 'Participantes',
     type: 'string',
   })
-  participantes: string;
+  participantes?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Notificar usuário',
     type: 'boolean',
     default: false,
   })
-  notificar: boolean;
+  notificar?: boolean;
 
   @ApiProperty({
     description: 'Notificar participantes',
     type: 'boolean',
     default: false,
   })
-  notificarParticipantes: boolean;
+  notificarParticipantes?: boolean;
 
   @ApiProperty({
     description: 'Usuario vinculado a agenda',

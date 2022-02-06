@@ -17,7 +17,7 @@ export class AgendaService {
     return await this.agendaRepository.createAgenda(createAgendaDto);
   }
 
-  async findAgendaById(agendaId: number): Promise<Agenda> {
+  async findAgendaById(agendaId: string): Promise<Agenda> {
     const agenda = await this.agendaRepository.findOne(agendaId);
 
     if (!agenda) throw new NotFoundException('Agenda não encontrada');
@@ -47,19 +47,15 @@ export class AgendaService {
     );
 
     if (result.affected > 0) {
-      const agenda = await this.findAgendaById(Number(id));
-      return {
-        agenda,
-        message: 'Agenda atualizado com sucesso',
-      };
+      return await this.findAgendaById(id);
     } else {
       throw new NotFoundException('Agenda não encontrada');
     }
   }
 
-  async deleteAgenda(agendaId: number) {
+  async deleteAgenda(agendaId: string) {
     const result = await this.agendaRepository.delete({
-      id: String(agendaId),
+      id: agendaId,
     });
     if (result.affected === 0) {
       throw new NotFoundException(
