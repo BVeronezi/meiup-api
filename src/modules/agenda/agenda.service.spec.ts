@@ -1,8 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Empresa } from '../empresa/empresa.entity';
-import { Endereco } from '../endereco/endereco.entity';
-import { EnderecoService } from '../endereco/endereco.service';
 import { Usuario } from '../usuario/usuario.entity';
 import { AgendaRepository } from './agenda.repository';
 import { AgendaService } from './agenda.service';

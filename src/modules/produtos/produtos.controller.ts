@@ -86,7 +86,7 @@ export class ProdutosController {
 
       for (const idFornecedor of createProdutoDto.fornecedoresProduto) {
         const fornecedor = await this.fornecedoresService.findFornecedorById(
-          Number(idFornecedor),
+          String(idFornecedor),
         );
 
         fornecedoresProduto.push(fornecedor);

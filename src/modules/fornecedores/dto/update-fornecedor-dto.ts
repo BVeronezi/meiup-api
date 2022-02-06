@@ -5,7 +5,7 @@ import { Endereco } from '../../endereco/endereco.entity';
 export class UpdateFornecedorDto {
   @IsOptional()
   @ApiProperty()
-  nome: string;
+  nome?: string;
 
   @IsOptional()
   @ApiProperty()
@@ -15,26 +15,26 @@ export class UpdateFornecedorDto {
       message: 'Informe um endereço de email válido',
     },
   )
-  email: string;
+  email?: string;
 
   @IsOptional()
   @ApiProperty()
-  cpfCnpj: string;
+  cpfCnpj?: string;
 
   @IsOptional()
   @ApiProperty()
-  situacaoCadastral: string;
+  situacaoCadastral?: string;
 
   @IsOptional()
   @ApiPropertyOptional()
-  celular: string;
+  celular?: string;
 
   @IsOptional()
   @ApiPropertyOptional()
-  telefone: string;
+  telefone?: string;
 
   @ApiPropertyOptional({
     description: 'Endereco vinculado ao fornecedor',
   })
-  endereco: Endereco;
+  endereco?: Endereco;
 }

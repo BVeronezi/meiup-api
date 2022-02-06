@@ -24,8 +24,10 @@ export class FornecedoresService {
     );
   }
 
-  async findFornecedorById(fornecedorId: number): Promise<Fornecedores> {
-    const fornecedor = await this.fornecedoresRepository.findOne(fornecedorId);
+  async findFornecedorById(fornecedorId: string): Promise<Fornecedores> {
+    const fornecedor = await this.fornecedoresRepository.findOne(fornecedorId, {
+      relations: ['endereco'],
+    });
 
     if (!fornecedor) throw new NotFoundException('Fornecedor não encontrado');
 
@@ -61,7 +63,7 @@ export class FornecedoresService {
     );
 
     if (result.affected > 0) {
-      const fornecedor = await this.findFornecedorById(Number(id));
+      const fornecedor = await this.findFornecedorById(id);
 
       if (!values(updateFornecedorDto.endereco).every(isEmpty)) {
         const endereco = await this.endereco(updateFornecedorDto, usuario);
@@ -76,7 +78,7 @@ export class FornecedoresService {
     }
   }
 
-  async deleteFornecedor(fornecedorId: number) {
+  async deleteFornecedor(fornecedorId: string) {
     const fornecedor = await this.findFornecedorById(fornecedorId);
 
     if (!fornecedor) {

@@ -25,7 +25,7 @@ import { FornecedoresService } from './fornecedores.service';
 
 @Controller('api/v1/fornecedores')
 @ApiTags('Fornecedores')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('access-token')
 export class FornecedoresController {
   constructor(private fornecedoresService: FornecedoresService) {}
@@ -68,11 +68,16 @@ export class FornecedoresController {
     @Param('id') id: string,
     @User('usuario') usuario: Usuario,
   ) {
-    return this.fornecedoresService.updateFornecedor(
+    const fornecedor = this.fornecedoresService.updateFornecedor(
       updateFornecedorDto,
       id,
       usuario,
     );
+
+    return {
+      fornecedor,
+      message: 'Fornecedor atualizado com sucesso',
+    };
   }
 
   @Post()
@@ -98,7 +103,7 @@ export class FornecedoresController {
   @ApiOperation({ summary: 'Remove o fornecedor por id' })
   @Role(UserRole.MEI)
   @Role(UserRole.ADMIN)
-  async deleteFornecedor(@Param('id') id: number) {
+  async deleteFornecedor(@Param('id') id: string) {
     await this.fornecedoresService.deleteFornecedor(id);
     return {
       message: 'Fornecedor removido com sucesso',

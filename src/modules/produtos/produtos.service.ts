@@ -74,7 +74,7 @@ export class ProdutosService {
           if (fornecedorJaCadastrado.length > 0) {
             const fornecedor =
               await this.fornecedoresService.findFornecedorById(
-                Number(idFornecedor),
+                String(idFornecedor),
               );
 
             fornecedoresProduto.push(fornecedor);
@@ -127,7 +127,7 @@ export class ProdutosService {
 
       for (const idFornecedor of produto.fornecedoresProduto) {
         const fornecedor = await this.fornecedoresService.findFornecedorById(
-          Number(idFornecedor),
+          String(idFornecedor),
         );
 
         newFornecedoresProdutos.push(fornecedor);
