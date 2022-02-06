@@ -29,8 +29,8 @@ export class ServicosVendaService {
   }
 
   async findProdutosVendaById(
-    vendaId: number,
-    produtoId: number,
+    vendaId: string,
+    produtoId: string,
   ): Promise<ServicosVenda> {
     const servicoVenda = await this.servicosVendaRepository.findOne({
       where: { venda: vendaId, servico: produtoId },

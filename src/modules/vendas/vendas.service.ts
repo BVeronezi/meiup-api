@@ -286,8 +286,8 @@ export class VendasService {
     let servicoVenda;
 
     const response = await this.servicosVendaService.findProdutosVendaById(
-      Number(venda.id),
-      Number(item.servico),
+      String(venda.id),
+      String(item.servico),
     );
 
     const servico = await this.servicoService.findServicoById(item.servico);
