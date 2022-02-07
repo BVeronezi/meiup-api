@@ -13,10 +13,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetUser } from '../auth/get-user.decorator';
-import { Role } from '../auth/role.decorator';
 import { RolesGuard } from '../auth/roles.guard';
-import { Empresa } from '../empresa/empresa.entity';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { FindUsuariosQueryDto } from './dto/find-usuarios-query.dto';
 import { ReturnUsuarioDto } from './dto/return-usuario.dto';
@@ -25,7 +22,8 @@ import { TipoUsuario } from './enum/user-roles.enum';
 import { Usuario } from './usuario.entity';
 import { UsuarioService } from './usuario.service';
 import { isEmpty, values } from 'lodash';
-import { User } from '../../decorators/user.decorator';
+import { User } from '../auth/decorators/user.decorator';
+import { Role } from '../auth/decorators/role.decorator';
 @Controller('api/v1/usuario')
 @ApiTags('Usuários')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -66,7 +64,7 @@ export class UsuariosController {
   @ApiOperation({ summary: 'Atualiza usuário por id' })
   async updateUser(
     @Body(ValidationPipe) updateUserDto: UpdateUsuarioDto,
-    @GetUser() user: Usuario,
+    @User() user: Usuario,
     @Param('id') id: string,
   ) {
     if (user.tipo == TipoUsuario.FUNCIONARIO && user.id.toString() != id) {
@@ -95,9 +93,12 @@ export class UsuariosController {
   })
   async findUsers(
     @Query() query: FindUsuariosQueryDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
-    const found = await this.usuarioService.findUsers(query, empresa.id);
+    const found = await this.usuarioService.findUsers(
+      query,
+      usuario.empresa.id,
+    );
     return {
       found,
       message: 'Usuários encontrados',

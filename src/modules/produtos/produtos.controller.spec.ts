@@ -11,10 +11,13 @@ import { UpdateProdutoDto } from './dto/update-produto-dto';
 import { PrecosService } from '../precos/precos.service';
 import { CategoriasService } from '../categorias/categorias.service';
 import { FornecedoresService } from '../fornecedores/fornecedores.service';
+import { Usuario } from '../usuario/usuario.entity';
 
 describe('ProdutosController', () => {
   let produtoController: ProdutosController;
   let produtoService: ProdutosService;
+
+  const mockUsuario = { id: '5', empresa: { id: '5' } } as Usuario;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -60,9 +63,7 @@ describe('ProdutosController', () => {
       precos: {} as Precos,
     };
 
-    const empresa = { id: '5' } as Empresa;
-
-    await produtoController.findProdutos(query, empresa);
+    await produtoController.findProdutos(query, mockUsuario);
 
     expect(produtoService.findProdutos).toBeCalled();
   });
@@ -83,7 +84,7 @@ describe('ProdutosController', () => {
     };
 
     expect(
-      await produtoController.createProduto(mockProduto, mockProduto.empresa),
+      await produtoController.createProduto(mockProduto, mockUsuario),
     ).toMatchObject({
       produto: {},
       message: 'Produto cadastrado com sucesso',

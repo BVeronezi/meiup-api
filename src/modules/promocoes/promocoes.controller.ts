@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from '../../decorators/user.decorator';
-import { Role } from '../auth/role.decorator';
-import { Empresa } from '../empresa/empresa.entity';
+import { Role } from '../auth/decorators/role.decorator';
+import { User } from '../auth/decorators/user.decorator';
 import { TipoUsuario } from '../usuario/enum/user-roles.enum';
+import { Usuario } from '../usuario/usuario.entity';
 import { CreatePromocaoDto } from './dto/create-promocoes-dto';
 import { FindPromocoesQueryDto } from './dto/find-promocoes-query-dto';
 import { ReturnPromocaoDto } from './dto/return-promocao-dto';
@@ -46,9 +46,12 @@ export class PromocoesController {
   })
   async findPromocoes(
     @Query() query: FindPromocoesQueryDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
-    const found = await this.promocoesService.findPromocoes(query, empresa.id);
+    const found = await this.promocoesService.findPromocoes(
+      query,
+      usuario.empresa.id,
+    );
     return {
       found,
       message: 'Promoções encontradas',
@@ -61,9 +64,9 @@ export class PromocoesController {
   @Role(TipoUsuario.ADMINISTRADOR)
   async createPromocao(
     @Body() createPromocaoDto: CreatePromocaoDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ): Promise<ReturnPromocaoDto> {
-    createPromocaoDto.empresa = empresa;
+    createPromocaoDto.empresa = usuario.empresa;
     const promocao = await this.promocoesService.createPromocao(
       createPromocaoDto,
     );

@@ -12,13 +12,13 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from '../../decorators/user.decorator';
-import { Role } from '../auth/role.decorator';
+import { Role } from '../auth/decorators/role.decorator';
+import { User } from '../auth/decorators/user.decorator';
 import { CategoriasService } from '../categorias/categorias.service';
-import { Empresa } from '../empresa/empresa.entity';
 import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { PrecosService } from '../precos/precos.service';
 import { TipoUsuario } from '../usuario/enum/user-roles.enum';
+import { Usuario } from '../usuario/usuario.entity';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
 import { FornecedorProdutoDto } from './dto/fornecedor-produto-dto';
@@ -55,9 +55,12 @@ export class ProdutosController {
   })
   async findProdutos(
     @Query() query: FindProdutosQueryDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
-    const found = await this.produtosService.findProdutos(query, empresa.id);
+    const found = await this.produtosService.findProdutos(
+      query,
+      usuario.empresa.id,
+    );
     return {
       found,
       message: 'Produtos encontrados',
@@ -70,7 +73,7 @@ export class ProdutosController {
   @Role(TipoUsuario.ADMINISTRADOR)
   async createProduto(
     @Body() createProdutoDto: CreateProdutoDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ): Promise<ReturnProdutoDto> {
     const idCategoria = String(createProdutoDto.categoria);
 
@@ -79,7 +82,7 @@ export class ProdutosController {
     );
 
     createProdutoDto.categoria = categoria;
-    createProdutoDto.empresa = empresa;
+    createProdutoDto.empresa = usuario.empresa;
 
     if (createProdutoDto.fornecedoresProduto?.length > 0) {
       const fornecedoresProduto = [];

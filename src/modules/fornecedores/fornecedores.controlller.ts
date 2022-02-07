@@ -12,9 +12,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from '../../decorators/user.decorator';
-import { Role } from '../auth/role.decorator';
-import { Empresa } from '../empresa/empresa.entity';
+import { Role } from '../auth/decorators/role.decorator';
+import { User } from '../auth/decorators/user.decorator';
 import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { Usuario } from '../usuario/usuario.entity';
 import { CreateFornecedorDto } from './dto/create-fornecedor-dto';
@@ -47,11 +46,11 @@ export class FornecedoresController {
   })
   async findFornecedores(
     @Query() query: FindFornecedoresQueryDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
     const found = await this.fornecedoresService.findFornecedores(
       query,
-      empresa.id,
+      usuario.empresa.id,
     );
     return {
       found,
@@ -86,9 +85,9 @@ export class FornecedoresController {
   @Role(TipoUsuario.ADMINISTRADOR)
   async createFornecedor(
     @Body() createFornecedorDto: CreateFornecedorDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ): Promise<ReturnFornecedorDto> {
-    createFornecedorDto.empresa = empresa;
+    createFornecedorDto.empresa = usuario.empresa;
     const fornecedor = await this.fornecedoresService.createFornecedor(
       createFornecedorDto,
     );

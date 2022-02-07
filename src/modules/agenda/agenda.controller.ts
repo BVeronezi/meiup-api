@@ -12,7 +12,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from '../../decorators/user.decorator';
+import { User } from '../auth/decorators/user.decorator';
+import { ITokenUser } from '../auth/interfaces/auth';
 import { Usuario } from '../usuario/usuario.entity';
 import { AgendaService } from './agenda.service';
 import { CreateAgendaDto } from './dto/create-agenda-dto';
@@ -44,9 +45,9 @@ export class AgendaController {
   })
   async findAgenda(
     @Query() query: FindAgendaQueryDto,
-    @User('id') usuario: Usuario,
+    @User() { id }: Pick<ITokenUser, 'id'>,
   ) {
-    const found = await this.agendaService.findAgenda(query, usuario.id);
+    const found = await this.agendaService.findAgenda(query, String(id));
     return {
       found,
       message: 'Agenda encontrada',
@@ -57,7 +58,7 @@ export class AgendaController {
   @ApiOperation({ summary: 'Cria agenda' })
   async createAgenda(
     @Body() createAgendaDto: CreateAgendaDto,
-    @User('id') usuario: Usuario,
+    @User('usuario') usuario: Usuario,
   ): Promise<ReturnAgendaDto> {
     createAgendaDto.usuario = usuario;
     const agenda = await this.agendaService.createAgenda(createAgendaDto);

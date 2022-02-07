@@ -12,8 +12,6 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from '../../decorators/user.decorator';
-import { Empresa } from '../empresa/empresa.entity';
 import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente-dto';
 import { FindClientesQueryDto } from './dto/find-clientes-query.dto';
@@ -22,6 +20,7 @@ import { UpdateClienteDto } from './dto/update-cliente-dto';
 import { isEmpty } from 'lodash';
 import { Usuario } from '../usuario/usuario.entity';
 import { RolesGuard } from '../auth/roles.guard';
+import { User } from '../auth/decorators/user.decorator';
 @Controller('api/v1/clientes')
 @ApiTags('Clientes')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -46,9 +45,12 @@ export class ClientesController {
   })
   async findClientes(
     @Query() query: FindClientesQueryDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
-    const found = await this.clientesService.findClientes(query, empresa.id);
+    const found = await this.clientesService.findClientes(
+      query,
+      usuario.empresa.id,
+    );
     return {
       found,
       message: 'Clientes encontrados',
@@ -78,10 +80,9 @@ export class ClientesController {
   @ApiOperation({ summary: 'Cria cliente' })
   async createCliente(
     @Body() createClienteDto: CreateClienteDto,
-    @User('empresa') empresa: Empresa,
     @User('usuario') usuario: Usuario,
   ): Promise<ReturnClienteDto> {
-    createClienteDto.empresa = empresa;
+    createClienteDto.empresa = usuario.empresa;
     const cliente = await this.clientesService.createCliente(createClienteDto);
 
     if (!isEmpty(createClienteDto.endereco)) {

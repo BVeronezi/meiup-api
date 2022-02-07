@@ -12,6 +12,8 @@ describe('UsuariosController', () => {
   let usuarioController: UsuariosController;
   let usuarioService: UsuarioService;
 
+  const mockUsuario = { id: '5', empresa: { id: '5' } } as Usuario;
+
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [UsuariosController],
@@ -44,9 +46,7 @@ describe('UsuariosController', () => {
       tipo: TipoUsuario.FUNCIONARIO,
     };
 
-    const empresa = { id: '5' } as Empresa;
-
-    await usuarioController.findUsers(query, empresa);
+    await usuarioController.findUsers(query, mockUsuario);
 
     expect(usuarioService.findUsers).toBeCalled();
   });

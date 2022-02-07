@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from '../../decorators/user.decorator';
-import { Empresa } from '../empresa/empresa.entity';
+import { User } from '../auth/decorators/user.decorator';
+import { Usuario } from '../usuario/usuario.entity';
 import { FindProdutosVendasQueryDto } from './dto/find-produtos-venda-dto';
 import { ProdutosVendaService } from './produtos_venda.service';
 
@@ -23,12 +23,12 @@ export class ProdutosVendaController {
   @ApiOperation({ summary: 'Busca produtos venda por id' })
   async findProdutosVendaById(
     @Query() query: FindProdutosVendasQueryDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
     try {
       const found = await this.produtosVendaService.findProdutosVenda(
         query,
-        empresa.id,
+        usuario.empresa.id,
       );
 
       return {

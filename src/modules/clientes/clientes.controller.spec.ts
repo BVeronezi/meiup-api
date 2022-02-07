@@ -12,7 +12,7 @@ describe('ClientesController', () => {
   let clienteController: ClientesController;
   let clienteService: ClientesService;
 
-  const mockUsuario = { id: 'mockId' } as Usuario;
+  const mockUsuario = { id: '5', empresa: { id: '5' } } as Usuario;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -46,9 +46,7 @@ describe('ClientesController', () => {
       tipo: TipoUsuario.FUNCIONARIO,
     };
 
-    const empresa = { id: '5' } as Empresa;
-
-    await clienteController.findClientes(query, empresa);
+    await clienteController.findClientes(query, mockUsuario);
 
     expect(clienteService.findClientes).toBeCalled();
   });
@@ -61,11 +59,7 @@ describe('ClientesController', () => {
     };
 
     expect(
-      await clienteController.createCliente(
-        mockCliente,
-        mockCliente.empresa,
-        mockUsuario,
-      ),
+      await clienteController.createCliente(mockCliente, mockUsuario),
     ).toMatchObject({
       cliente: {},
       message: 'Cliente cadastrado com sucesso',

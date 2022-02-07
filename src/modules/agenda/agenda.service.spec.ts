@@ -19,7 +19,7 @@ describe('AgendaService', () => {
   let service: AgendaService;
   let agendaRepository: AgendaRepository;
 
-  const mockUsuario = { id: 'mockId' } as Usuario;
+  const mockUsuario = { id: '5', empresa: { id: '5' } } as Usuario;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

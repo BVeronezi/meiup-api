@@ -18,9 +18,9 @@ import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
 import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { Usuario } from '../usuario/usuario.entity';
 import { AuthService } from './auth.service';
+import { User } from './decorators/user.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialsDto } from './dto/credentials.dto';
-import { GetUser } from './get-user.decorator';
 
 @Controller('api/v1/auth')
 @ApiTags('Autenticação')
@@ -102,9 +102,12 @@ export class AuthController {
   async changePassword(
     @Param('id') id: string,
     @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
-    @GetUser() user: Usuario,
+    @User('usuario') usuario: Usuario,
   ) {
-    if (user.tipo !== TipoUsuario.ADMINISTRADOR && user.id.toString() !== id)
+    if (
+      usuario.tipo !== TipoUsuario.ADMINISTRADOR &&
+      usuario.id.toString() !== id
+    )
       throw new UnauthorizedException(
         'Você não tem permissão para realizar esta operação',
       );
@@ -118,7 +121,7 @@ export class AuthController {
   @Get('/me')
   @ApiOperation({ summary: 'Retorna os dados do usuário' })
   @UseGuards(AuthGuard('jwt'))
-  getMe(@GetUser() user: Usuario): Usuario {
+  getMe(@User() user: Usuario): Usuario {
     return user;
   }
 }

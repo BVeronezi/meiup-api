@@ -5,10 +5,13 @@ import { PromocoesController } from './promocoes.controller';
 import { PromocoesService } from './promocoes.service';
 import { CreatePromocaoDto } from './dto/create-promocoes-dto';
 import { UpdatePromocaoDto } from './dto/update-promocao-dto';
+import { Usuario } from '../usuario/usuario.entity';
 
 describe('PromocoesController', () => {
   let promocaoController: PromocoesController;
   let promocaoService: PromocoesService;
+
+  const mockUsuario = { id: '5', empresa: { id: '5' } } as Usuario;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -41,9 +44,7 @@ describe('PromocoesController', () => {
       descricao: 'Promoção teste',
     };
 
-    const empresa = { id: '5' } as Empresa;
-
-    await promocaoController.findPromocoes(query, empresa);
+    await promocaoController.findPromocoes(query, mockUsuario);
 
     expect(promocaoService.findPromocoes).toBeCalled();
   });
@@ -59,10 +60,7 @@ describe('PromocoesController', () => {
     };
 
     expect(
-      await promocaoController.createPromocao(
-        mockPromocao,
-        mockPromocao.empresa,
-      ),
+      await promocaoController.createPromocao(mockPromocao, mockUsuario),
     ).toMatchObject({
       promocao: {},
       message: 'Promoção cadastrada com sucesso',

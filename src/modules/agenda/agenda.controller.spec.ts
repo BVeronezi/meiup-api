@@ -5,6 +5,7 @@ import { AgendaService } from './agenda.service';
 import { Usuario } from '../usuario/usuario.entity';
 import { CreateAgendaDto } from './dto/create-agenda-dto';
 import { UpdateAgendaDto } from './dto/update-agenda-dto';
+import { ITokenUser } from '../auth/interfaces/auth';
 
 describe('AgendaController', () => {
   let agendaController: AgendaController;
@@ -42,7 +43,10 @@ describe('AgendaController', () => {
       titulo: 'teste',
     };
 
-    await agendaController.findAgenda(query, mockUsuario);
+    await agendaController.findAgenda(
+      query,
+      createMock<Pick<ITokenUser, 'id'>>(),
+    );
 
     expect(agendaService.findAgenda).toBeCalled();
   });

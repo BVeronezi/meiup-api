@@ -11,7 +11,7 @@ describe('FornecedoresController', () => {
   let fornecedorController: FornecedoresController;
   let fornecedorService: FornecedoresService;
 
-  const mockUsuario = { id: 'mockId' } as Usuario;
+  const mockUsuario = { id: '5', empresa: { id: '5' } } as Usuario;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -46,9 +46,7 @@ describe('FornecedoresController', () => {
       email: '',
     };
 
-    const empresa = { id: '5' } as Empresa;
-
-    await fornecedorController.findFornecedores(query, empresa);
+    await fornecedorController.findFornecedores(query, mockUsuario);
 
     expect(fornecedorService.findFornecedores).toBeCalled();
   });
@@ -63,10 +61,7 @@ describe('FornecedoresController', () => {
     };
 
     expect(
-      await fornecedorController.createFornecedor(
-        mockFornecedor,
-        mockFornecedor.empresa,
-      ),
+      await fornecedorController.createFornecedor(mockFornecedor, mockUsuario),
     ).toMatchObject({
       fornecedor: {},
       message: 'Fornecedor cadastrado com sucesso',

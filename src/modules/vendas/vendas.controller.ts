@@ -12,8 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from '../../decorators/user.decorator';
-import { Empresa } from '../empresa/empresa.entity';
+import { User } from '../auth/decorators/user.decorator';
 import { ProdutosVendaService } from '../produtos_venda/produtos_venda.service';
 import { ServicosVendaService } from '../servicos_venda/servicos_venda.service';
 import { Usuario } from '../usuario/usuario.entity';
@@ -53,9 +52,12 @@ export class VendasController {
   })
   async findVendas(
     @Query() query: FindVendasQueryDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
-    const found = await this.vendasService.findVendas(query, empresa.id);
+    const found = await this.vendasService.findVendas(
+      query,
+      usuario.empresa.id,
+    );
 
     return {
       found,
@@ -77,9 +79,9 @@ export class VendasController {
   @ApiOperation({ summary: 'Cancela venda por id' })
   async cancelaVenda(
     @Param('id') id,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ): Promise<ReturnVendasDto> {
-    const venda = await this.vendasService.cancelaVenda(id, empresa);
+    const venda = await this.vendasService.cancelaVenda(id, usuario.empresa);
 
     return {
       venda,
@@ -100,7 +102,7 @@ export class VendasController {
   @ApiOperation({ summary: 'Adiciona produto na venda por id' })
   async adicionaProdutoVenda(
     @Body(ValidationPipe) updateVendaDto: UpdateVendaDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
     @Param('vendaId') vendaId: number,
   ) {
     const venda = await this.vendasService.findVendaById(vendaId);
@@ -108,7 +110,7 @@ export class VendasController {
     const response: any = await this.vendasService.adicionaProdutoVenda(
       updateVendaDto,
       venda,
-      empresa,
+      usuario.empresa,
     );
 
     return {
@@ -122,7 +124,7 @@ export class VendasController {
   @ApiOperation({ summary: 'Adiciona serviço na venda por id' })
   async adicionaServicoVenda(
     @Body(ValidationPipe) updateVendaDto: UpdateVendaDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
     @Param('vendaId') vendaId: number,
   ) {
     const venda = await this.vendasService.findVendaById(vendaId);
@@ -130,7 +132,7 @@ export class VendasController {
     const response = await this.vendasService.adicionaServicoVenda(
       updateVendaDto,
       venda,
-      empresa,
+      usuario.empresa,
     );
 
     return {
@@ -144,10 +146,9 @@ export class VendasController {
   @ApiOperation({ summary: 'Cria venda' })
   async createVenda(
     @Body() createVendaDto: CreateVendaDto,
-    @User('empresa') empresa: Empresa,
-    @User('id') usuario: Usuario,
+    @User('usuario') usuario: Usuario,
   ): Promise<ReturnVendasDto> {
-    createVendaDto.empresa = empresa;
+    createVendaDto.empresa = usuario.empresa;
     createVendaDto.usuario = usuario;
 
     const venda = await this.vendasService.createVenda(createVendaDto);
@@ -156,7 +157,7 @@ export class VendasController {
       await this.vendasService.adicionaServicoVenda(
         createVendaDto.servicos,
         venda,
-        empresa,
+        usuario.empresa,
       );
     }
 
@@ -164,7 +165,7 @@ export class VendasController {
       await this.vendasService.adicionaProdutoVenda(
         createVendaDto.produtos,
         venda,
-        empresa,
+        usuario.empresa,
       );
     }
 
@@ -178,7 +179,7 @@ export class VendasController {
   @ApiOperation({ summary: 'Remove produto da venda por id' })
   async removeProdutoVenda(
     @Param('vendaId') vendaId: number,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
     @Body(ValidationPipe) removeProdutoVendaDto: RemoveProdutoVendaDto,
   ) {
     const venda = await this.vendasService.findVendaById(vendaId);
@@ -190,7 +191,7 @@ export class VendasController {
 
     const valorVenda = await this.vendasService.calculaTotalVenda(
       Number(venda.id),
-      empresa.id,
+      usuario.empresa.id,
     );
 
     venda.valorTotal = valorVenda;
@@ -207,19 +208,19 @@ export class VendasController {
   async removeServicoVenda(
     @Body(ValidationPipe) removeServicoVendaDto: RemoveServicoVendaDto,
     @Param('vendaId') vendaId: number,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
     const venda = await this.vendasService.findVendaById(vendaId);
 
     await this.servicosVendaService.deleteServicoVenda(
       removeServicoVendaDto,
       Number(venda.id),
-      Number(empresa.id),
+      Number(usuario.empresa.id),
     );
 
     const valorVenda = await this.vendasService.calculaTotalVenda(
       Number(venda.id),
-      empresa.id,
+      usuario.empresa.id,
     );
 
     venda.valorTotal = valorVenda;

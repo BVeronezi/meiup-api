@@ -8,10 +8,13 @@ import { ProdutosServicoService } from '../produtos_servico/produtos_servico.ser
 import { FindServicosQueryDto } from './dto/find-servicos-query-dto';
 import { CreateServicosDto } from './dto/create-servicos-dto';
 import { UpdateServicosDto } from './dto/update-servicos-dto';
+import { Usuario } from '../usuario/usuario.entity';
 
 describe('ServicosController', () => {
   let servicoController: ServicosController;
   let servicoService: ServicosService;
+
+  const mockUsuario = { id: '5', empresa: { id: '5' } } as Usuario;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -51,9 +54,7 @@ describe('ServicosController', () => {
       nome: 'Serviço Teste',
     };
 
-    const empresa = { id: '5' } as Empresa;
-
-    await servicoController.findServicos(query, empresa);
+    await servicoController.findServicos(query, mockUsuario);
 
     expect(servicoService.findServicos).toBeCalled();
   });
@@ -65,7 +66,7 @@ describe('ServicosController', () => {
     };
 
     expect(
-      await servicoController.createServico(mockServico, mockServico.empresa),
+      await servicoController.createServico(mockServico, mockUsuario),
     ).toMatchObject({
       servico: {},
       message: 'Serviço cadastrado com sucesso',
@@ -86,9 +87,8 @@ describe('ServicosController', () => {
   });
 
   it('deve remover o serviço por id', async () => {
-    const empresa = { id: '5' } as Empresa;
     expect(
-      await servicoController.deleteServico('mockId', empresa),
+      await servicoController.deleteServico('mockId', mockUsuario),
     ).toMatchObject({
       message: 'Serviço removido com sucesso',
     });

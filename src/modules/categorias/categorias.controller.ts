@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from '../../decorators/user.decorator';
-import { Role } from '../auth/role.decorator';
-import { Empresa } from '../empresa/empresa.entity';
+import { Role } from '../auth/decorators/role.decorator';
+import { User } from '../auth/decorators/user.decorator';
 import { TipoUsuario } from '../usuario/enum/user-roles.enum';
+import { Usuario } from '../usuario/usuario.entity';
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriaDto } from './dto/create-categoria-dto';
 import { FindCategoriasQueryDto } from './dto/find-categorias-query-dto';
@@ -46,11 +46,11 @@ export class CategoriasController {
   })
   async findCategorias(
     @Query() query: FindCategoriasQueryDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
     const found = await this.categoriasService.findCategorias(
       query,
-      empresa.id,
+      usuario.empresa.id,
     );
     return {
       found,
@@ -64,9 +64,9 @@ export class CategoriasController {
   @Role(TipoUsuario.ADMINISTRADOR)
   async createCategoria(
     @Body() createCategoriaDto: CreateCategoriaDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ): Promise<ReturnCategoriaDto> {
-    createCategoriaDto.empresa = empresa;
+    createCategoriaDto.empresa = usuario.empresa;
     const categoria = await this.categoriasService.createCategoria(
       createCategoriaDto,
     );

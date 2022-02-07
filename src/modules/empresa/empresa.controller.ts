@@ -10,15 +10,14 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetUser } from '../auth/get-user.decorator';
-import { Role } from '../auth/role.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { Usuario } from '../usuario/usuario.entity';
 import { EmpresaService } from './empresa.service';
 import { ReturnEmpresaDto } from './dto/return-empresa.dto';
 import { UpdateEmpresaDto } from './dto/update-empresa.dto';
-
+import { Role } from '../auth/decorators/role.decorator';
+import { User } from '../auth/decorators/user.decorator';
 @Controller('api/v1/empresa')
 @ApiTags('Empresa')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -43,7 +42,7 @@ export class EmpresaController {
   @Role(TipoUsuario.ADMINISTRADOR)
   async updateCompany(
     @Body(ValidationPipe) updateCompanyDto: UpdateEmpresaDto,
-    @GetUser() user: Usuario,
+    @User() user: Usuario,
     @Param('id') id: string,
   ) {
     if (user.tipo != TipoUsuario.MEI && user.id.toString() != id) {

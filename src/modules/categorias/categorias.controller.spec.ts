@@ -5,10 +5,13 @@ import { CategoriasService } from './categorias.service';
 import { Empresa } from '../empresa/empresa.entity';
 import { CreateCategoriaDto } from './dto/create-categoria-dto';
 import { UpdateCategoriaDto } from './dto/update-categoria-dto';
+import { Usuario } from '../usuario/usuario.entity';
 
 describe('CategoriasController', () => {
   let categoriaController: CategoriasController;
   let categoriaService: CategoriasService;
+
+  const mockUsuario = { id: '5', empresa: { id: '5' } } as Usuario;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -41,9 +44,7 @@ describe('CategoriasController', () => {
       nome: 'categoria',
     };
 
-    const empresa = { id: '5' } as Empresa;
-
-    await categoriaController.findCategorias(query, empresa);
+    await categoriaController.findCategorias(query, mockUsuario);
 
     expect(categoriaService.findCategorias).toBeCalled();
   });
@@ -55,10 +56,7 @@ describe('CategoriasController', () => {
     };
 
     expect(
-      await categoriaController.createCategoria(
-        mockCategoria,
-        mockCategoria.empresa,
-      ),
+      await categoriaController.createCategoria(mockCategoria, mockUsuario),
     ).toMatchObject({
       categoria: {},
       message: 'Categoria cadastrada com sucesso',

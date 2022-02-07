@@ -2,7 +2,7 @@ import { User } from './user.decorator';
 import { createMock } from '@golevelup/ts-jest';
 import { ExecutionContext } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
-import { getParamDecoratorFactory } from '../../jest.setup';
+import { getParamDecoratorFactory } from '../../../../jest.setup';
 
 describe('UserDecorator', function () {
   it('Deve chamar o decorator', function () {

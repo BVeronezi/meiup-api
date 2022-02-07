@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from '../../decorators/user.decorator';
-import { Empresa } from '../empresa/empresa.entity';
+import { User } from '../auth/decorators/user.decorator';
+import { Usuario } from '../usuario/usuario.entity';
 import { FindServicosVendasQueryDto } from './dto/find-servicos-venda-dto';
 import { ServicosVendaService } from './servicos_venda.service';
 
@@ -23,12 +23,12 @@ export class ServicosVendaController {
   @ApiOperation({ summary: 'Busca serviços venda por id' })
   async findServicosVendaById(
     @Query() query: FindServicosVendasQueryDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
     try {
       const found = await this.servicosVendaService.findServicosVenda(
         query,
-        empresa.id,
+        usuario.empresa.id,
       );
 
       return {

@@ -12,11 +12,11 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from '../../decorators/user.decorator';
-import { Role } from '../auth/role.decorator';
-import { Empresa } from '../empresa/empresa.entity';
+import { Role } from '../auth/decorators/role.decorator';
+import { User } from '../auth/decorators/user.decorator';
 import { ProdutosServicoService } from '../produtos_servico/produtos_servico.service';
 import { TipoUsuario } from '../usuario/enum/user-roles.enum';
+import { Usuario } from '../usuario/usuario.entity';
 import { CreateServicosDto } from './dto/create-servicos-dto';
 import { FindServicosQueryDto } from './dto/find-servicos-query-dto';
 import { RemoveProdutosServicoDto } from './dto/remove-produto-servico-dto';
@@ -51,9 +51,12 @@ export class ServicosController {
   })
   async findServicos(
     @Query() query: FindServicosQueryDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
-    const found = await this.servicosService.findServicos(query, empresa.id);
+    const found = await this.servicosService.findServicos(
+      query,
+      usuario.empresa.id,
+    );
     return {
       found,
       message: 'Serviços encontrados',
@@ -64,9 +67,9 @@ export class ServicosController {
   @ApiOperation({ summary: 'Cria serviço' })
   async createServico(
     @Body() createServicosDto: CreateServicosDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ): Promise<ReturnServicosDto> {
-    createServicosDto.empresa = empresa;
+    createServicosDto.empresa = usuario.empresa;
     const servico = await this.servicosService.createServico(createServicosDto);
 
     return {
@@ -95,9 +98,9 @@ export class ServicosController {
   @Role(TipoUsuario.ADMINISTRADOR)
   async deleteServico(
     @Param('id') id: string,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
   ) {
-    await this.servicosService.deleteServico(id, Number(empresa.id));
+    await this.servicosService.deleteServico(id, Number(usuario.empresa.id));
     return {
       message: 'Serviço removido com sucesso',
     };
@@ -107,7 +110,7 @@ export class ServicosController {
   @ApiOperation({ summary: 'Adiciona produto no serviço por id' })
   async adicionaProdutoServico(
     @Body(ValidationPipe) updateServicoDto: UpdateServicosDto,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
     @Param('servicoId') servicoId: string,
   ) {
     const servico = await this.servicosService.findServicoById(servicoId);
@@ -116,7 +119,7 @@ export class ServicosController {
       await this.servicosService.adicionaProdutoServico(
         updateServicoDto,
         servico,
-        empresa,
+        usuario.empresa,
       );
 
     return {
@@ -128,7 +131,7 @@ export class ServicosController {
   @ApiOperation({ summary: 'Remove produto do servico por id' })
   async removeProdutoServico(
     @Param('servicoId') servicoId: string,
-    @User('empresa') empresa: Empresa,
+    @User('usuario') usuario: Usuario,
     @Body(ValidationPipe) removeProdutoServicoDto: RemoveProdutosServicoDto,
   ) {
     const servico = await this.servicosService.findServicoById(servicoId);
@@ -136,7 +139,7 @@ export class ServicosController {
     await this.produtosServicoService.deleteProdutoServico(
       removeProdutoServicoDto,
       String(servico.id),
-      String(empresa.id),
+      String(usuario.empresa.id),
     );
 
     return {

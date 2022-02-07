@@ -17,7 +17,7 @@ describe('VendasController', () => {
   let vendaService: VendasService;
 
   const mockEmpresa = { id: '5' } as Empresa;
-  const mockUsuario = { id: '1' } as Usuario;
+  const mockUsuario = { id: '5', empresa: { id: '5' } } as Usuario;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -57,7 +57,7 @@ describe('VendasController', () => {
       cliente: 'Cliente Teste',
     };
 
-    await vendaController.findVendas(query, mockEmpresa);
+    await vendaController.findVendas(query, mockUsuario);
 
     expect(vendaService.findVendas).toBeCalled();
   });
@@ -75,7 +75,7 @@ describe('VendasController', () => {
     };
 
     expect(
-      await vendaController.createVenda(mockVenda, mockEmpresa, mockUsuario),
+      await vendaController.createVenda(mockVenda, mockUsuario),
     ).toMatchObject({
       venda: {},
       message: 'Venda cadastrada com sucesso',
@@ -95,7 +95,7 @@ describe('VendasController', () => {
     };
 
     expect(
-      await vendaController.createVenda(mockVenda, mockEmpresa, mockUsuario),
+      await vendaController.createVenda(mockVenda, mockUsuario),
     ).toMatchObject({
       venda: {},
       message: 'Venda cadastrada com sucesso',
@@ -121,7 +121,7 @@ describe('VendasController', () => {
 
   it('deve cancelar a venda por id', async () => {
     expect(
-      await vendaController.cancelaVenda('mockIdVenda', mockEmpresa),
+      await vendaController.cancelaVenda('mockIdVenda', mockUsuario),
     ).toMatchObject({
       venda: {},
       message: 'Venda cancelada',
@@ -139,7 +139,7 @@ describe('VendasController', () => {
 
     const result = await vendaController.adicionaProdutoVenda(
       mockVendaUpdate,
-      mockEmpresa,
+      mockUsuario,
       1,
     );
 
@@ -161,7 +161,7 @@ describe('VendasController', () => {
 
     const result = await vendaController.adicionaServicoVenda(
       mockVendaUpdate,
-      mockEmpresa,
+      mockUsuario,
       1,
     );
 
@@ -181,7 +181,7 @@ describe('VendasController', () => {
     expect(
       await vendaController.removeProdutoVenda(
         1,
-        mockEmpresa,
+        mockUsuario,
         mockRemoveProdutoVenda,
       ),
     ).toMatchObject({
@@ -199,7 +199,7 @@ describe('VendasController', () => {
       await vendaController.removeServicoVenda(
         mockRemoveServicoVenda,
         1,
-        mockEmpresa,
+        mockUsuario,
       ),
     ).toMatchObject({
       valorVenda: 100,
