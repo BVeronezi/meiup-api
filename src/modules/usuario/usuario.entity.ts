@@ -32,7 +32,7 @@ export class Usuario extends BaseEntity {
   telefone: number;
 
   @Column({ nullable: false, type: 'varchar', length: 20 })
-  role: string;
+  tipo: string;
 
   @Column({ nullable: false })
   senha: string;

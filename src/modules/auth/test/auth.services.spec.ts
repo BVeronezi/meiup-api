@@ -2,13 +2,12 @@ import { createMock } from '@golevelup/ts-jest';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { Empresa } from '../../empresa/empresa.entity';
-import { UserRole } from '../../usuario/enum/user-roles.enum';
+import { TipoUsuario } from '../../usuario/enum/user-roles.enum';
 import { Usuario } from '../../usuario/usuario.entity';
 import { EmpresaService } from '../../empresa/empresa.service';
 import { UsuarioService } from '../../usuario/usuario.service';
 import { AuthService } from '../auth.service';
 import { CreateUsuarioDto } from 'src/modules/usuario/dto/create-usuario.dto';
-import { BadRequestException } from '@nestjs/common';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -27,7 +26,7 @@ describe('AuthService', () => {
           id: '123',
           email: 'test@gmail.com',
           nome: 'Teste',
-          role: UserRole.USER,
+          tipo: TipoUsuario.FUNCIONARIO,
         } as Usuario),
     };
 
@@ -65,7 +64,7 @@ describe('AuthService', () => {
       nome: 'Teste',
       email: 'test@example.com',
       senha: '123456',
-      role: UserRole.USER,
+      tipo: TipoUsuario.FUNCIONARIO,
       empresa: { id: '5' } as Empresa,
     };
 

@@ -15,7 +15,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '../../decorators/user.decorator';
 import { Role } from '../auth/role.decorator';
 import { Empresa } from '../empresa/empresa.entity';
-import { UserRole } from '../usuario/enum/user-roles.enum';
+import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { Usuario } from '../usuario/usuario.entity';
 import { CreateFornecedorDto } from './dto/create-fornecedor-dto';
 import { FindFornecedoresQueryDto } from './dto/find-fornecedores-query.dto';
@@ -61,8 +61,8 @@ export class FornecedoresController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza fornecedor por id' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async updateFornecedor(
     @Body(ValidationPipe) updateFornecedorDto: UpdateFornecedorDto,
     @Param('id') id: string,
@@ -82,8 +82,8 @@ export class FornecedoresController {
 
   @Post()
   @ApiOperation({ summary: 'Cria fornecedor' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async createFornecedor(
     @Body() createFornecedorDto: CreateFornecedorDto,
     @User('empresa') empresa: Empresa,
@@ -101,8 +101,8 @@ export class FornecedoresController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove o fornecedor por id' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async deleteFornecedor(@Param('id') id: string) {
     await this.fornecedoresService.deleteFornecedor(id);
     return {

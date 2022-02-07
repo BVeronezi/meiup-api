@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { randomBytes } from 'crypto';
 import { EmpresaService } from '../empresa/empresa.service';
 import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
-import { UserRole } from '../usuario/enum/user-roles.enum';
+import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { Usuario } from '../usuario/usuario.entity';
 import { UsuarioRepository } from '../usuario/usuario.repository';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -41,7 +41,7 @@ export class AuthService {
           email: user.email,
           nome: user.nome,
           senha: user.senha,
-          role: UserRole.MEI,
+          tipo: TipoUsuario.MEI,
           empresa: user.empresa,
         };
 
@@ -69,7 +69,7 @@ export class AuthService {
   async cadastra(createUserDto: CreateUsuarioDto): Promise<Usuario> {
     const user = await this.userRepository.createUser(
       createUserDto,
-      UserRole.MEI,
+      TipoUsuario.MEI,
     );
 
     const empresa = await this.empresaService.createCompany(createUserDto);
@@ -105,7 +105,7 @@ export class AuthService {
       refreshToken,
       empresa: user.empresa,
       nome: user.nome,
-      roles: user.role,
+      tipo: user.tipo,
     };
   }
 

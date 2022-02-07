@@ -16,7 +16,7 @@ import { User } from '../../decorators/user.decorator';
 import { Role } from '../auth/role.decorator';
 import { Empresa } from '../empresa/empresa.entity';
 import { ProdutosServicoService } from '../produtos_servico/produtos_servico.service';
-import { UserRole } from '../usuario/enum/user-roles.enum';
+import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { CreateServicosDto } from './dto/create-servicos-dto';
 import { FindServicosQueryDto } from './dto/find-servicos-query-dto';
 import { RemoveProdutosServicoDto } from './dto/remove-produto-servico-dto';
@@ -91,8 +91,8 @@ export class ServicosController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove serviço por id' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async deleteServico(
     @Param('id') id: string,
     @User('empresa') empresa: Empresa,

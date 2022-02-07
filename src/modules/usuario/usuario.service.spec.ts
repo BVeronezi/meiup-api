@@ -6,7 +6,7 @@ import { EnderecoService } from '../endereco/endereco.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { FindUsuariosQueryDto } from './dto/find-usuarios-query.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { UserRole } from './enum/user-roles.enum';
+import { TipoUsuario } from './enum/user-roles.enum';
 import { UsuarioRepository } from './usuario.repository';
 import { UsuarioService } from './usuario.service';
 
@@ -69,7 +69,7 @@ describe('UsuarioService', () => {
         nome: 'Teste',
         email: 'teste@example.com',
         empresa: { id: '5' } as Empresa,
-        role: UserRole.MEI,
+        tipo: TipoUsuario.MEI,
         senha: '123456',
       };
     });
@@ -82,7 +82,7 @@ describe('UsuarioService', () => {
 
       expect(usuarioRepository.createUser).toHaveBeenCalledWith(
         mockCreateUsuarioDto,
-        UserRole.MEI,
+        TipoUsuario.MEI,
       );
       expect(result).toEqual('mockUsuario');
     });
@@ -95,7 +95,7 @@ describe('UsuarioService', () => {
 
       const result = await service.findUserById('mockId');
       expect(usuarioRepository.findOne).toHaveBeenCalledWith('mockId', {
-        select: ['email', 'nome', 'role', 'id'],
+        select: ['email', 'nome', 'tipo', 'id'],
       });
       expect(result).toEqual('mockUsuario');
     });
@@ -117,7 +117,6 @@ describe('UsuarioService', () => {
         limit: 1,
         page: 1,
         sort: '',
-        role: UserRole.USER,
       };
 
       const result = await service.findUsers(
@@ -141,7 +140,7 @@ describe('UsuarioService', () => {
         email: 'teste2@example.com',
         celular: 31994411234,
         telefone: 3130161234,
-        role: UserRole.MEI,
+        tipo: TipoUsuario.MEI,
       };
     });
 

@@ -6,7 +6,7 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { UserRole } from './enum/user-roles.enum';
+import { TipoUsuario } from './enum/user-roles.enum';
 import { CredentialsDto } from '../auth/dto/credentials.dto';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { FindUsuariosQueryDto } from './dto/find-usuarios-query.dto';
@@ -34,7 +34,7 @@ export class UsuarioRepository extends Repository<Usuario> {
     if (nome) {
       query.andWhere('usuario.nome ILIKE :nome', { nome: `%${nome}%` });
     }
-    query.andWhere('usuario.role NOT ILIKE :role', { role: 'MEI' });
+    query.andWhere('usuario.tipo NOT ILIKE :tipo', { tipo: 'MEI' });
 
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);
@@ -44,7 +44,7 @@ export class UsuarioRepository extends Repository<Usuario> {
       'usuario.nome',
       'usuario.email',
       'usuario.dataCriacao',
-      'usuario.role',
+      'usuario.tipo',
     ]);
 
     const [users, total] = await query.getManyAndCount();
@@ -54,7 +54,7 @@ export class UsuarioRepository extends Repository<Usuario> {
 
   async createUser(
     createUserDto: CreateUsuarioDto,
-    role: UserRole,
+    role: TipoUsuario,
   ): Promise<Usuario> {
     const { email, nome, senha, celular, telefone, empresa } = createUserDto;
 
@@ -64,7 +64,7 @@ export class UsuarioRepository extends Repository<Usuario> {
     user.celular = celular ? Number(celular) : 0;
     user.telefone = telefone ? Number(telefone) : 0;
     user.empresa = empresa;
-    user.role = role;
+    user.tipo = role;
     user.confirmationToken = crypto.randomBytes(32).toString('hex');
     user.salt = await bcrypt.genSalt();
     user.senha = await this.hashPassword(senha, user.salt);
@@ -91,7 +91,7 @@ export class UsuarioRepository extends Repository<Usuario> {
     const user = this.create();
     user.email = email;
     user.nome = name ? name : email;
-    user.role = UserRole.MEI;
+    user.tipo = TipoUsuario.MEI;
     user.confirmationToken = crypto.randomBytes(32).toString('hex');
     user.salt = await bcrypt.genSalt();
     user.senha = token;

@@ -2,5 +2,5 @@ import { BaseQueryParametersDto } from '../../../shared/dto/base-query-parameter
 export class FindUsuariosQueryDto extends BaseQueryParametersDto {
   nome: string;
   email: string;
-  role: string;
+  tipo?: string;
 }

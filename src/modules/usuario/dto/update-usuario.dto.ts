@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsEmail, IsOptional } from 'class-validator';
 import { Endereco } from '../../endereco/endereco.entity';
-import { UserRole } from '../enum/user-roles.enum';
+import { TipoUsuario } from '../enum/user-roles.enum';
 export class UpdateUsuarioDto {
   @IsOptional()
   @ApiProperty()
@@ -22,7 +22,7 @@ export class UpdateUsuarioDto {
 
   @IsOptional()
   @ApiPropertyOptional()
-  role?: UserRole;
+  tipo?: TipoUsuario;
 
   @IsOptional()
   @ApiPropertyOptional()

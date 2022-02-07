@@ -15,7 +15,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
-import { UserRole } from '../usuario/enum/user-roles.enum';
+import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { Usuario } from '../usuario/usuario.entity';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -104,7 +104,7 @@ export class AuthController {
     @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
     @GetUser() user: Usuario,
   ) {
-    if (user.role !== UserRole.ADMIN && user.id.toString() !== id)
+    if (user.tipo !== TipoUsuario.ADMINISTRADOR && user.id.toString() !== id)
       throw new UnauthorizedException(
         'Você não tem permissão para realizar esta operação',
       );

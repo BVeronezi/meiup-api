@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
 import { Empresa } from '../empresa/empresa.entity';
-import { UserRole } from '../usuario/enum/user-roles.enum';
+import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { ClientesController } from './clientes.controller';
 import { ClientesService } from './clientes.service';
 import { Usuario } from '../usuario/usuario.entity';
@@ -43,7 +43,7 @@ describe('ClientesController', () => {
     const query = {
       nome: 'teste',
       email: '',
-      role: UserRole.USER,
+      tipo: TipoUsuario.FUNCIONARIO,
     };
 
     const empresa = { id: '5' } as Empresa;

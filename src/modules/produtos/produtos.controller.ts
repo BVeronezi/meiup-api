@@ -18,7 +18,7 @@ import { CategoriasService } from '../categorias/categorias.service';
 import { Empresa } from '../empresa/empresa.entity';
 import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { PrecosService } from '../precos/precos.service';
-import { UserRole } from '../usuario/enum/user-roles.enum';
+import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
 import { FornecedorProdutoDto } from './dto/fornecedor-produto-dto';
@@ -66,8 +66,8 @@ export class ProdutosController {
 
   @Post()
   @ApiOperation({ summary: 'Cria produto' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async createProduto(
     @Body() createProdutoDto: CreateProdutoDto,
     @User('empresa') empresa: Empresa,
@@ -119,8 +119,8 @@ export class ProdutosController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza produto por id' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async updateProduto(
     @Body(ValidationPipe) updateProdutoDto: UpdateProdutoDto,
     @Param('id') id: string,
@@ -148,8 +148,8 @@ export class ProdutosController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove produto por id' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async deleteProduto(@Param('id') id: string) {
     await this.produtosService.deleteProduto(id);
 
@@ -160,8 +160,8 @@ export class ProdutosController {
 
   @Delete('/fornecedor/:id')
   @ApiOperation({ summary: 'Remove fornecedor do produto por id' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async deleteFornecedorProduto(
     @Param('id') id: string,
     @Body(ValidationPipe) fornecedorProdutoDto: FornecedorProdutoDto,

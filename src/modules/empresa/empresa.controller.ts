@@ -13,7 +13,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from '../auth/get-user.decorator';
 import { Role } from '../auth/role.decorator';
 import { RolesGuard } from '../auth/roles.guard';
-import { UserRole } from '../usuario/enum/user-roles.enum';
+import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { Usuario } from '../usuario/usuario.entity';
 import { EmpresaService } from './empresa.service';
 import { ReturnEmpresaDto } from './dto/return-empresa.dto';
@@ -28,7 +28,7 @@ export class EmpresaController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Busca empresa por id' })
-  @Role(UserRole.MEI)
+  @Role(TipoUsuario.MEI)
   async findCompanyById(@Param('id') id): Promise<ReturnEmpresaDto> {
     const empresa = await this.empresaService.findEmpresaById(id);
     return {
@@ -39,14 +39,14 @@ export class EmpresaController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza empresa por id' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async updateCompany(
     @Body(ValidationPipe) updateCompanyDto: UpdateEmpresaDto,
     @GetUser() user: Usuario,
     @Param('id') id: string,
   ) {
-    if (user.role != UserRole.MEI && user.id.toString() != id) {
+    if (user.tipo != TipoUsuario.MEI && user.id.toString() != id) {
       throw new ForbiddenException(
         'Você não tem autorização para acessar esse recurso',
       );

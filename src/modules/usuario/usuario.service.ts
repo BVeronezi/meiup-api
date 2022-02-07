@@ -18,7 +18,7 @@ export class UsuarioService {
   async createUser(createUserDto: CreateUsuarioDto): Promise<Usuario> {
     return await this.userRepository.createUser(
       createUserDto,
-      createUserDto.role,
+      createUserDto.tipo,
     );
   }
 
@@ -28,7 +28,7 @@ export class UsuarioService {
 
   async findUserById(userId: string): Promise<Usuario> {
     const user = await this.userRepository.findOne(userId, {
-      select: ['email', 'nome', 'role', 'id'],
+      select: ['email', 'nome', 'tipo', 'id'],
     });
 
     if (!user) throw new NotFoundException('Usuário não encontrado');
@@ -39,7 +39,7 @@ export class UsuarioService {
   async findUserByEmail(email: string): Promise<Usuario> {
     const user = await this.userRepository.findOne({
       where: { email },
-      select: ['email', 'nome', 'role', 'id'],
+      select: ['email', 'nome', 'tipo', 'id'],
     });
 
     if (!user) throw new NotFoundException('Usuário não encontrado');
@@ -49,7 +49,7 @@ export class UsuarioService {
 
   async findUserByGoogleId(googleId: string): Promise<Usuario> {
     return await this.userRepository.findOne({
-      select: ['email', 'nome', 'role', 'id'],
+      select: ['email', 'nome', 'tipo', 'id'],
       where: {
         googleId: googleId,
       },
@@ -64,7 +64,7 @@ export class UsuarioService {
         email: updateUserDto.email,
         celular: updateUserDto.celular ? Number(updateUserDto.celular) : 0,
         telefone: updateUserDto.telefone ? Number(updateUserDto.telefone) : 0,
-        role: updateUserDto.role,
+        tipo: updateUserDto.tipo,
       },
     );
 

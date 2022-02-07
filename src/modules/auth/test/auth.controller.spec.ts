@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
 import { AuthService } from '../auth.service';
 import { AuthController } from '../auth.controller';
-import { UserRole } from '../../usuario/enum/user-roles.enum';
+import { TipoUsuario } from '../../usuario/enum/user-roles.enum';
 import { Empresa } from 'src/modules/empresa/empresa.entity';
 
 describe('AuthController', () => {
@@ -33,7 +33,7 @@ describe('AuthController', () => {
       nome: 'Teste',
       email: 'teste@gmail.com',
       senha: '123456',
-      role: UserRole.MEI,
+      tipo: TipoUsuario.MEI,
       empresa: { id: '5' } as Empresa,
     };
 

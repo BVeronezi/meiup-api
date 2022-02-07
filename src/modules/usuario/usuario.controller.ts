@@ -21,7 +21,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { FindUsuariosQueryDto } from './dto/find-usuarios-query.dto';
 import { ReturnUsuarioDto } from './dto/return-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { UserRole } from './enum/user-roles.enum';
+import { TipoUsuario } from './enum/user-roles.enum';
 import { Usuario } from './usuario.entity';
 import { UsuarioService } from './usuario.service';
 import { isEmpty, values } from 'lodash';
@@ -69,7 +69,7 @@ export class UsuariosController {
     @GetUser() user: Usuario,
     @Param('id') id: string,
   ) {
-    if (user.role == UserRole.USER && user.id.toString() != id) {
+    if (user.tipo == TipoUsuario.FUNCIONARIO && user.id.toString() != id) {
       throw new ForbiddenException(
         'Você não tem autorização para acessar esse recurso',
       );
@@ -80,7 +80,7 @@ export class UsuariosController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove o usuário por id' })
-  @Role(UserRole.MEI)
+  @Role(TipoUsuario.MEI)
   async deleteUser(@Param('id') id: string) {
     await this.usuarioService.deleteUser(id);
     return {

@@ -15,7 +15,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '../../decorators/user.decorator';
 import { Role } from '../auth/role.decorator';
 import { Empresa } from '../empresa/empresa.entity';
-import { UserRole } from '../usuario/enum/user-roles.enum';
+import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { CreatePromocaoDto } from './dto/create-promocoes-dto';
 import { FindPromocoesQueryDto } from './dto/find-promocoes-query-dto';
 import { ReturnPromocaoDto } from './dto/return-promocao-dto';
@@ -57,8 +57,8 @@ export class PromocoesController {
 
   @Post()
   @ApiOperation({ summary: 'Cria promoção' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async createPromocao(
     @Body() createPromocaoDto: CreatePromocaoDto,
     @User('empresa') empresa: Empresa,
@@ -76,8 +76,8 @@ export class PromocoesController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza promoção por id' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async updatePromocao(
     @Body(ValidationPipe) updatePromocaoDto: UpdatePromocaoDto,
     @Param('id') id: string,
@@ -95,8 +95,8 @@ export class PromocoesController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove promoção por id' })
-  @Role(UserRole.MEI)
-  @Role(UserRole.ADMIN)
+  @Role(TipoUsuario.MEI)
+  @Role(TipoUsuario.ADMINISTRADOR)
   async deletePromocao(@Param('id') id: string) {
     await this.promocoesService.deletePromocao(id);
     return {

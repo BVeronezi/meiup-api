@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
 import { Empresa } from '../empresa/empresa.entity';
-import { UserRole } from '../usuario/enum/user-roles.enum';
+import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { UsuariosController } from './usuario.controller';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
@@ -41,7 +41,7 @@ describe('UsuariosController', () => {
     const query = {
       nome: 'teste',
       email: '',
-      role: UserRole.USER,
+      tipo: TipoUsuario.FUNCIONARIO,
     };
 
     const empresa = { id: '5' } as Empresa;
@@ -56,7 +56,7 @@ describe('UsuariosController', () => {
       nome: 'Teste',
       email: 'teste@example.com',
       empresa: { id: '5' } as Empresa,
-      role: UserRole.MEI,
+      tipo: TipoUsuario.MEI,
       senha: '123456',
     };
 
@@ -72,7 +72,7 @@ describe('UsuariosController', () => {
       email: 'teste2@example.com',
     };
 
-    const usuario = { id: '5', role: UserRole.MEI } as Usuario;
+    const usuario = { id: '5', tipo: TipoUsuario.MEI } as Usuario;
 
     expect(await usuarioController.updateUser(mockUsuario, usuario, 'mockId'));
   });
