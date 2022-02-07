@@ -24,9 +24,13 @@ export class EmpresaService {
       {
         cnpj: updateCompanyDto.cnpj,
         razaoSocial: updateCompanyDto.razaoSocial,
-        ie: updateCompanyDto.ie,
-        telefone: updateCompanyDto.telefone,
-        celular: updateCompanyDto.celular,
+        ie: updateCompanyDto.ie ? Number(updateCompanyDto.ie) : 0,
+        telefone: updateCompanyDto.telefone
+          ? Number(updateCompanyDto.telefone)
+          : 0,
+        celular: updateCompanyDto.celular
+          ? Number(updateCompanyDto.celular)
+          : 0,
         email: updateCompanyDto.email,
       },
     );
