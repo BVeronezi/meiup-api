@@ -23,6 +23,7 @@ import { ProdutosVendaModule } from './modules/produtos_venda/produtos_venda.mod
 import { ProdutosServicoModule } from './modules/produtos_servico/produtos_servico.module';
 import { ServicosVendaModule } from './modules/servicos_venda/servicos_venda.module';
 import { MailModule } from './mail/mail.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { MailModule } from './mail/mail.module';
     ProdutosServicoModule,
     ServicosVendaModule,
     MailModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [],
