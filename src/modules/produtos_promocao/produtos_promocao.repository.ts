@@ -34,7 +34,7 @@ export class ProdutosPromocaoRepository extends Repository<ProdutosPromocao> {
       'produtos_promocao.empresaId',
     ]);
     query.leftJoin('produtos_promocao.produto', 'produto');
-    query.leftJoin('produtos_promocao.promocao', 'promocao');
+    query.leftJoin('produtos_promocao.promocoes', 'promocao');
 
     const [produtosPromocao, total] = await query.getManyAndCount();
 

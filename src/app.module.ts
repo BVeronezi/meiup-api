@@ -25,6 +25,7 @@ import { ServicosVendaModule } from './modules/servicos_venda/servicos_venda.mod
 import { MailModule } from './mail/mail.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { ProdutosPromocaoModule } from './modules/produtos_promocao/produtos_promocao.module';
+import { ServicosPromocaoModule } from './modules/servicos_promocao/servicos_promocao.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { ProdutosPromocaoModule } from './modules/produtos_promocao/produtos_pro
     ProdutosServicoModule,
     ServicosVendaModule,
     ProdutosPromocaoModule,
+    ServicosPromocaoModule,
     MailModule,
     DashboardModule,
   ],
