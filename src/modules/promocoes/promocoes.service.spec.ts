@@ -48,7 +48,6 @@ describe('PromocoesService', () => {
       mockCreatePromocaoDto = {
         descricao: 'Promoção teste',
         produtos: [{ id: 1, descricao: 'Produto Teste' }],
-        valorPromocional: 10.0,
         dataInicio: new Date(),
         dataFim: new Date(),
         empresa: { id: '5' } as Empresa,

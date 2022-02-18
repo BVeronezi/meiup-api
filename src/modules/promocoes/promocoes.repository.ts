@@ -38,20 +38,13 @@ export class PromocoesRepository extends Repository<Promocoes> {
   async createPromocao(
     createPromocaoDto: CreatePromocaoDto,
   ): Promise<Promocoes> {
-    const {
-      descricao,
-      produtos,
-      servicos,
-      valorPromocional,
-      dataInicio,
-      dataFim,
-    } = createPromocaoDto;
+    const { descricao, produtos, servicos, dataInicio, dataFim } =
+      createPromocaoDto;
 
     const promocao = this.create();
     promocao.descricao = descricao;
     promocao.produtos = produtos;
     promocao.servicos = servicos;
-    promocao.valorPromocional = valorPromocional;
     promocao.dataInicio = dataInicio;
     promocao.dataFim = dataFim;
 

@@ -53,7 +53,6 @@ describe('PromocoesController', () => {
     const mockPromocao: CreatePromocaoDto = {
       descricao: 'Promoção teste',
       produtos: [{ id: 1, descricao: 'Produto Teste' }],
-      valorPromocional: 10.0,
       dataInicio: new Date(),
       dataFim: new Date(),
       empresa: { id: '5' } as Empresa,
@@ -69,7 +68,7 @@ describe('PromocoesController', () => {
 
   it('deve atualizar o promoção por id', async () => {
     const mockPromocao: UpdatePromocaoDto = {
-      valorPromocional: 12.0,
+      dataInicio: new Date(),
     };
 
     expect(

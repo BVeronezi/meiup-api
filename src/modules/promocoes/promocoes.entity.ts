@@ -34,9 +34,6 @@ export class Promocoes extends BaseEntity {
   })
   servicos: Servicos;
 
-  @Column({ nullable: false, type: 'decimal' })
-  valorPromocional: number;
-
   @Column({ nullable: false, type: 'date' })
   dataInicio: Date;
 

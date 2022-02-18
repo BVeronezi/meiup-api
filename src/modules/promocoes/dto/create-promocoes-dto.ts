@@ -24,15 +24,6 @@ export class CreatePromocaoDto {
   servicos?: any;
 
   @IsNotEmpty({
-    message: 'Informe o valor promocional',
-  })
-  @ApiProperty({
-    description: 'Valor promocional',
-    type: 'decimal',
-  })
-  valorPromocional: number;
-
-  @IsNotEmpty({
     message: 'Informe qual a data de inicio da promoção',
   })
   @ApiProperty({

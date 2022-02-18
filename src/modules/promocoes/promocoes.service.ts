@@ -45,7 +45,6 @@ export class PromocoesService {
         descricao: updatePromocaoDto.descricao,
         produtos: updatePromocaoDto.produtos,
         servicos: updatePromocaoDto.servicos,
-        valorPromocional: updatePromocaoDto.valorPromocional,
         dataInicio: updatePromocaoDto.dataInicio,
         dataFim: updatePromocaoDto.dataFim,
       },

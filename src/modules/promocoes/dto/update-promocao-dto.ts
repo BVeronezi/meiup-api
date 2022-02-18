@@ -24,13 +24,6 @@ export class UpdatePromocaoDto {
 
   @IsOptional()
   @ApiProperty({
-    description: 'Valor promocional',
-    type: 'decimal',
-  })
-  valorPromocional?: number;
-
-  @IsOptional()
-  @ApiProperty({
     description: 'Data inicio da promoção',
     type: 'date',
   })
