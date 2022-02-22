@@ -69,8 +69,10 @@ export class ServicosController {
     @Body() createServicosDto: CreateServicosDto,
     @User('usuario') usuario: Usuario,
   ): Promise<ReturnServicosDto> {
-    createServicosDto.empresa = usuario.empresa;
-    const servico = await this.servicosService.createServico(createServicosDto);
+    const servico = await this.servicosService.createServico(
+      createServicosDto,
+      usuario.empresa,
+    );
 
     return {
       servico,

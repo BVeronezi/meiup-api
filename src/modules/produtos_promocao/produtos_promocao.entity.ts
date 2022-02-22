@@ -23,7 +23,7 @@ export class ProdutosPromocao extends BaseEntity {
   @JoinColumn()
   produto: Produtos;
 
-  @Column({ nullable: true, type: 'integer', default: 0 })
+  @Column({ nullable: true, type: 'decimal', default: 0 })
   precoPromocional: number;
 
   @ManyToOne(() => Promocoes, {

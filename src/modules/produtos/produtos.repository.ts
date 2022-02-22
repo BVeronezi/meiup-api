@@ -1,4 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Categorias } from '../categorias/categorias.entity';
+import { Empresa } from '../empresa/empresa.entity';
+import { Fornecedores } from '../fornecedores/fornecedores.entity';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
 import { Produtos } from './produtos.entity';
@@ -37,17 +40,19 @@ export class ProdutosRepository extends Repository<Produtos> {
     return { produtos, total };
   }
 
-  async createProduto(createProdutoDto: CreateProdutoDto): Promise<Produtos> {
+  async createProduto(
+    createProdutoDto: CreateProdutoDto,
+    categoria: Categorias,
+    empresa: Empresa,
+    fornecedoresProduto: Fornecedores[],
+  ): Promise<Produtos> {
     const {
       descricao,
       tipoItem,
       unidade,
-      categoria,
       estoque,
       estoqueMinimo,
       estoqueMaximo,
-      empresa,
-      fornecedoresProduto,
     } = createProdutoDto;
 
     const produto = this.create();

@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Empresa } from '../empresa/empresa.entity';
 import { Clientes } from './clientes.entity';
 import { CreateClienteDto } from './dto/create-cliente-dto';
 import { FindClientesQueryDto } from './dto/find-clientes-query.dto';
@@ -43,9 +44,11 @@ export class ClientesRepository extends Repository<Clientes> {
     return { clientes, total };
   }
 
-  async createCliente(createClienteDto: CreateClienteDto): Promise<Clientes> {
-    const { nome, email, celular, telefone, dataNascimento, empresa } =
-      createClienteDto;
+  async createCliente(
+    createClienteDto: CreateClienteDto,
+    empresa: Empresa,
+  ): Promise<Clientes> {
+    const { nome, email, celular, telefone, dataNascimento } = createClienteDto;
 
     const cliente = this.create();
     cliente.nome = nome;

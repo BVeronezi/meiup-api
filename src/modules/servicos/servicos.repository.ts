@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Empresa } from '../empresa/empresa.entity';
 import { CreateServicosDto } from './dto/create-servicos-dto';
 import { FindServicosQueryDto } from './dto/find-servicos-query-dto';
 import { Servicos } from './servicos.entity';
@@ -41,8 +42,11 @@ export class ServicosRepository extends Repository<Servicos> {
     return { servicos, total };
   }
 
-  async createServico(createServicosDto: CreateServicosDto): Promise<Servicos> {
-    const { nome, empresa } = createServicosDto;
+  async createServico(
+    createServicosDto: CreateServicosDto,
+    empresa: Empresa,
+  ): Promise<Servicos> {
+    const { nome } = createServicosDto;
 
     const servico = this.create();
     servico.nome = nome;

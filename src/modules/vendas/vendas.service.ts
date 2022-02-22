@@ -21,6 +21,7 @@ import { StatusVenda } from './enum/venda-status.enum';
 import { Vendas } from './vendas.entity';
 import { VendasRepository } from './vendas.repository';
 import { Repository } from 'typeorm';
+import { Usuario } from '../usuario/usuario.entity';
 @Injectable()
 export class VendasService {
   constructor(
@@ -35,8 +36,16 @@ export class VendasService {
     private servicoService: ServicosService,
   ) {}
 
-  async createVenda(createVendaDto: CreateVendaDto): Promise<Vendas> {
-    return await this.vendasRepository.createVenda(createVendaDto);
+  async createVenda(
+    createVendaDto: CreateVendaDto,
+    usuario: Usuario,
+    empresa: Empresa,
+  ): Promise<Vendas> {
+    return await this.vendasRepository.createVenda(
+      createVendaDto,
+      usuario,
+      empresa,
+    );
   }
 
   async findVendaById(vendaId: number): Promise<Vendas> {

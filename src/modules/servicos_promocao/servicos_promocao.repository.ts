@@ -29,12 +29,10 @@ export class ServicosPromocaoRepository extends Repository<ServicosPromocao> {
     query.select([
       'servicos_promocao.id',
       'servico',
-      'promocao',
       'servicos_promocao.precoPromocional',
       'servicos_promocao.empresaId',
     ]);
     query.leftJoin('servicos_promocao.servico', 'servico');
-    query.leftJoin('servicos_promocao.promocoes', 'promocao');
 
     const [servicosPromocao, total] = await query.getManyAndCount();
 

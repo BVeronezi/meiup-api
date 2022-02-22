@@ -87,9 +87,9 @@ export class FornecedoresController {
     @Body() createFornecedorDto: CreateFornecedorDto,
     @User('usuario') usuario: Usuario,
   ): Promise<ReturnFornecedorDto> {
-    createFornecedorDto.empresa = usuario.empresa;
     const fornecedor = await this.fornecedoresService.createFornecedor(
       createFornecedorDto,
+      usuario.empresa,
     );
 
     return {

@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Empresa } from '../empresa/empresa.entity';
 import { Categorias } from './categorias.entity';
 import { CreateCategoriaDto } from './dto/create-categoria-dto';
 import { FindCategoriasQueryDto } from './dto/find-categorias-query-dto';
@@ -37,8 +38,9 @@ export class CategoriasRepository extends Repository<Categorias> {
 
   async createCategoria(
     createCategoriaDto: CreateCategoriaDto,
+    empresa: Empresa,
   ): Promise<Categorias> {
-    const { nome, empresa } = createCategoriaDto;
+    const { nome } = createCategoriaDto;
 
     const categoria = this.create();
     categoria.nome = nome;

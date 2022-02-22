@@ -66,7 +66,7 @@ export class ProdutosPromocaoService {
   ) {
     const produtoPromocao = await this.produtosPromocaoRepository.findOne({
       where: {
-        id: item.id,
+        id: item.produtoPromocao,
         produto: String(item.produto),
         promocao: promocaoId,
         empresa: empresaId,

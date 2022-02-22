@@ -66,7 +66,7 @@ export class ServicosPromocaoService {
   ) {
     const servicoPromocao = await this.servicosPromocaoRepository.findOne({
       where: {
-        id: item.id,
+        id: item.servicoPromocao,
         servico: String(item.servico),
         promocao: promocaoId,
         empresa: empresaId,

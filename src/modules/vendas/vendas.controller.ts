@@ -148,10 +148,11 @@ export class VendasController {
     @Body() createVendaDto: CreateVendaDto,
     @User('usuario') usuario: Usuario,
   ): Promise<ReturnVendasDto> {
-    createVendaDto.empresa = usuario.empresa;
-    createVendaDto.usuario = usuario;
-
-    const venda = await this.vendasService.createVenda(createVendaDto);
+    const venda = await this.vendasService.createVenda(
+      createVendaDto,
+      usuario,
+      usuario.empresa,
+    );
 
     if (createVendaDto.servicos?.length > 0) {
       await this.vendasService.adicionaServicoVenda(

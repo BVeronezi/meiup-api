@@ -19,8 +19,14 @@ export class ServicosService {
     private produtosService: ProdutosService,
   ) {}
 
-  async createServico(createServicosDto: CreateServicosDto): Promise<Servicos> {
-    return await this.servicosRepository.createServico(createServicosDto);
+  async createServico(
+    createServicosDto: CreateServicosDto,
+    empresa: Empresa,
+  ): Promise<Servicos> {
+    return await this.servicosRepository.createServico(
+      createServicosDto,
+      empresa,
+    );
   }
 
   async findServicoById(servicoId: string): Promise<Servicos> {

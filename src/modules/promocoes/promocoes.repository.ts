@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Empresa } from '../empresa/empresa.entity';
 import { CreatePromocaoDto } from './dto/create-promocoes-dto';
 import { FindPromocoesQueryDto } from './dto/find-promocoes-query-dto';
 import { Promocoes } from './promocoes.entity';
@@ -28,7 +29,12 @@ export class PromocoesRepository extends Repository<Promocoes> {
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
-    query.select(['promocoes.id', 'promocoes.descricao']);
+    query.select([
+      'promocoes.id',
+      'promocoes.descricao',
+      'promocoes.dataInicio',
+      'promocoes.dataFim',
+    ]);
 
     const [promocoes, total] = await query.getManyAndCount();
 
@@ -37,16 +43,15 @@ export class PromocoesRepository extends Repository<Promocoes> {
 
   async createPromocao(
     createPromocaoDto: CreatePromocaoDto,
+    empresa: Empresa,
   ): Promise<Promocoes> {
-    const { descricao, produtos, servicos, dataInicio, dataFim } =
-      createPromocaoDto;
+    const { descricao, dataInicio, dataFim } = createPromocaoDto;
 
     const promocao = this.create();
     promocao.descricao = descricao;
-    promocao.produtos = produtos;
-    promocao.servicos = servicos;
     promocao.dataInicio = dataInicio;
     promocao.dataFim = dataFim;
+    promocao.empresa = empresa;
 
     try {
       return await promocao.save();

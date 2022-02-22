@@ -7,6 +7,7 @@ import { CreateClienteDto } from './dto/create-cliente-dto';
 import { FindClientesQueryDto } from './dto/find-clientes-query.dto';
 import { UpdateClienteDto } from './dto/update-cliente-dto';
 import { isEmpty, values } from 'lodash';
+import { Empresa } from '../empresa/empresa.entity';
 @Injectable()
 export class ClientesService {
   constructor(
@@ -15,8 +16,14 @@ export class ClientesService {
     private enderecoService: EnderecoService,
   ) {}
 
-  async createCliente(createClienteDto: CreateClienteDto): Promise<Clientes> {
-    return await this.clientesRepository.createCliente(createClienteDto);
+  async createCliente(
+    createClienteDto: CreateClienteDto,
+    empresa: Empresa,
+  ): Promise<Clientes> {
+    return await this.clientesRepository.createCliente(
+      createClienteDto,
+      empresa,
+    );
   }
 
   async findClienteById(clienteId: string): Promise<Clientes> {

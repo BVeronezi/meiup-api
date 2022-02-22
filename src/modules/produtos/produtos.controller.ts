@@ -76,17 +76,13 @@ export class ProdutosController {
     @User('usuario') usuario: Usuario,
   ): Promise<ReturnProdutoDto> {
     const idCategoria = String(createProdutoDto.categoria);
+    const fornecedoresProduto = [];
 
     const categoria = await this.categoriasService.findCategoriaById(
       idCategoria,
     );
 
-    createProdutoDto.categoria = categoria;
-    createProdutoDto.empresa = usuario.empresa;
-
     if (createProdutoDto.fornecedoresProduto?.length > 0) {
-      const fornecedoresProduto = [];
-
       for (const idFornecedor of createProdutoDto.fornecedoresProduto) {
         const fornecedor = await this.fornecedoresService.findFornecedorById(
           String(idFornecedor),
@@ -94,11 +90,14 @@ export class ProdutosController {
 
         fornecedoresProduto.push(fornecedor);
       }
-
-      createProdutoDto.fornecedoresProduto = fornecedoresProduto;
     }
 
-    const produto = await this.produtosService.createProduto(createProdutoDto);
+    const produto = await this.produtosService.createProduto(
+      createProdutoDto,
+      categoria,
+      usuario.empresa,
+      fornecedoresProduto,
+    );
     if (Object.keys(createProdutoDto.precos).length !== 0) {
       const params = Object.assign(createProdutoDto.precos, {
         produto: produto.id,

@@ -1,4 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Empresa } from '../empresa/empresa.entity';
+import { Usuario } from '../usuario/usuario.entity';
 import { CreateVendaDto } from './dto/create-venda-dto';
 import { FindVendasQueryDto } from './dto/find-vendas-query-dto';
 import { Vendas } from './vendas.entity';
@@ -43,16 +45,13 @@ export class VendasRepository extends Repository<Vendas> {
     return { vendas, total };
   }
 
-  async createVenda(createVendaDto: CreateVendaDto): Promise<Vendas> {
-    const {
-      cliente,
-      dataVenda,
-      valorTotal,
-      pagamento,
-      valorTroco,
-      empresa,
-      usuario,
-    } = createVendaDto;
+  async createVenda(
+    createVendaDto: CreateVendaDto,
+    usuario: Usuario,
+    empresa: Empresa,
+  ): Promise<Vendas> {
+    const { cliente, dataVenda, valorTotal, pagamento, valorTroco } =
+      createVendaDto;
 
     const venda = this.create();
     venda.cliente = cliente;

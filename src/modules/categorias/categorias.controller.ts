@@ -66,9 +66,9 @@ export class CategoriasController {
     @Body() createCategoriaDto: CreateCategoriaDto,
     @User('usuario') usuario: Usuario,
   ): Promise<ReturnCategoriaDto> {
-    createCategoriaDto.empresa = usuario.empresa;
     const categoria = await this.categoriasService.createCategoria(
       createCategoriaDto,
+      usuario.empresa,
     );
     return {
       categoria,

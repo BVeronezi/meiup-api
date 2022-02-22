@@ -14,10 +14,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Role } from '../auth/decorators/role.decorator';
 import { User } from '../auth/decorators/user.decorator';
+import { ProdutosPromocaoService } from '../produtos_promocao/produtos_promocao.service';
+import { ServicosPromocaoService } from '../servicos_promocao/servicos_promocao.service';
 import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { Usuario } from '../usuario/usuario.entity';
 import { CreatePromocaoDto } from './dto/create-promocoes-dto';
 import { FindPromocoesQueryDto } from './dto/find-promocoes-query-dto';
+import { RemoveProdutosPromocaoDto } from './dto/remove-produto-promocao-dto';
+import { RemoveServicosPromocaoDto } from './dto/remove-servico-promocao-dto';
 import { ReturnPromocaoDto } from './dto/return-promocao-dto';
 import { UpdatePromocaoDto } from './dto/update-promocao-dto';
 import { PromocoesService } from './promocoes.service';
@@ -27,7 +31,11 @@ import { PromocoesService } from './promocoes.service';
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('access-token')
 export class PromocoesController {
-  constructor(private promocoesService: PromocoesService) {}
+  constructor(
+    private promocoesService: PromocoesService,
+    private produtoPromocaoService: ProdutosPromocaoService,
+    private servicoPromocaoService: ServicosPromocaoService,
+  ) {}
 
   @Get(':id')
   @ApiOperation({ summary: 'Busca promocao por id' })
@@ -66,9 +74,9 @@ export class PromocoesController {
     @Body() createPromocaoDto: CreatePromocaoDto,
     @User('usuario') usuario: Usuario,
   ): Promise<ReturnPromocaoDto> {
-    createPromocaoDto.empresa = usuario.empresa;
     const promocao = await this.promocoesService.createPromocao(
       createPromocaoDto,
+      usuario.empresa,
     );
 
     return {
@@ -100,10 +108,95 @@ export class PromocoesController {
   @ApiOperation({ summary: 'Remove promoção por id' })
   @Role(TipoUsuario.MEI)
   @Role(TipoUsuario.ADMINISTRADOR)
-  async deletePromocao(@Param('id') id: string) {
-    await this.promocoesService.deletePromocao(id);
+  async deletePromocao(
+    @Param('id') id: string,
+    @User('usuario') usuario: Usuario,
+  ) {
+    await this.promocoesService.deletePromocao(id, usuario.empresa.id);
     return {
       message: 'Promoção removida com sucesso',
+    };
+  }
+
+  @Post('/produto/:promocaoId')
+  @ApiOperation({ summary: 'Adiciona produto na promoção por id' })
+  async adicionaProdutoPromocao(
+    @Body(ValidationPipe) updatePromocaoDto: UpdatePromocaoDto,
+    @User('usuario') usuario: Usuario,
+    @Param('promocaoId') promocaoId: string,
+  ) {
+    const promocao = await this.promocoesService.findPromocaoById(promocaoId);
+
+    const produtoPromoao: any =
+      await this.promocoesService.adicionaProdutoPromocao(
+        updatePromocaoDto,
+        promocao,
+        usuario.empresa,
+      );
+
+    return {
+      produtoPromoao: produtoPromoao,
+    };
+  }
+
+  @Delete('/produto/:promocaoId')
+  @ApiOperation({ summary: 'Remove produto da promoção por id' })
+  async removeProdutoPromocao(
+    @Param('promocaoId') promocaoId: string,
+    @User('usuario') usuario: Usuario,
+    @Body(ValidationPipe) removeProdutoPromocaoDto: RemoveProdutosPromocaoDto,
+  ) {
+    const promocao = await this.promocoesService.findPromocaoById(promocaoId);
+
+    await this.produtoPromocaoService.deleteProdutoPromocao(
+      removeProdutoPromocaoDto,
+      String(promocao.id),
+      String(usuario.empresa.id),
+    );
+
+    return {
+      message: 'Produto removido com sucesso da promoção',
+    };
+  }
+
+  @Post('/servico/:promocaoId')
+  @ApiOperation({ summary: 'Adiciona serviço na promoção por id' })
+  async adicionaServixoPromocao(
+    @Body(ValidationPipe) updatePromocaoDto: UpdatePromocaoDto,
+    @User('usuario') usuario: Usuario,
+    @Param('promocaoId') promocaoId: string,
+  ) {
+    const promocao = await this.promocoesService.findPromocaoById(promocaoId);
+
+    const servicoPromocao: any =
+      await this.promocoesService.adicionaServicoPromocao(
+        updatePromocaoDto,
+        promocao,
+        usuario.empresa,
+      );
+
+    return {
+      servicoPromocao: servicoPromocao,
+    };
+  }
+
+  @Delete('/servico/:promocaoId')
+  @ApiOperation({ summary: 'Remove serviço da promoção por id' })
+  async removeServicoPromocao(
+    @Param('promocaoId') promocaoId: string,
+    @User('usuario') usuario: Usuario,
+    @Body(ValidationPipe) removeServicoPromocaoDto: RemoveServicosPromocaoDto,
+  ) {
+    const promocao = await this.promocoesService.findPromocaoById(promocaoId);
+
+    await this.servicoPromocaoService.deleteServicoPromocao(
+      removeServicoPromocaoDto,
+      String(promocao.id),
+      String(usuario.empresa.id),
+    );
+
+    return {
+      message: 'Serviço removido com sucesso da promoção',
     };
   }
 }

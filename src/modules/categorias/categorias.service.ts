@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Empresa } from '../empresa/empresa.entity';
 import { Categorias } from './categorias.entity';
 import { CategoriasRepository } from './categorias.repository';
 import { CreateCategoriaDto } from './dto/create-categoria-dto';
@@ -38,8 +39,12 @@ export class CategoriasService {
 
   async createCategoria(
     createCategoriaDto: CreateCategoriaDto,
+    empresa: Empresa,
   ): Promise<Categorias> {
-    return await this.categoriasRepository.createCategoria(createCategoriaDto);
+    return await this.categoriasRepository.createCategoria(
+      createCategoriaDto,
+      empresa,
+    );
   }
 
   async updateCategoria(updateCategoriaDto: UpdateCategoriaDto, id: string) {

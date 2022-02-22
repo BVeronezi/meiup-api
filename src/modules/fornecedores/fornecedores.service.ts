@@ -8,6 +8,7 @@ import { FornecedoresRepository } from './fornecedores.repository';
 import { Fornecedores } from './fornecedores.entity';
 import { isEmpty, values } from 'lodash';
 import { Usuario } from '../usuario/usuario.entity';
+import { Empresa } from '../empresa/empresa.entity';
 @Injectable()
 export class FornecedoresService {
   constructor(
@@ -18,9 +19,11 @@ export class FornecedoresService {
 
   async createFornecedor(
     createFornecedorDto: CreateFornecedorDto,
+    empresa: Empresa,
   ): Promise<Fornecedores> {
     return await this.fornecedoresRepository.createFornecedor(
       createFornecedorDto,
+      empresa,
     );
   }
 

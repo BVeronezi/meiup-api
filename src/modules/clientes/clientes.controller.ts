@@ -82,8 +82,10 @@ export class ClientesController {
     @Body() createClienteDto: CreateClienteDto,
     @User('usuario') usuario: Usuario,
   ): Promise<ReturnClienteDto> {
-    createClienteDto.empresa = usuario.empresa;
-    const cliente = await this.clientesService.createCliente(createClienteDto);
+    const cliente = await this.clientesService.createCliente(
+      createClienteDto,
+      usuario.empresa,
+    );
 
     if (!isEmpty(createClienteDto.endereco)) {
       await this.clientesService.endereco(createClienteDto, usuario, cliente);

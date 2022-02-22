@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Empresa } from '../empresa/empresa.entity';
 import { CreateFornecedorDto } from './dto/create-fornecedor-dto';
 import { FindFornecedoresQueryDto } from './dto/find-fornecedores-query.dto';
 import { Fornecedores } from './fornecedores.entity';
@@ -45,6 +46,7 @@ export class FornecedoresRepository extends Repository<Fornecedores> {
 
   async createFornecedor(
     createFornecedorDto: CreateFornecedorDto,
+    empresa: Empresa,
   ): Promise<Fornecedores> {
     const {
       nome,
@@ -54,7 +56,6 @@ export class FornecedoresRepository extends Repository<Fornecedores> {
       celular,
       telefone,
       endereco,
-      empresa,
     } = createFornecedorDto;
 
     const fornecedor = this.create();
