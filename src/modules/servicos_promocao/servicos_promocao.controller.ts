@@ -39,4 +39,23 @@ export class ServicosPromocaoController {
       throw new NotFoundException('Produtos promoção não encontrado');
     }
   }
+
+  @Get('/servico')
+  @ApiOperation({ summary: 'Busca serviço do produto' })
+  async findServicoPromocaoAtiva(
+    @Query() query: FindServicosPromocaoQueryDto,
+    @User('usuario') usuario: Usuario,
+  ) {
+    try {
+      const promocao =
+        await this.servicosPromocaoService.findServicoPromocaoAtiva(
+          query.servicoId,
+          usuario.empresa.id,
+        );
+
+      return promocao;
+    } catch (error) {
+      throw new NotFoundException('Serviço promoção não encontrado');
+    }
+  }
 }

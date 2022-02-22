@@ -5,6 +5,7 @@ import { Empresa } from '../empresa/empresa.entity';
 import { Fornecedores } from '../fornecedores/fornecedores.entity';
 import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { PrecosService } from '../precos/precos.service';
+import { ProdutosPromocaoService } from '../produtos_promocao/produtos_promocao.service';
 import { ProdutosServicoService } from '../produtos_servico/produtos_servico.service';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
@@ -21,6 +22,7 @@ export class ProdutosService {
     private precosService: PrecosService,
     private fornecedoresService: FornecedoresService,
     private produtoServicoService: ProdutosServicoService,
+    private produtoPromocaoService: ProdutosPromocaoService,
   ) {}
 
   async createProduto(
@@ -38,7 +40,7 @@ export class ProdutosService {
   }
 
   async findProdutoById(produtoId: string): Promise<Produtos> {
-    const produto = await this.produtosRepository.findOne(produtoId);
+    const produto: any = await this.produtosRepository.findOne(produtoId);
 
     if (!produto) throw new NotFoundException('Produto não encontrado');
 

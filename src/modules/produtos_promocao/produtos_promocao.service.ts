@@ -4,7 +4,8 @@ import { FindProdutosPromocaoQueryDto } from './dto/find-produtos-promocao-dto';
 import { ProdutoPromocaoDto } from './dto/produtos-promoca-dto';
 import { ProdutosPromocao } from './produtos_promocao.entity';
 import { ProdutosPromocaoRepository } from './produtos_promocao.repository';
-
+import * as moment from 'moment';
+import { getManager } from 'typeorm';
 @Injectable()
 export class ProdutosPromocaoService {
   constructor(
@@ -33,6 +34,31 @@ export class ProdutosPromocaoService {
     });
 
     return produtoPromocao;
+  }
+
+  async findProdutoPromocaoAtiva(
+    produtoId: string,
+    empresaId: string,
+  ): Promise<ProdutosPromocao> {
+    const entityManager = getManager();
+    const hoje = moment().format('YYYY-MM-DD');
+
+    const promocao = await entityManager.query(`
+    select
+      pp."produtoId" ,
+      pp."precoPromocional" ,
+      p."dataFim" 
+    from
+      produtos_promocao pp
+    left join promocoes p on
+      p.id = pp."promocaoId"
+    where
+      "produtoId" = ${produtoId}
+      and pp."empresaId" = ${empresaId}
+      and p."dataFim" >= '${hoje}' 
+    `);
+
+    return promocao;
   }
 
   async findProduto(produtoId: number) {

@@ -79,7 +79,10 @@ describe('ClientesService', () => {
       (clienteRepository.createCliente as jest.Mock).mockResolvedValue(
         'mockCliente',
       );
-      const result = await service.createCliente(mockCreateClienteDto);
+      const result = await service.createCliente(
+        mockCreateClienteDto,
+        mockCreateClienteDto.empresa,
+      );
 
       expect(clienteRepository.createCliente).toHaveBeenCalledWith(
         mockCreateClienteDto,
