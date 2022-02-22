@@ -31,10 +31,7 @@ export class CreateFornecedorDto {
   })
   nome: string;
 
-  @IsNotEmpty({
-    message: 'Informe o CPF/CNPJ do fornecedor',
-  })
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'CPF/CNPJ para cadastro no sistema',
     type: 'string',
   })

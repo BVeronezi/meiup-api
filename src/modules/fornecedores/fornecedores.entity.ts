@@ -23,7 +23,7 @@ export class Fornecedores extends BaseEntity {
   @Column({ nullable: true, type: 'varchar', length: 200 })
   email: string;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: true, type: 'varchar' })
   cpfCnpj: string;
 
   @Column({ nullable: true, type: 'varchar' })
