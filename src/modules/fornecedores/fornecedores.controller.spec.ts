@@ -2,16 +2,17 @@ import { Test } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
 import { Empresa } from '../empresa/empresa.entity';
 import { Usuario } from '../usuario/usuario.entity';
-import { FornecedoresController } from './fornecedores.controlller';
 import { FornecedoresService } from './fornecedores.service';
 import { CreateFornecedorDto } from './dto/create-fornecedor-dto';
 import { UpdateFornecedorDto } from './dto/update-fornecedor-dto';
+import { FornecedoresController } from './fornecedores.controller';
 
 describe('FornecedoresController', () => {
   let fornecedorController: FornecedoresController;
   let fornecedorService: FornecedoresService;
 
   const mockUsuario = { id: '5', empresa: { id: '5' } } as Usuario;
+  const mockEmpresa = { id: '1' } as Empresa;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -57,7 +58,7 @@ describe('FornecedoresController', () => {
       cpfCnpj: '1231321123',
       situacaoCadastral: 'regular',
       email: 'teste@example.com',
-      empresa: { id: '5' } as Empresa,
+      empresa: mockEmpresa,
     };
 
     expect(
@@ -87,10 +88,10 @@ describe('FornecedoresController', () => {
   });
 
   it('deve remover o fornecedor por id', async () => {
-    expect(await fornecedorController.deleteFornecedor('mockId')).toMatchObject(
-      {
-        message: 'Fornecedor removido com sucesso',
-      },
-    );
+    expect(
+      await fornecedorController.deleteFornecedor('mockId', mockUsuario),
+    ).toMatchObject({
+      message: 'Fornecedor removido com sucesso',
+    });
   });
 });

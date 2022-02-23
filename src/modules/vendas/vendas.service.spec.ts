@@ -122,10 +122,16 @@ describe('VendasService', () => {
 
     it('deve criar a venda', async () => {
       (vendaRepository.createVenda as jest.Mock).mockResolvedValue('mockVenda');
-      const result = await service.createVenda(mockCreateVendaDto);
+      const result = await service.createVenda(
+        mockCreateVendaDto,
+        mockUsuario,
+        mockEmpresa,
+      );
 
       expect(vendaRepository.createVenda).toHaveBeenCalledWith(
         mockCreateVendaDto,
+        mockUsuario,
+        mockEmpresa,
       );
       expect(result).toEqual('mockVenda');
     });

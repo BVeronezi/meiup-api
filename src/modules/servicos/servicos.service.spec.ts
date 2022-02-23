@@ -79,10 +79,14 @@ describe('ServicosService', () => {
       (servicoRepository.createServico as jest.Mock).mockResolvedValue(
         'mockServico',
       );
-      const result = await service.createServico(mockCreateServicoDto);
+      const result = await service.createServico(
+        mockCreateServicoDto,
+        mockEmpresa,
+      );
 
       expect(servicoRepository.createServico).toHaveBeenCalledWith(
         mockCreateServicoDto,
+        mockEmpresa,
       );
       expect(result).toEqual('mockServico');
     });

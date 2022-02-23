@@ -10,8 +10,8 @@ import { CreateProdutoDto } from './dto/create-produto-dto';
 import { UpdateProdutoDto } from './dto/update-produto-dto';
 import { PrecosService } from '../precos/precos.service';
 import { CategoriasService } from '../categorias/categorias.service';
-import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { Usuario } from '../usuario/usuario.entity';
+import { ProdutosFornecedoresService } from '../produtos_fornecedores/produtos_fornecedores.service';
 
 describe('ProdutosController', () => {
   let produtoController: ProdutosController;
@@ -32,12 +32,12 @@ describe('ProdutosController', () => {
           useValue: createMock<PrecosService>(),
         },
         {
-          provide: FornecedoresService,
-          useValue: createMock<FornecedoresService>(),
-        },
-        {
           provide: CategoriasService,
           useValue: createMock<CategoriasService>(),
+        },
+        {
+          provide: ProdutosFornecedoresService,
+          useValue: createMock<ProdutosFornecedoresService>(),
         },
       ],
     }).compile();
@@ -104,7 +104,9 @@ describe('ProdutosController', () => {
   });
 
   it('deve remover o produto por id', async () => {
-    expect(await produtoController.deleteProduto('mockId')).toMatchObject({
+    expect(
+      await produtoController.deleteProduto('mockId', mockUsuario),
+    ).toMatchObject({
       message: 'Produto removido com sucesso',
     });
   });

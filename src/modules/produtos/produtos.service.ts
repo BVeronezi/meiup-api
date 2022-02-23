@@ -105,7 +105,7 @@ export class ProdutosService {
         empresaId,
       );
 
-    if (fornecedores.produtosFornecedores.length > 0) {
+    if (fornecedores?.produtosFornecedores.length > 0) {
       for (const fornecedor of fornecedores.produtosFornecedores) {
         await this.produtoFornecedoresService.deleteProdutoFornecedor(
           { produtoFornecedor: fornecedor.id },

@@ -104,7 +104,7 @@ export class FornecedoresService {
         empresaId,
       );
 
-    if (resultProdutosFornecedores.produtosFornecedores.length > 0) {
+    if (resultProdutosFornecedores?.produtosFornecedores.length > 0) {
       throw new ConflictException(
         'Há produto(s) vinculado(s) a este fornecedor',
       );

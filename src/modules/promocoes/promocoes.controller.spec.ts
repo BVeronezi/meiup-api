@@ -6,6 +6,8 @@ import { PromocoesService } from './promocoes.service';
 import { CreatePromocaoDto } from './dto/create-promocoes-dto';
 import { UpdatePromocaoDto } from './dto/update-promocao-dto';
 import { Usuario } from '../usuario/usuario.entity';
+import { ProdutosPromocaoService } from '../produtos_promocao/produtos_promocao.service';
+import { ServicosPromocaoService } from '../servicos_promocao/servicos_promocao.service';
 
 describe('PromocoesController', () => {
   let promocaoController: PromocoesController;
@@ -20,6 +22,14 @@ describe('PromocoesController', () => {
         {
           provide: PromocoesService,
           useValue: createMock<PromocoesService>(),
+        },
+        {
+          provide: ProdutosPromocaoService,
+          useValue: createMock<ProdutosPromocaoService>(),
+        },
+        {
+          provide: ServicosPromocaoService,
+          useValue: createMock<ServicosPromocaoService>(),
         },
       ],
     }).compile();
@@ -80,7 +90,9 @@ describe('PromocoesController', () => {
   });
 
   it('deve remover o promoção por id', async () => {
-    expect(await promocaoController.deletePromocao('mockId')).toMatchObject({
+    expect(
+      await promocaoController.deletePromocao('mockId', mockUsuario),
+    ).toMatchObject({
       message: 'Promoção removida com sucesso',
     });
   });

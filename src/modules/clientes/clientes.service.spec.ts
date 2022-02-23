@@ -86,6 +86,7 @@ describe('ClientesService', () => {
 
       expect(clienteRepository.createCliente).toHaveBeenCalledWith(
         mockCreateClienteDto,
+        mockCreateClienteDto.empresa,
       );
       expect(result).toEqual('mockCliente');
     });

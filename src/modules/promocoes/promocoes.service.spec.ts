@@ -1,6 +1,11 @@
+import { createMock } from '@golevelup/ts-jest';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Empresa } from '../empresa/empresa.entity';
+import { ProdutosService } from '../produtos/produtos.service';
+import { ProdutosPromocaoService } from '../produtos_promocao/produtos_promocao.service';
+import { ServicosService } from '../servicos/servicos.service';
+import { ServicosPromocaoService } from '../servicos_promocao/servicos_promocao.service';
 import { CreatePromocaoDto } from './dto/create-promocoes-dto';
 import { FindPromocoesQueryDto } from './dto/find-promocoes-query-dto';
 import { UpdatePromocaoDto } from './dto/update-promocao-dto';
@@ -19,6 +24,8 @@ describe('PromocoesService', () => {
   let service: PromocoesService;
   let promocaoRepository: PromocoesRepository;
 
+  const empresa = { id: '5' } as Empresa;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -26,6 +33,22 @@ describe('PromocoesService', () => {
         {
           provide: PromocoesRepository,
           useFactory: mockPromocaoRepository,
+        },
+        {
+          provide: ProdutosPromocaoService,
+          useValue: createMock<ProdutosPromocaoService>(),
+        },
+        {
+          provide: ServicosPromocaoService,
+          useValue: createMock<ServicosPromocaoService>(),
+        },
+        {
+          provide: ServicosService,
+          useValue: createMock<ServicosService>(),
+        },
+        {
+          provide: ProdutosService,
+          useValue: createMock<ProdutosService>(),
         },
       ],
     }).compile();
@@ -50,7 +73,7 @@ describe('PromocoesService', () => {
         produtos: [{ id: 1, descricao: 'Produto Teste' }],
         dataInicio: new Date(),
         dataFim: new Date(),
-        empresa: { id: '5' } as Empresa,
+        empresa,
       };
     });
 
@@ -58,10 +81,14 @@ describe('PromocoesService', () => {
       (promocaoRepository.createPromocao as jest.Mock).mockResolvedValue(
         'mockPromocao',
       );
-      const result = await service.createPromocao(mockCreatePromocaoDto);
+      const result = await service.createPromocao(
+        mockCreatePromocaoDto,
+        empresa,
+      );
 
       expect(promocaoRepository.createPromocao).toHaveBeenCalledWith(
         mockCreatePromocaoDto,
+        empresa,
       );
       expect(result).toEqual('mockPromocao');
     });
@@ -114,7 +141,8 @@ describe('PromocoesService', () => {
     beforeEach(() => {
       mockUpdatePromocaoDto = {
         descricao: 'Promoção teste 2',
-        produtos: [{ id: 1, descricao: 'Produto Teste 2' }],
+        dataInicio: undefined,
+        dataFim: undefined,
       };
     });
 
@@ -160,7 +188,7 @@ describe('PromocoesService', () => {
         affected: 1,
       });
 
-      await service.deletePromocao('mockId');
+      await service.deletePromocao('mockId', 'mockIdEmpresa');
       expect(promocaoRepository.delete).toHaveBeenCalledWith({ id: 'mockId' });
     });
 
@@ -169,7 +197,7 @@ describe('PromocoesService', () => {
         affected: 0,
       });
 
-      expect(service.deletePromocao('mockId')).rejects.toThrow(
+      expect(service.deletePromocao('mockId', 'mockIdEmpresa')).rejects.toThrow(
         NotFoundException,
       );
     });

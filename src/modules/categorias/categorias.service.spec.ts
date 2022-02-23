@@ -19,6 +19,8 @@ describe('CategoriasService', () => {
   let service: CategoriasService;
   let categoriaRepository: CategoriasRepository;
 
+  const mockEmpresa = { id: '5' } as Empresa;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -47,7 +49,7 @@ describe('CategoriasService', () => {
     beforeEach(() => {
       mockCreateCategoriaDto = {
         nome: 'categoria',
-        empresa: { id: '5' } as Empresa,
+        empresa: mockEmpresa,
       };
     });
 
@@ -55,10 +57,14 @@ describe('CategoriasService', () => {
       (categoriaRepository.createCategoria as jest.Mock).mockResolvedValue(
         'mockCategoria',
       );
-      const result = await service.createCategoria(mockCreateCategoriaDto);
+      const result = await service.createCategoria(
+        mockCreateCategoriaDto,
+        mockEmpresa,
+      );
 
       expect(categoriaRepository.createCategoria).toHaveBeenCalledWith(
         mockCreateCategoriaDto,
+        mockEmpresa,
       );
       expect(result).toEqual('mockCategoria');
     });

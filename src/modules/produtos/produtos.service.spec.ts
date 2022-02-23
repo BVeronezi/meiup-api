@@ -2,9 +2,9 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Categorias } from '../categorias/categorias.entity';
 import { Empresa } from '../empresa/empresa.entity';
-import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { Precos } from '../precos/precos.entity';
 import { PrecosService } from '../precos/precos.service';
+import { ProdutosFornecedoresService } from '../produtos_fornecedores/produtos_fornecedores.service';
 import { ProdutosServicoService } from '../produtos_servico/produtos_servico.service';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
@@ -24,6 +24,8 @@ describe('ProdutosService', () => {
   let service: ProdutosService;
   let produtoRepository: ProdutosRepository;
 
+  const mockEmpresa = { id: '5' } as Empresa;
+
   const fakePrecosService: Partial<PrecosService> = {
     updateOrCreatePrecos: () =>
       Promise.resolve({
@@ -35,13 +37,15 @@ describe('ProdutosService', () => {
     deletePreco: jest.fn(),
   };
 
-  const fakeFornecedoresService: Partial<FornecedoresService> = {
-    findFornecedorById: jest.fn(),
-  };
-
   const fakeProdutoServicoService: Partial<ProdutosServicoService> = {
     findProduto: jest.fn(),
   };
+
+  const fakeProdutosFornecedoresService: Partial<ProdutosFornecedoresService> =
+    {
+      findProdutosFornecedor: jest.fn(),
+      deleteProdutoFornecedor: jest.fn(),
+    };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -56,12 +60,12 @@ describe('ProdutosService', () => {
           useValue: fakePrecosService,
         },
         {
-          provide: FornecedoresService,
-          useValue: fakeFornecedoresService,
-        },
-        {
           provide: ProdutosServicoService,
           useValue: fakeProdutoServicoService,
+        },
+        {
+          provide: ProdutosFornecedoresService,
+          useValue: fakeProdutosFornecedoresService,
         },
       ],
     }).compile();
@@ -92,7 +96,7 @@ describe('ProdutosService', () => {
           precoCompra: 1.0,
           margemLucro: 3.0,
         } as Precos,
-        empresa: { id: '5' } as Empresa,
+        empresa: mockEmpresa,
       };
     });
 
@@ -100,10 +104,16 @@ describe('ProdutosService', () => {
       (produtoRepository.createProduto as jest.Mock).mockResolvedValue(
         'mockProduto',
       );
-      const result = await service.createProduto(mockCreateProdutoDto);
+      const result = await service.createProduto(
+        mockCreateProdutoDto,
+        mockCreateProdutoDto.categoria,
+        mockEmpresa,
+      );
 
       expect(produtoRepository.createProduto).toHaveBeenCalledWith(
         mockCreateProdutoDto,
+        mockCreateProdutoDto.categoria,
+        mockEmpresa,
       );
       expect(result).toEqual('mockProduto');
     });
@@ -203,7 +213,7 @@ describe('ProdutosService', () => {
         affected: 1,
       });
 
-      await service.deleteProduto('mockId');
+      await service.deleteProduto('mockId', 'mockIdEmpresa');
       expect(produtoRepository.delete).toHaveBeenCalledWith({ id: 'mockId' });
     });
 
@@ -212,7 +222,7 @@ describe('ProdutosService', () => {
         affected: 0,
       });
 
-      expect(service.deleteProduto('mockId')).rejects.toThrow(
+      expect(service.deleteProduto('mockId', 'mockIdEmpresa')).rejects.toThrow(
         NotFoundException,
       );
     });

@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Empresa } from '../empresa/empresa.entity';
 import { Endereco } from '../endereco/endereco.entity';
 import { EnderecoService } from '../endereco/endereco.service';
+import { ProdutosFornecedoresService } from '../produtos_fornecedores/produtos_fornecedores.service';
 import { Usuario } from '../usuario/usuario.entity';
 import { CreateFornecedorDto } from './dto/create-fornecedor-dto';
 import { FindFornecedoresQueryDto } from './dto/find-fornecedores-query.dto';
@@ -23,6 +24,7 @@ describe('FornecedoresService', () => {
   let fornecedorRepository: FornecedoresRepository;
 
   const mockUsuario = { id: 'mockId' } as Usuario;
+  const mockEmpresa = { id: '5' } as Empresa;
 
   const fakeEnderecoService: Partial<EnderecoService> = {
     updateOrCreateEndereco: () =>
@@ -38,6 +40,11 @@ describe('FornecedoresService', () => {
     deleteEndereco: jest.fn(),
   };
 
+  const fakeProdutosFornecedoresService: Partial<ProdutosFornecedoresService> =
+    {
+      findProdutosFornecedor: jest.fn(),
+    };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -49,6 +56,10 @@ describe('FornecedoresService', () => {
         {
           provide: EnderecoService,
           useValue: fakeEnderecoService,
+        },
+        {
+          provide: ProdutosFornecedoresService,
+          useValue: fakeProdutosFornecedoresService,
         },
       ],
     }).compile();
@@ -73,7 +84,7 @@ describe('FornecedoresService', () => {
         cpfCnpj: '1231321123',
         situacaoCadastral: 'regular',
         email: 'teste@example.com',
-        empresa: { id: '5' } as Empresa,
+        empresa: mockEmpresa,
       };
     });
 
@@ -81,10 +92,14 @@ describe('FornecedoresService', () => {
       (fornecedorRepository.createFornecedor as jest.Mock).mockResolvedValue(
         'mockFornecedor',
       );
-      const result = await service.createFornecedor(mockCreateFornecedorDto);
+      const result = await service.createFornecedor(
+        mockCreateFornecedorDto,
+        mockEmpresa,
+      );
 
       expect(fornecedorRepository.createFornecedor).toHaveBeenCalledWith(
         mockCreateFornecedorDto,
+        mockEmpresa,
       );
       expect(result).toEqual('mockFornecedor');
     });
@@ -195,7 +210,7 @@ describe('FornecedoresService', () => {
         affected: 1,
       });
 
-      await service.deleteFornecedor('mockId');
+      await service.deleteFornecedor('mockId', 'mockIdEmpresa');
       expect(fornecedorRepository.delete).toHaveBeenCalledWith({
         id: 'mockId',
       });
@@ -206,9 +221,9 @@ describe('FornecedoresService', () => {
         affected: 0,
       });
 
-      expect(service.deleteFornecedor('mockId')).rejects.toThrow(
-        NotFoundException,
-      );
+      expect(
+        service.deleteFornecedor('mockId', 'mockIdEmpresa'),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

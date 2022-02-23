@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
-import { Fornecedores } from 'src/modules/fornecedores/fornecedores.entity';
+import { Fornecedores } from '../../fornecedores/fornecedores.entity';
 import { Categorias } from '../../categorias/categorias.entity';
 import { Precos } from '../../precos/precos.entity';
 
