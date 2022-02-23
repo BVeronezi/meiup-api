@@ -15,13 +15,13 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Role } from '../auth/decorators/role.decorator';
 import { User } from '../auth/decorators/user.decorator';
 import { CategoriasService } from '../categorias/categorias.service';
-import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { PrecosService } from '../precos/precos.service';
+import { ProdutosFornecedoresService } from '../produtos_fornecedores/produtos_fornecedores.service';
 import { TipoUsuario } from '../usuario/enum/user-roles.enum';
 import { Usuario } from '../usuario/usuario.entity';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
-import { FornecedorProdutoDto } from './dto/fornecedor-produto-dto';
+import { RemoveProdutosFornecedorDto } from './dto/remove-fornecedor-dto';
 import { ReturnProdutoDto } from './dto/return-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto-dto';
 import { ProdutosService } from './produtos.service';
@@ -35,7 +35,7 @@ export class ProdutosController {
     private produtosService: ProdutosService,
     private categoriasService: CategoriasService,
     private precosService: PrecosService,
-    private fornecedoresService: FornecedoresService,
+    private produtosFornecedorService: ProdutosFornecedoresService,
   ) {}
 
   @Get(':id')
@@ -76,27 +76,15 @@ export class ProdutosController {
     @User('usuario') usuario: Usuario,
   ): Promise<ReturnProdutoDto> {
     const idCategoria = String(createProdutoDto.categoria);
-    const fornecedoresProduto = [];
 
     const categoria = await this.categoriasService.findCategoriaById(
       idCategoria,
     );
 
-    if (createProdutoDto.fornecedoresProduto?.length > 0) {
-      for (const idFornecedor of createProdutoDto.fornecedoresProduto) {
-        const fornecedor = await this.fornecedoresService.findFornecedorById(
-          String(idFornecedor),
-        );
-
-        fornecedoresProduto.push(fornecedor);
-      }
-    }
-
     const produto = await this.produtosService.createProduto(
       createProdutoDto,
       categoria,
       usuario.empresa,
-      fornecedoresProduto,
     );
     if (Object.keys(createProdutoDto.precos).length !== 0) {
       const params = Object.assign(createProdutoDto.precos, {
@@ -152,28 +140,58 @@ export class ProdutosController {
   @ApiOperation({ summary: 'Remove produto por id' })
   @Role(TipoUsuario.MEI)
   @Role(TipoUsuario.ADMINISTRADOR)
-  async deleteProduto(@Param('id') id: string) {
-    await this.produtosService.deleteProduto(id);
+  async deleteProduto(
+    @Param('id') id: string,
+    @User('usuario') usuario: Usuario,
+  ) {
+    await this.produtosService.deleteProduto(id, usuario.empresa.id);
 
     return {
       message: 'Produto removido com sucesso',
     };
   }
 
-  @Delete('/fornecedor/:id')
-  @ApiOperation({ summary: 'Remove fornecedor do produto por id' })
-  @Role(TipoUsuario.MEI)
-  @Role(TipoUsuario.ADMINISTRADOR)
-  async deleteFornecedorProduto(
-    @Param('id') id: string,
-    @Body(ValidationPipe) fornecedorProdutoDto: FornecedorProdutoDto,
+  @Post('/fornecedor/:produtoId')
+  @ApiOperation({ summary: 'Adiciona fornecedor no produto por id' })
+  async adicionaFornecedor(
+    @Body(ValidationPipe) updateServicoDto: UpdateProdutoDto,
+    @User('usuario') usuario: Usuario,
+    @Param('produtoId') produtoId: string,
   ) {
-    await this.produtosService.deleteFornecedorProduto(
-      fornecedorProdutoDto,
-      id,
-    );
+    const produto = await this.produtosService.findProdutoById(produtoId);
+
+    const params = {
+      produto,
+      fornecedor: updateServicoDto.fornecedor,
+      empresa: usuario.empresa,
+    };
+
+    const produtoFornecedor: any =
+      await this.produtosFornecedorService.createProdutoFornecedor(params);
+
     return {
-      message: 'Fornecedor removido com sucesso',
+      produtoFornecedor: produtoFornecedor,
+    };
+  }
+
+  @Delete('/fornecedor/:produtoId')
+  @ApiOperation({ summary: 'Remove fornecedor do produto por id' })
+  async removeFornecedor(
+    @Param('produtoId') produtoId: string,
+    @User('usuario') usuario: Usuario,
+    @Body(ValidationPipe)
+    removeProdutoFornecedorDto: RemoveProdutosFornecedorDto,
+  ) {
+    const produto = await this.produtosService.findProdutoById(produtoId);
+
+    await this.produtosFornecedorService.deleteProdutoFornecedor(
+      removeProdutoFornecedorDto,
+      String(produto.id),
+      String(usuario.empresa.id),
+    );
+
+    return {
+      message: 'Fornecedor removido com sucesso do produto',
     };
   }
 }

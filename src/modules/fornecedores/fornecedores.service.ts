@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EnderecoService } from '../endereco/endereco.service';
 import { CreateFornecedorDto } from './dto/create-fornecedor-dto';
@@ -9,11 +13,13 @@ import { Fornecedores } from './fornecedores.entity';
 import { isEmpty, values } from 'lodash';
 import { Usuario } from '../usuario/usuario.entity';
 import { Empresa } from '../empresa/empresa.entity';
+import { ProdutosFornecedoresService } from '../produtos_fornecedores/produtos_fornecedores.service';
 @Injectable()
 export class FornecedoresService {
   constructor(
     @InjectRepository(FornecedoresRepository)
     private fornecedoresRepository: FornecedoresRepository,
+    private produtosFornecedoresService: ProdutosFornecedoresService,
     private enderecoService: EnderecoService,
   ) {}
 
@@ -81,7 +87,7 @@ export class FornecedoresService {
     }
   }
 
-  async deleteFornecedor(fornecedorId: string) {
+  async deleteFornecedor(fornecedorId: string, empresaId: string) {
     const fornecedor = await this.findFornecedorById(fornecedorId);
 
     if (!fornecedor) {
@@ -90,7 +96,21 @@ export class FornecedoresService {
       );
     }
 
-    if (fornecedor.endereco) {
+    const resultProdutosFornecedores =
+      await this.produtosFornecedoresService.findProdutosFornecedor(
+        {
+          fornecedorId,
+        },
+        empresaId,
+      );
+
+    if (resultProdutosFornecedores.produtosFornecedores.length > 0) {
+      throw new ConflictException(
+        'Há produto(s) vinculado(s) a este fornecedor',
+      );
+    }
+
+    if (!values(fornecedor.endereco).every(isEmpty)) {
       await this.enderecoService.deleteEndereco(fornecedor.endereco.id);
     }
 

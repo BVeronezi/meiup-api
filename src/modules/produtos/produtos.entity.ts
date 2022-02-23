@@ -7,13 +7,10 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
-  ManyToMany,
-  JoinTable,
   OneToOne,
 } from 'typeorm';
 import { Categorias } from '../categorias/categorias.entity';
 import { Empresa } from '../empresa/empresa.entity';
-import { Fornecedores } from '../fornecedores/fornecedores.entity';
 import { Precos } from '../precos/precos.entity';
 @Entity()
 export class Produtos extends BaseEntity {
@@ -53,14 +50,6 @@ export class Produtos extends BaseEntity {
   })
   @JoinColumn()
   precos: Precos;
-
-  @ManyToMany(() => Fornecedores, {
-    eager: true,
-  })
-  @JoinTable({
-    name: 'produtos_fornecedores',
-  })
-  fornecedoresProduto: Fornecedores[];
 
   @ManyToOne(() => Empresa, {
     eager: true,

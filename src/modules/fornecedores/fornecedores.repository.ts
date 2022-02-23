@@ -37,6 +37,8 @@ export class FornecedoresRepository extends Repository<Fornecedores> {
       'fornecedores.id',
       'fornecedores.nome',
       'fornecedores.email',
+      'fornecedores.celular',
+      'fornecedores.telefone',
     ]);
 
     const [fornecedores, total] = await query.getManyAndCount();

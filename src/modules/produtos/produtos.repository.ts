@@ -1,7 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Categorias } from '../categorias/categorias.entity';
 import { Empresa } from '../empresa/empresa.entity';
-import { Fornecedores } from '../fornecedores/fornecedores.entity';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
 import { Produtos } from './produtos.entity';
@@ -44,7 +43,6 @@ export class ProdutosRepository extends Repository<Produtos> {
     createProdutoDto: CreateProdutoDto,
     categoria: Categorias,
     empresa: Empresa,
-    fornecedoresProduto: Fornecedores[],
   ): Promise<Produtos> {
     const {
       descricao,
@@ -61,7 +59,6 @@ export class ProdutosRepository extends Repository<Produtos> {
     produto.unidade = unidade;
     produto.categoria = categoria;
     produto.empresa = empresa;
-    produto.fornecedoresProduto = fornecedoresProduto;
     produto.estoque = estoque ?? 0;
     produto.estoqueMinimo = estoqueMinimo ?? 0;
     produto.estoqueMaximo = estoqueMaximo ?? 0;

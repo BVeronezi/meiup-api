@@ -55,5 +55,4 @@ export class Fornecedores extends BaseEntity {
 
   @UpdateDateColumn()
   dataAlteracao: Date;
-  fornecedor: Promise<Endereco>;
 }

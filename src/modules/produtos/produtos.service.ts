@@ -2,14 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Categorias } from '../categorias/categorias.entity';
 import { Empresa } from '../empresa/empresa.entity';
-import { Fornecedores } from '../fornecedores/fornecedores.entity';
-import { FornecedoresService } from '../fornecedores/fornecedores.service';
 import { PrecosService } from '../precos/precos.service';
-import { ProdutosPromocaoService } from '../produtos_promocao/produtos_promocao.service';
+import { FindProdutosFornecedoresQueryDto } from '../produtos_fornecedores/dto/find-produtos-fornecedores-dto';
+import { ProdutosFornecedoresService } from '../produtos_fornecedores/produtos_fornecedores.service';
 import { ProdutosServicoService } from '../produtos_servico/produtos_servico.service';
 import { CreateProdutoDto } from './dto/create-produto-dto';
 import { FindProdutosQueryDto } from './dto/find-produtos-query-dto';
-import { FornecedorProdutoDto } from './dto/fornecedor-produto-dto';
 import { UpdateProdutoDto } from './dto/update-produto-dto';
 import { Produtos } from './produtos.entity';
 import { ProdutosRepository } from './produtos.repository';
@@ -20,22 +18,19 @@ export class ProdutosService {
     @InjectRepository(ProdutosRepository)
     private produtosRepository: ProdutosRepository,
     private precosService: PrecosService,
-    private fornecedoresService: FornecedoresService,
     private produtoServicoService: ProdutosServicoService,
-    private produtoPromocaoService: ProdutosPromocaoService,
+    private produtoFornecedoresService: ProdutosFornecedoresService,
   ) {}
 
   async createProduto(
     createProdutoDto: CreateProdutoDto,
     categoria: Categorias,
     empresa: Empresa,
-    fornecedoresProduto: Fornecedores[],
   ): Promise<Produtos> {
     return await this.produtosRepository.createProduto(
       createProdutoDto,
       categoria,
       empresa,
-      fornecedoresProduto,
     );
   }
 
@@ -62,8 +57,6 @@ export class ProdutosService {
     const produto = await this.findProdutoById(id);
 
     if (produto) {
-      const fornecedoresProduto = produto.fornecedoresProduto;
-      const fornecedoresCadastrados = [];
       const precoId = produto.precos ? produto.precos.id : null;
 
       if (updateProdutoDto.precos) {
@@ -73,30 +66,6 @@ export class ProdutosService {
         );
 
         produto.precos = precos;
-        await produto.save();
-      }
-
-      if (updateProdutoDto.fornecedoresProduto?.length > 0) {
-        for (const fornecedorCadastrado of produto.fornecedoresProduto) {
-          fornecedoresCadastrados.push(fornecedorCadastrado.id);
-        }
-
-        for (const idFornecedor of updateProdutoDto.fornecedoresProduto) {
-          const fornecedorJaCadastrado = fornecedoresCadastrados.filter(
-            (f) => f !== idFornecedor,
-          );
-
-          if (fornecedorJaCadastrado.length > 0) {
-            const fornecedor =
-              await this.fornecedoresService.findFornecedorById(
-                String(idFornecedor),
-              );
-
-            fornecedoresProduto.push(fornecedor);
-          }
-        }
-
-        produto.fornecedoresProduto = fornecedoresProduto;
         await produto.save();
       }
 
@@ -123,40 +92,28 @@ export class ProdutosService {
     }
   }
 
-  async deleteFornecedorProduto(
-    fornecedorProdutoDto: FornecedorProdutoDto,
-    produtoId: string,
-  ) {
-    try {
-      const produto = await this.findProdutoById(produtoId);
-      const fornecedoresCadastrados = [];
-      const newFornecedoresProdutos = [];
+  async deleteProduto(produtoId: string, empresaId: string) {
+    const produto = await this.findProdutoById(produtoId);
 
-      for (const fornecedorCadastrado of produto.fornecedoresProduto) {
-        fornecedoresCadastrados.push(fornecedorCadastrado.id);
-      }
+    const paramsFornecedores: FindProdutosFornecedoresQueryDto = {
+      produtoId,
+    };
 
-      produto.fornecedoresProduto = fornecedoresCadastrados.filter(
-        (fornecedor) => !fornecedorProdutoDto.fornecedores.includes(fornecedor),
+    const fornecedores =
+      await this.produtoFornecedoresService.findProdutosFornecedor(
+        paramsFornecedores,
+        empresaId,
       );
 
-      for (const idFornecedor of produto.fornecedoresProduto) {
-        const fornecedor = await this.fornecedoresService.findFornecedorById(
-          String(idFornecedor),
+    if (fornecedores.produtosFornecedores.length > 0) {
+      for (const fornecedor of fornecedores.produtosFornecedores) {
+        await this.produtoFornecedoresService.deleteProdutoFornecedor(
+          { produtoFornecedor: fornecedor.id },
+          produtoId,
+          empresaId,
         );
-
-        newFornecedoresProdutos.push(fornecedor);
       }
-
-      produto.fornecedoresProduto = newFornecedoresProdutos;
-      return await produto.save();
-    } catch (error) {
-      throw new Error(error.message);
     }
-  }
-
-  async deleteProduto(produtoId: string) {
-    const produto = await this.findProdutoById(produtoId);
 
     const produtoServico = await this.produtoServicoService.findProduto(
       Number(produto.id),

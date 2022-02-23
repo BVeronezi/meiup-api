@@ -26,6 +26,7 @@ import { MailModule } from './mail/mail.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { ProdutosPromocaoModule } from './modules/produtos_promocao/produtos_promocao.module';
 import { ServicosPromocaoModule } from './modules/servicos_promocao/servicos_promocao.module';
+import { ProdutosFornecedoresModule } from './modules/produtos_fornecedores/produtos_fornecedores.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { ServicosPromocaoModule } from './modules/servicos_promocao/servicos_pro
     ServicosPromocaoModule,
     MailModule,
     DashboardModule,
+    ProdutosFornecedoresModule,
   ],
   controllers: [],
   providers: [],

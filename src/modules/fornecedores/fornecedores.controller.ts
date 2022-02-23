@@ -102,8 +102,11 @@ export class FornecedoresController {
   @ApiOperation({ summary: 'Remove o fornecedor por id' })
   @Role(TipoUsuario.MEI)
   @Role(TipoUsuario.ADMINISTRADOR)
-  async deleteFornecedor(@Param('id') id: string) {
-    await this.fornecedoresService.deleteFornecedor(id);
+  async deleteFornecedor(
+    @Param('id') id: string,
+    @User('usuario') usuario: Usuario,
+  ) {
+    await this.fornecedoresService.deleteFornecedor(id, usuario.empresa.id);
     return {
       message: 'Fornecedor removido com sucesso',
     };

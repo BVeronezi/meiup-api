@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriasModule } from '../categorias/categorias.module';
-import { FornecedoresModule } from '../fornecedores/fornecedores.module';
 import { PrecosModule } from '../precos/precos.module';
+import { ProdutosFornecedoresModule } from '../produtos_fornecedores/produtos_fornecedores.module';
 import { ProdutosPromocaoModule } from '../produtos_promocao/produtos_promocao.module';
 import { ProdutosServicoModule } from '../produtos_servico/produtos_servico.module';
 import { ProdutosController } from './produtos.controller';
@@ -16,9 +16,9 @@ import { ProdutosService } from './produtos.service';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     CategoriasModule,
     PrecosModule,
-    FornecedoresModule,
     ProdutosServicoModule,
     ProdutosPromocaoModule,
+    ProdutosFornecedoresModule,
   ],
   controllers: [ProdutosController],
   providers: [ProdutosService],
