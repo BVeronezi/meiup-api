@@ -12,10 +12,7 @@ export class CreateAgendaDto {
   })
   titulo: string;
 
-  @IsNotEmpty({
-    message: 'Informe uma descrição',
-  })
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Descrição',
     type: 'string',
   })

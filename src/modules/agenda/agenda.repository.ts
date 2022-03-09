@@ -9,14 +9,11 @@ export class AgendaRepository extends Repository<Agenda> {
     queryDto: FindAgendaQueryDto,
     usuarioId: string,
   ): Promise<{ agenda: Agenda[]; total: number }> {
-    queryDto.page = queryDto.page < 1 ? 1 : queryDto.page ?? 1;
-    queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit ?? 100;
-
     const { titulo, descricao } = queryDto;
     const query = this.createQueryBuilder('agenda');
 
     query.andWhere('agenda.usuarioId = :usuarioId', {
-      usuarioId: Number(usuarioId),
+      usuarioId: String(usuarioId),
     });
 
     if (titulo) {
@@ -30,11 +27,12 @@ export class AgendaRepository extends Repository<Agenda> {
         descricao: `%${descricao}%`,
       });
     }
-
-    query.skip((queryDto.page - 1) * queryDto.limit);
-    query.take(+queryDto.limit);
-    query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
-    query.select(['agenda.id', 'agenda.titulo', 'agenda.descricao']);
+    query.select([
+      'agenda.id',
+      'agenda.titulo',
+      'agenda.data',
+      'agenda.descricao',
+    ]);
 
     const [agenda, total] = await query.getManyAndCount();
 

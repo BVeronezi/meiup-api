@@ -18,7 +18,7 @@ export class Agenda extends BaseEntity {
   @Column({ nullable: false, type: 'varchar' })
   titulo: string;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: true, type: 'varchar' })
   descricao: string;
 
   @Column({ nullable: false })
