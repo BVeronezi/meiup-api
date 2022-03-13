@@ -398,7 +398,7 @@ export class VendasService {
   async findVendas(
     queryDto: FindVendasQueryDto,
     empresaId: string,
-  ): Promise<{ vendas: Vendas[]; total: number }> {
+  ): Promise<{ vendas: Vendas[]; total: number; totais?: any[] }> {
     try {
       return await this.vendasRepository.findVendas(queryDto, empresaId);
     } catch (error) {

@@ -3,4 +3,5 @@ export class FindUsuariosQueryDto extends BaseQueryParametersDto {
   nome: string;
   email: string;
   tipo?: string;
+  filterMEI?: boolean = false;
 }

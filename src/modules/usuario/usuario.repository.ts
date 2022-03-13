@@ -34,7 +34,10 @@ export class UsuarioRepository extends Repository<Usuario> {
     if (nome) {
       query.andWhere('usuario.nome ILIKE :nome', { nome: `%${nome}%` });
     }
-    query.andWhere('usuario.tipo NOT ILIKE :tipo', { tipo: 'MEI' });
+
+    if (!queryDto.filterMEI) {
+      query.andWhere('usuario.tipo NOT ILIKE :tipo', { tipo: 'MEI' });
+    }
 
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);

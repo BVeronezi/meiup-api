@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, getManager, Repository } from 'typeorm';
 import { Empresa } from '../empresa/empresa.entity';
 import { Usuario } from '../usuario/usuario.entity';
 import { CreateVendaDto } from './dto/create-venda-dto';
@@ -10,7 +10,10 @@ export class VendasRepository extends Repository<Vendas> {
   async findVendas(
     queryDto: FindVendasQueryDto,
     empresaId: string,
-  ): Promise<{ vendas: Vendas[]; total: number }> {
+  ): Promise<{ vendas: Vendas[]; total: number; totais?: any[] }> {
+    const entityManager = getManager();
+    const totais = [];
+
     const { cliente } = queryDto;
     const query = this.createQueryBuilder('vendas');
 
@@ -26,11 +29,18 @@ export class VendasRepository extends Repository<Vendas> {
       query.skip((Number(queryDto.page) - 1) * queryDto.limit ?? 10);
     }
 
-    query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
+    if (queryDto.dataInicio) {
+      query.andWhere(
+        `vendas.dataVenda between '${queryDto.dataInicio}' and '${queryDto.dataFim}'`,
+      );
+    }
+
     query.leftJoin('vendas.cliente', 'cliente');
+    query.leftJoin('vendas.usuario', 'usuario');
     query.select([
       'vendas.id',
       'cliente',
+      'usuario.nome',
       'vendas.dataVenda',
       'vendas.valorTotal',
       'vendas.status',
@@ -40,9 +50,51 @@ export class VendasRepository extends Repository<Vendas> {
       query.andWhere('cliente.nome ILIKE :nome', { nome: `%${cliente}%` });
     }
 
+    if (queryDto.relatorio) {
+      query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : `"dataVenda"`);
+    } else {
+      query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
+    }
+
     const [vendas, total] = await query.getManyAndCount();
 
-    return { vendas, total };
+    if (queryDto.relatorio) {
+      const totalPorStatus = await entityManager.query(`
+      select
+        status,
+        case
+          when (status) = 0 then sum("valorTotal")
+          when (status) = 1 then sum("valorTotal")
+          when (status) = 2 then sum("valorTotal")
+        end as totais
+      from
+        vendas
+      where
+        "empresaId" = ${empresaId}
+      and "dataVenda" between '${queryDto.dataInicio}' and '${queryDto.dataFim}'
+      group by
+        status   
+      `);
+
+      const total = await entityManager.query(`
+      select
+        SUM("valorTotal") as "Total"
+      from
+        vendas
+      where
+         "empresaId" = ${empresaId}    
+       and "dataVenda" between '${queryDto.dataInicio}' and '${queryDto.dataFim}' 
+      `);
+
+      totais.push({
+        totalEmAberto: totalPorStatus[0]?.totais,
+        totalFinalizadas: totalPorStatus[1]?.totais,
+        totalCanceladas: totalPorStatus[2]?.totais,
+        total: total[0]?.Total,
+      });
+    }
+
+    return { vendas, total, totais };
   }
 
   async createVenda(
