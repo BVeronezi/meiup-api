@@ -71,7 +71,7 @@ export class DashboardService {
 
     const produtosMaisVendidos = await entityManager.query(`
         SELECT
-        "produto"."descricao" as "produto_descricao",
+        "produto"."descricao" as "descricao",
         "produto"."id" as "produto_id", 
         COUNT(*) 
         FROM
@@ -85,6 +85,24 @@ export class DashboardService {
         "produto"."id"
         ORDER BY 2 DESC ;
       `);
+
+    const servicosMaisVendidos = await entityManager.query(`
+    select
+        s.nome as "descricao",
+        s.id as "servico_id",
+        count(*)
+    from
+        servicos_venda sv
+    left join servicos s on
+        s.id = sv."servicoId"
+    where
+        sv."empresaId" = ${empresaId}
+    group by
+        s.nome ,
+        s.id
+    order by
+        2 desc
+  `);
 
     const evolucaoVendaMes = await entityManager.query(`
     select
@@ -107,6 +125,7 @@ export class DashboardService {
       vendasMesAtual,
       vendasMesAnterior,
       produtosMaisVendidos,
+      servicosMaisVendidos,
       evolucaoVendaMes,
     };
   }
