@@ -47,6 +47,26 @@ export class AuthController {
     );
   }
 
+  @Get('/facebook')
+  @UseGuards(AuthGuard('facebook'))
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  facebookAuth() {}
+
+  @Get('/facebook/callback')
+  @UseGuards(AuthGuard('facebook'))
+  facebookAuthRedirect(
+    @Req() req,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const jwt = req.user.jwt;
+
+    const user = JSON.stringify(req.user.user);
+
+    response.redirect(
+      `https://meiup-frontend.herokuapp.com/loading?jwt=${jwt}&user=${user}`,
+    );
+  }
+
   @Get('protected')
   @UseGuards(AuthGuard('jwt'))
   protectedResource() {
