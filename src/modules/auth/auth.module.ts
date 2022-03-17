@@ -7,6 +7,7 @@ import { UsuarioModule } from '../usuario/usuario.module';
 import { UsuarioRepository } from '../usuario/usuario.repository';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { FacebookStrategy } from './facebook.strategy';
 import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
 @Module({
@@ -18,7 +19,7 @@ import { JwtStrategy } from './jwt.strategy';
     UsuarioModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, GoogleStrategy],
+  providers: [AuthService, JwtStrategy, GoogleStrategy, FacebookStrategy],
   exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}
